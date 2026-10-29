@@ -1,5 +1,7 @@
 # V0 最小切片：NAPI `.so` + ArkTS 调用 + 空 HAP
 
+> **HISTORICAL（V0）**：V0.1 的 HAP `.so` 已包含 decoder，尺寸/行为见 `docs/v0.1-decode.md` 与 `evidence/v0_1_decode.json`；本文保留 V0 快照。
+
 日期：2026-10-29 ｜ 分支：`feature/p1-v0-min` ｜ 本地执行，不推送远程
 
 ## 结果

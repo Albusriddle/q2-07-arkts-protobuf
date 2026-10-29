@@ -5,18 +5,19 @@
   "exit_code": 0,
   "hap": {
     "path": "app/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap",
-    "size": 1455938,
-    "sha256": "6c2f24d3c329d6d87fb3e624f8bf1920860f3a9f91d769352db650aa20fdac0e",
+    "size": 1458236,
+    "sha256": "08b6f6708a030c5524116d01fa64b627a6a5d0f44ee3d15a9660f56a5dc2f861",
     "signed": false
   },
   "tests": [
     "ping_returns_pong",
-    "add_2_3_returns_5"
+    "add_2_3_returns_5",
+    "decodeUser_c20_full"
   ],
   "device_run": false,
   "hdc_status": "blocked: no target",
   "blocked": [
     "no target device: tests built but not executed"
   ],
-  "notes": "Test HAP compiled; no installation/execution. @ohos/hypium 1.0.30 installed."
+  "notes": "Test HAP compiled after V0.1 decodeUser; no installation/execution. @ohos/hypium 1.0.30."
 }

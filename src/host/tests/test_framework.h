@@ -128,5 +128,6 @@ void suite_wire();
 void suite_vectors();
 void suite_tape();
 void suite_decode();
+void suite_object_model();
 }  // namespace test
 }  // namespace q207

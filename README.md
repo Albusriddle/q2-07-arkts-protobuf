@@ -1,6 +1,6 @@
 # Q2-07 · Native ArkTS High-Performance Protobuf Parsing
 
-> Status: **host vertical slice implemented; V0 NAPI bridge + unsigned/self-signed HAP built**.
+> Status: **host vertical slice implemented; V0.1 adds generated field table + NAPI `decodeUser`**; unsigned/self-signed HAP built (not device-run).
 > Feasibility: **B- / conditionally viable** under “API-level compatibility + P3-batch first + hot-message P4 + 20 weeks”.
 > This repository is a working scaffold, not a claim that 1.5×/700 ms is achieved.
 
@@ -16,14 +16,17 @@ A feasibility + implementation workspace for the OpenHarmony Q2-07 challenge:
 
 - host-side C++17 wire reader, POD decoder for `proto/example.proto`, tape v0 writer/verifier,
   TS materializer and differential harness against **protobufjs 7.6.5**;
-- V0 NAPI bridge (`ping`/`add`) in `app/entry/src/main/cpp/entry.cpp`, built by hvigor
-  `externalNativeOptions`, plus unsigned and locally self-signed HAP;
-- `ohosTest` test HAP builds (not executed: no device).
+- V0.1 NAPI bridge (`ping`/`add`/`decodeUser`) in `app/entry/src/main/cpp/`,
+  built by hvigor `externalNativeOptions`; `decodeUser` returns the norm-v1 object shape;
+- field numbers/wire types generated from `proto/example.proto` into
+  `src/host/decoder/generated/q207_demo_fields.h` (`scripts/codegen.sh --check`);
+- `ohosTest` test HAP builds (not executed: no device); `decodeUser` is **compiled,
+  not executed on a device** (see `docs/v0.1-decode.md`).
 
 **Not implemented yet (do not claim as done)**
 
-- `.proto → descriptor/IR → C++/ArkTS` code generation; the decoder/POD are hand-written
-  “generated-code-shaped” code today;
+- full `.proto → descriptor/IR → C++/ArkTS` code generation; only field constants + wire
+  types are generated today, while `pod.h` / `decode_user.cpp` remain hand-written;
 - NAPI `decode`/`decodeMany` (only `ping`/`add` exist);
 - protobufjs **8.x**, full P3/P4, real device install/run/AOT/performance.
 
@@ -39,6 +42,7 @@ profile. All host numbers are labelled `HOST-ONLY`.
 | [`docs/w0-resource-assumption.md`](docs/w0-resource-assumption.md) | Why W0 `BLOCKED` items are reclassified as `RESOURCE-GATED`, not no-go |
 | [`docs/host-slice.md`](docs/host-slice.md) | HOST-ONLY reader/tape/materializer/differential results |
 | [`docs/v0-slice.md`](docs/v0-slice.md) | V0 NAPI/HAP build and current BLOCKED list |
+| [`docs/v0.1-decode.md`](docs/v0.1-decode.md) | V0.1 generated field table + `decodeUser` NAPI, claim levels and limitations |
 
 ## Scope and non-goals
 
@@ -80,12 +84,13 @@ bash scripts/build.sh
 #   export Q207_SIGN_STORE_PWD=...   (or create gitignored signing/.local_pwd)
 bash scripts/sign_hap.sh
 
-# HOST-ONLY C++/TS slice: build + 425 tests + bench + differential + evidence
+# HOST-ONLY C++/TS slice: build + 433 assertions + bench + differential + evidence
 bash scripts/build_host.sh
 ```
 
-> Native build is integrated through `externalNativeOptions`; `scripts/build.sh` builds the
-> standalone `.so` and the HAP. `scripts/build_hap.sh` is the hvigor-only shortcut and now
+> Field table: `bash scripts/codegen.sh --check` (and `build.sh` / `build_host.sh` run it
+> automatically). Native build is integrated through `externalNativeOptions`; `scripts/build.sh`
+> builds the standalone `.so` and the HAP. `scripts/build_hap.sh` is the hvigor-only shortcut and now
 > runs `ohpm install` first. `scripts/sign_hap.sh` only signs/verifies locally; its output is
 > `installable=false` because the CA is not trusted by a device and no UDID profile exists.
 
