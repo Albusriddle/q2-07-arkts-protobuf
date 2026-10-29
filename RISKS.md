@@ -16,10 +16,11 @@
 - 当前只能构建 arm64 `.so` 与 HAP（若模板/签名允许），**不能安装/运行/测性能**。
 - `evidence/v0_build.json` 的 `hdc_status` 必须写实际状态；没有设备就写 `blocked`，不得伪造安装结果。
 
-## R3 HAP 签名/模板不确定（不阻塞）
+## R3 HAP 签名/安装不确定（不阻塞）
 
-- 本切片可能只能产出 `.so`；HAP 构建可能因签名/profile、hvigor 模板、资源或 SDK 版本失败。
-- 失败只记 `evidence/hap_build.log` 与 `hap_status`，不编造成功；不因为 HAP 失败停止 `.so`/NAPI/ArkTS 代码工作。
+- 本切片实际产出了 **unsigned HAP**：`app/entry/build/default/outputs/default/entry-default-unsigned.hap`。
+- 没有 `signingConfigs`/profile，hvigor 明确 `Will skip sign`；因此 **HAP 不能安装到真实设备**。
+- 签名、profile、安装、启动均未执行；不得把“unsigned HAP 构建成功”写成“设备可运行”。
 
 ## R4 未采购（不阻塞）
 
