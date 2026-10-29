@@ -62,3 +62,4 @@ app/entry/oh-package-lock.json5
 # 编译中间产物 / 测试输出
 *.obj
 app/entry/.test/
+t.obj

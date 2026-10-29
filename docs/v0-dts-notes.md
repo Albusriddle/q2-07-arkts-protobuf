@@ -14,7 +14,7 @@
 | 真正原因 | 依赖声明了 `file:` 本地包，但**从未执行 `ohpm install`** → `app/entry/oh_modules/` 不存在 → ArkTS 解析不到 `libentry.so` 的类型 → 走"模块未找到"分支，对这一类 `.so` 只报 **warning（TS 28014）而不报 error**，所以 HAP 照样成功 |
 | 这个 warning 是不是纯噪音 | **不是**。实测：`oh_modules` 缺失时，把 `index.d.ts` 故意写错类型，构建**依然成功** → 说明 .d.ts 之前**完全没被消费**，`import entry from 'libentry.so'` 退化为隐式 `any` |
 | 修复动作 | 在 `app/` 下执行一次 `ohpm install`（生成 `app/entry/oh_modules/libentry.so`，含 `types: ./index.d.ts`） |
-| HAP | **构建成功**，`entry-default-unsigned.hap`，127,135 B，未签名 |
+| HAP | **构建成功**，`entry-default-unsigned.hap`，127,135 B（native 集成前快照；当前 1,390,057 B，以 `evidence/v0_artifact_check.json` 为准），未签名 |
 | 仍未解除 | **BLOCKED**：无目标板（`hdc list targets` 为空）、HAP 未签名 → 不能安装/运行。**UNVERIFIED**：`ping()`/`add()` 真机行为 |
 
 ## 1. 证据（每次实验都做了 clean 重编，`CompileArkTS` 均实际执行）
@@ -27,7 +27,7 @@
 | 3 | d.ts 是否真被消费（反例） | 同上错误 d.ts，但移走 `oh_modules` | **BUILD SUCCESSFUL** + warning → 证明 .d.ts 未生效 | `evidence/hap_build_dts_wrongtype_nodeps.log` |
 | 4 | 因果验证 | 正确 d.ts，移走 `oh_modules` | warning 复现 → 证明"缺 `oh_modules`"就是原因 | `evidence/hap_build_dts_nodeps.log` |
 | 5 | 依赖 key 反例 | key/包名改 `libentry`（去掉 `.so`），安装后构建 | warning 复现 → **依赖 key 必须与 import 说明符逐字一致** | `evidence/hap_build_dts_keylibentry.log` |
-| 6 | 最终状态 | 全部回滚 + `ohpm install` + clean build | **无 warning**；`BUILD SUCCESSFUL`；HAP 127,135 B | `evidence/hap_build.log`、`evidence/hap_build_dts_fixed_final.log` |
+| 6 | 最终状态 | 全部回滚 + `ohpm install` + clean build | **无 warning**；`BUILD SUCCESSFUL`；HAP 127,135 B（历史快照） | `evidence/hap_build.log`、`evidence/hap_build_dts_fixed_final.log` |
 
 ¹ 10:55 的历史日志 `evidence/hap_build_dts.log`（warning 在第 27 行）；本次的等价复现是实验 4 的 `hap_build_dts_nodeps.log`（同一状态：原接线 + 无 `oh_modules`）。
 
@@ -89,7 +89,7 @@ bash scripts/build.sh
 
 > git-bash 下 `ohpm` 包装脚本依赖 `cygpath`（本机没有），直接 `node .../ohpm/bin/pm-cli.js install` 等价且可用。
 
-**运维注意（重要）**：ohpm 是把本地包**复制**成 `app/entry/oh_modules/libentry.so/`，不是软链（本次实测为目录）。因此**每次改完 `types/libentry/index.d.ts` 都要重跑 `ohpm install`**（或删掉 `oh_modules` 再装），否则编译器读到的还是旧副本——这会再次表现成"d.ts 明明改了却没生效"。
+**运维注意（重要）**：本机 ohpm 6.1.2 把本地包物化为 **symlink**（`app/entry/oh_modules/libentry.so -> ../../src/main/ets/types/libentry`），不是复制；但不同 ohpm 版本可能是复制。无论哪种，改完 `types/libentry/index.d.ts` 都建议重跑 `ohpm install`（或删 `oh_modules` 再装），避免读到旧副本。
 
 **fresh clone**：`oh_modules/`、`build/`、`.hvigor/` 都在 `.gitignore` 里，`scripts/build.sh` 也不调用 ohpm。所以新克隆必须手工跑一次 `ohpm install`，否则 warning 会回来（这是**已知的操作前置**，不是新的技术问题；若要在 CI 里固定，需要另开任务改 `build.sh`，本次按约束未改）。
 
@@ -114,7 +114,7 @@ bash scripts/build.sh
 | 项 | 状态 |
 |---|---|
 | ArkTS `libentry.so` warning | **已消除**（clean 与增量构建均无） |
-| HAP 构建 | **成功**，unsigned，127,135 B，`sha256 e73db566fe36765e8b0f77c4a9a5303fa71c19d5f11545cc267f7a3f9e3270a6` |
+| HAP 构建 | **成功**，unsigned，127,135 B（历史快照；native 集成后为 1,390,057 B，以 `v0_artifact_check.json` 为准） |
 | 设备安装 / 运行 | **BLOCKED**：`hdc list targets` 为空；HAP 无 signingConfig，不可安装到真机 |
 | `ping()` / `add()` 真机行为 | **UNVERIFIED** |
 | 签名 / profile | **BLOCKED**（无 `signingConfigs`，hvigor 明确 `Will skip sign`） |

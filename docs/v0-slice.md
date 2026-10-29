@@ -8,8 +8,8 @@
 |---|---|---|
 | NAPI 动态库（未 strip） | `build/napi/libentry.so` | **built**，14,696 B，ELF64 AArch64 |
 | 放入 app 的 NAPI 库 | 由 hvigor `externalNativeOptions` 构建 | **native build**（不再手工拷 `.so`） |
-| 未签名 HAP | `app/entry/build/default/outputs/default/entry-default-unsigned.hap` | **built unsigned**，1,390,057 B |
-| 自签名 HAP | `app/entry/build/default/outputs/default/entry-default-signed.hap` | **signed + verify-app 通过**，1,455,790 B；**installable=false** |
+| 未签名 HAP | `app/entry/build/default/outputs/default/entry-default-unsigned.hap` | **built unsigned**；大小/hash 以 `evidence/v0_build.json` 为准 |
+| 自签名 HAP | `app/entry/build/default/outputs/default/entry-default-signed.hap` | **signed + verify-app 通过**；大小/hash 以 `evidence/sign_check.json` 为准；**installable=false** |
 | 设备安装/运行 | — | **BLOCKED**：`hdc list targets` 为空，无板 |
 
 ## 构建命令
