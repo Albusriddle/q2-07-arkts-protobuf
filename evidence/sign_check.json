@@ -1,8 +1,8 @@
 {
   "slice": "V0-sign: local self-signed HAP (no device, no install)",
-  "timestamp_utc": "2026-10-29T06:20:39Z",
-  "branch": "feature/p1-v0-min",
-  "commit": "8401e9c",
+  "timestamp_utc": "2026-10-29T08:00:32Z",
+  "branch": "feature/v0.1-decode",
+  "commit": "484eeb9",
   "status": "PASS-SIGNED-NOT-INSTALLABLE",
   "signing": {
     "tool": "<DevEco>/sdk/default/openharmony/toolchains/lib/hap-sign-tool.jar",
@@ -19,56 +19,6 @@
     "store_password_source": "Q207_SIGN_STORE_PWD env var or gitignored signing/.local_pwd; never used for a real release"
   },
   "commands": [
-    {
-      "command": "generate-keypair:q207-root-ca",
-      "exit_code": 0,
-      "log": "signing/logs/keypair-q207-root-ca.log"
-    },
-    {
-      "command": "generate-keypair:q207-app-sub-ca",
-      "exit_code": 0,
-      "log": "signing/logs/keypair-q207-app-sub-ca.log"
-    },
-    {
-      "command": "generate-keypair:q207-profile-sub-ca",
-      "exit_code": 0,
-      "log": "signing/logs/keypair-q207-profile-sub-ca.log"
-    },
-    {
-      "command": "generate-keypair:q207-app-key",
-      "exit_code": 0,
-      "log": "signing/logs/keypair-q207-app-key.log"
-    },
-    {
-      "command": "generate-keypair:q207-profile-key",
-      "exit_code": 0,
-      "log": "signing/logs/keypair-q207-profile-key.log"
-    },
-    {
-      "command": "generate-cert:root",
-      "exit_code": 0,
-      "log": "signing/logs/cert-root.log"
-    },
-    {
-      "command": "generate-cert:app-ca",
-      "exit_code": 0,
-      "log": "signing/logs/cert-app-ca.log"
-    },
-    {
-      "command": "generate-cert:profile-ca",
-      "exit_code": 0,
-      "log": "signing/logs/cert-profile-ca.log"
-    },
-    {
-      "command": "generate-app-cert",
-      "exit_code": 0,
-      "log": "signing/logs/cert-app-leaf.log"
-    },
-    {
-      "command": "generate-profile-cert",
-      "exit_code": 0,
-      "log": "signing/logs/cert-profile-leaf.log"
-    },
     {
       "command": "sign-profile",
       "exit_code": 0,
@@ -93,26 +43,26 @@
   "artifacts": {
     "hap_unsigned": {
       "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
-      "size": 1390781,
-      "sha256": "8914d1d6ecfbd46f5050f396dcc6250ddd26b0d46c9429de029b047e57544b11",
+      "size": 1610530,
+      "sha256": "43a58a1d1537ed1ed2a085c993cbe21984cb798b0af0d903eeffab912a7110d0",
       "signed": false
     },
     "hap_signed": {
       "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
-      "size": 1455119,
-      "sha256": "8802b3ba50b4fce893f060861dffe14a8bd0dc749f8a3bc1b3fb86b2d1128b7f",
+      "size": 1670442,
+      "sha256": "9b49ec199bffcd251bfa46f3e9ca5f395b06ff16994ef946f310e44faffdbb8f",
       "signed": true,
       "installable": false
     },
     "profile_signed": {
       "path": "signing/profile/q207-profile.p7b",
       "size": 3065,
-      "sha256": "df7caf093614c928697f935e881f063b8881bfdf5f001d90142a2a5aa86e9688"
+      "sha256": "7b8517aef8febfcf8117bd51de250af4e9b3a6c39774f930beabc663b870b65c"
     },
     "profile_json": {
       "path": "signing/profile/q207-profile.json",
       "size": 1427,
-      "sha256": "3da6284555577d938d594b569ad87b06bff1d8ab29cb30023b4f657cbe202dc6"
+      "sha256": "f00444baf4ae424c7819c77cee4091f24a7633fe20b650caf362d6f76377d4d3"
     },
     "app_cert_chain": {
       "path": "signing/certs/q207-app-cert.pem",

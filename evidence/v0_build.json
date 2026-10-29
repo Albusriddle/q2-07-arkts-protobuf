@@ -1,14 +1,19 @@
 {
   "slice": "V0-min: NAPI .so + ArkTS caller",
-  "timestamp_utc": "2026-10-29T06:18:05.096668+00:00",
-  "branch": "feature/p1-v0-min",
-  "commit": "8401e9c",
+  "timestamp_utc": "2026-10-29T08:00:08.312220+00:00",
+  "branch": "feature/v0.1-decode",
+  "commit": "484eeb9",
   "status": "PASS-UNSIGNED",
   "commands": [
     {
       "command": "check_env",
       "exit_code": 0,
       "log": "check_env.log"
+    },
+    {
+      "command": "codegen-check",
+      "exit_code": 0,
+      "log": "codegen_check.log"
     },
     {
       "command": "cmake-configure",
@@ -35,15 +40,15 @@
     "so": [
       {
         "path": "build/napi/libentry.so",
-        "size": 15128,
-        "sha256": "d4ff70951c187440b703ab5d70ff5f93209ee9c9a17b7fd05b4584e93f2c5939"
+        "size": 230888,
+        "sha256": "a8b61f1f060bf18abcafb80c78c8ba83daa99f9532a0f1e1dfb6e84d8aa3d521"
       }
     ],
     "hap": [
       {
         "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
-        "size": 1390781,
-        "sha256": "8914d1d6ecfbd46f5050f396dcc6250ddd26b0d46c9429de029b047e57544b11",
+        "size": 1610530,
+        "sha256": "43a58a1d1537ed1ed2a085c993cbe21984cb798b0af0d903eeffab912a7110d0",
         "signed": false
       }
     ]

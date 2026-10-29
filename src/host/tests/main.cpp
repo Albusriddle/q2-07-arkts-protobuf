@@ -12,6 +12,7 @@ int main() {
     q207::test::suite_vectors();
     q207::test::suite_tape();
     q207::test::suite_decode();
+    q207::test::suite_object_model();
   } catch (const std::exception& e) {
     std::fprintf(stderr, "UNCAUGHT EXCEPTION: %s\n", e.what());
     return 2;

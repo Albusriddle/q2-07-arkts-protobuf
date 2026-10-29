@@ -11,7 +11,7 @@
 ## 一行结论
 
 在 host 上把 `.proto → 解码(POD) → tape → materializer` 这条链路**跑通并判否**了：
-38/38 条 W0 golden wire 向量、425 条断言、25/25 对象图差分、22/22 字节回归、
+38/38 条 W0 golden wire 向量、433 条断言、25/25 对象图差分、22/22 字节回归、
 8,178 条消息的 tape→对象重建与 C++ 对象图**逐字节一致**；单条 100 MB 类数据卡的
 wire 解码约 0.57–0.65 GB/s（host，参考实现）。**设备侧仍未测。**
 
@@ -22,7 +22,7 @@ wire 解码约 0.57–0.65 GB/s（host，参考实现）。**设备侧仍未测�
 | 一键构建+测试+基准+差分+证据 | `scripts/build_host.sh` | **exit 0** |
 | C++ wire reader / 解码 / tape / 基准 | `src/host/decoder`、`src/host/tape`、`src/host/bench` | **built** |
 | TS 参考 materializer | `src/host/materializer/materializer.ts` | **runs under node 24 type-stripping** |
-| 单元测试（含 38 向量） | `src/host/tests` | **425 passed / 0 failed** |
+| 单元测试（含 38 向量） | `src/host/tests` | **433 passed / 0 failed** |
 | 差分 harness（protobufjs 7.6.5） | `src/host/ts/*.mjs` | **25 cases PASS** |
 | 基准 CSV（含卡大小+sha256） | `evidence/host/host_bench.csv` | **30 行数据 + 表头** |
 | 差分报告 | `evidence/host/differential.json` | **ok: true** |
@@ -73,8 +73,7 @@ wire 解码约 0.57–0.65 GB/s（host，参考实现）。**设备侧仍未测�
 
 ## 没证明什么（明确边界）
 
-- **没有设备数据**：无板、无 ArkTS 运行时、无 NAPI、无真机 GC/CPU；本切片不碰
-  `repo/app/**` 与 `repo/host/napi/**`。
+- **没有设备数据**：无板、无 ArkTS 运行时、无 NAPI 执行、无真机 GC/CPU。V0.1 例外：decoder 子集被编译进 app NAPI `.so`，但仍未在设备上执行；见 `docs/v0.1-decode.md`。
 - **没有 ASan/UBSan**："先校验后分配"是用**插桩计数器 + 覆写全局 `operator new`** 断言的，
   不是 sanitizer 证明；C++ ASan 设备版仍 `BLOCKED`。
 - **没有 codegen**：`decoder/decode_user.cpp` 是手写的"生成器形状"代码；`.proto → IR → 模板`
