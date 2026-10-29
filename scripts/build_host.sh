@@ -34,7 +34,14 @@ run_logged() {
   cat "$log"
   return $rc
 }
-now_ms() { date +%s%3N 2>/dev/null || python -c 'import time;print(int(time.time()*1000))'; }
+now_ms() {
+  local t
+  t="$(date +%s%3N 2>/dev/null || true)"
+  case "$t" in
+    ''|*[!0-9]*) python -c 'import time;print(int(time.time()*1000))' ;;
+    *) printf '%s\n' "$t" ;;
+  esac
+}
 
 # run_step <name> <command-description> <function...>
 # records name / command description / exit code / duration into the manifest

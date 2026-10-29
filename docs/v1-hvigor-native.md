@@ -12,7 +12,7 @@
 | `scripts/build_hap.sh` | 新增一键脚本（只调 hvigor） | 复跑入口，替代手工两条命令 |
 | `app/entry/libs/arm64-v8a/libentry.so` | **删除**（手工拷贝已无必要） | 避免 HAP 里出现两份 `.so` |
 
-> NAPI 源文件仍保留在 `host/napi/entry.cpp`（v0 的旁路构建仍在引用它），`app/entry/src/main/cpp/CMakeLists.txt` 通过相对路径引用同一份源码，**不复制、不改两份**。等真正的 decoder 落地时再把源文件迁进 `app/entry/src/main/cpp/`。
+> NAPI 源文件仍保留在 `host/napi/entry.cpp`（v0 的旁路构建仍在引用它），`app/entry/src/main/cpp/CMakeLists.txt` 使用 app 内的 `entry.cpp` 作为唯一 canonical 源；`host/napi/CMakeLists.txt` 反过来引用这份 app 源，不再保留第二份源码。
 
 ## 2. 结果（E2：本机实测）
 
@@ -21,10 +21,10 @@
 | 产物 | 大小 | 说明 |
 |---|---:|---|
 | `libentry.so`（hvigor 构建，未 strip） | 35,008 B | `intermediates/cmake/default/obj/arm64-v8a/` |
-| `libentry.so`（strip 后进 HAP） | 6,520 B | `intermediates/stripped_native_libs/...` |
-| `entry-default-unsigned.hap` | **1,390,057 B** | 未签名 |
+| `libentry.so`（strip 后进 HAP） | 7,176 B | `intermediates/stripped_native_libs/...` |
+| `entry-default-unsigned.hap` | 以 `evidence/v0_build.json` 为准 | 未签名（HAP 大小随构建变化） |
 | HAP 内 `libs/arm64-v8a/libc++_shared.so` | 1,262,504 B | **新增**，见下方发现 |
-| HAP 内 `libs/arm64-v8a/libentry.so` | 6,520 B | 由 hvigor 产出 |
+| HAP 内 `libs/arm64-v8a/libentry.so` | 7,176 B | 由 hvigor 产出 |
 
 ## 3. 两个必须记录的发现
 

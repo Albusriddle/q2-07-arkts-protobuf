@@ -66,20 +66,21 @@ class Validator {
   }
 
  private:
-  Code mismatch(uint32_t w) {
+  Code mismatch(uint32_t field, uint32_t w) {
     if (strict_) return r_->fail_with(Code::WireTypeMismatch);
-    return r_->skip_field(0, w);
+    // Skip the actual field (not field 0): a group end must match its start.
+    return r_->skip_field(field, w);
   }
 
   Code read_known(const Spec& spec, uint32_t w) {
     const std::string kind = spec.kind;
     if (kind == "int32") {
-      if (w != kWireVarint) return mismatch(w);
+      if (w != kWireVarint) return mismatch(spec.number, w);
       uint64_t v = 0;
       return r_->read_varint(&v);
     }
     if (kind == "string") {
-      if (w != kWireLength) return mismatch(w);
+      if (w != kWireLength) return mismatch(spec.number, w);
       const uint8_t* p = nullptr;
       uint32_t n = 0;
       return r_->read_string_view(&p, &n, r_->limits().max_string_bytes);
@@ -89,12 +90,12 @@ class Validator {
         std::vector<uint32_t> tmp;
         return r_->read_packed_fixed32(&tmp, r_->limits().max_repeated_elements);
       }
-      if (w != kWireFixed32) return mismatch(w);
+      if (w != kWireFixed32) return mismatch(spec.number, w);
       uint32_t v = 0;
       return r_->read_fixed32(&v);
     }
     if (kind == "message") {
-      if (w != kWireLength) return mismatch(w);
+      if (w != kWireLength) return mismatch(spec.number, w);
       uint64_t cap = std::min<uint64_t>(static_cast<uint64_t>(r_->remaining()),
                                         r_->limits().max_message_bytes);
       Code e = r_->enter_length(cap);
@@ -104,7 +105,7 @@ class Validator {
       return r_->leave();
     }
     if (kind == "map") {
-      if (w != kWireLength) return mismatch(w);
+      if (w != kWireLength) return mismatch(spec.number, w);
       uint64_t cap = std::min<uint64_t>(static_cast<uint64_t>(r_->remaining()),
                                         r_->limits().max_message_bytes);
       Code e = r_->enter_length(cap);

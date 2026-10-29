@@ -1,6 +1,6 @@
 # Host 垂直切片 v0：wire reader + tape + materializer + 差分/基准（HOST-ONLY）
 
-日期：2026-10-29 ｜ 分支：`feature/p1-v0-min` ｜ 本地执行，不 commit/push（由 Lead 统一提交）
+日期：2026-10-29 ｜ 分支：`feature/p1-v0-min` ｜ 已由 `d70f912` 提交（HOST-ONLY 独立纵切，不属于 V0 设备证据）
 范围：`repo/src/host/**`、`repo/scripts/build_host.sh`、`repo/bench/**`、`repo/evidence/host/**`
 
 > **本文件所有数字都是 HOST-ONLY**：在开发 PC 上用原生 host 编译器测得，**不是设备数据**，
@@ -11,7 +11,7 @@
 ## 一行结论
 
 在 host 上把 `.proto → 解码(POD) → tape → materializer` 这条链路**跑通并判否**了：
-38/38 条 W0 golden wire 向量、385 条断言、25/25 对象图差分、22/22 字节回归、
+38/38 条 W0 golden wire 向量、425 条断言、25/25 对象图差分、22/22 字节回归、
 8,178 条消息的 tape→对象重建与 C++ 对象图**逐字节一致**；单条 100 MB 类数据卡的
 wire 解码约 0.57–0.65 GB/s（host，参考实现）。**设备侧仍未测。**
 
@@ -22,7 +22,7 @@ wire 解码约 0.57–0.65 GB/s（host，参考实现）。**设备侧仍未测�
 | 一键构建+测试+基准+差分+证据 | `scripts/build_host.sh` | **exit 0** |
 | C++ wire reader / 解码 / tape / 基准 | `src/host/decoder`、`src/host/tape`、`src/host/bench` | **built** |
 | TS 参考 materializer | `src/host/materializer/materializer.ts` | **runs under node 24 type-stripping** |
-| 单元测试（含 38 向量） | `src/host/tests` | **385 passed / 0 failed** |
+| 单元测试（含 38 向量） | `src/host/tests` | **425 passed / 0 failed** |
 | 差分 harness（protobufjs 7.6.5） | `src/host/ts/*.mjs` | **25 cases PASS** |
 | 基准 CSV（含卡大小+sha256） | `evidence/host/host_bench.csv` | **30 行数据 + 表头** |
 | 差分报告 | `evidence/host/differential.json` | **ok: true** |
@@ -49,8 +49,8 @@ wire 解码约 0.57–0.65 GB/s（host，参考实现）。**设备侧仍未测�
    （magic/version/record size/crc/未对齐 root/越界 root/presence 位/oneof 位/blob 越界/
    values 越界/profile 未对齐/记录数撒谎/段未对齐）全部拒绝。
 5. **tape → 普通对象可重建**：`materializer.ts` 从 9,463,448 B tape 重建 8,178 个对象，
-   与 C++ norm dump **JSON 文本级完全一致**（sha256 `0640ce08…` 相同，0 处差异），26.4 ms
-   （≈309k users/s，host，仅供量级参考）。
+   与 C++ norm dump **JSON 文本级完全一致**（sha256 `0640ce08…` 相同，0 处差异），27.3 ms
+   （≈300k users/s，host，仅供量级参考；以 `evidence/host_slice.json` 为准）。
 6. **与 protobufjs 7.6.5 无未登记差异**：25 例语料上对象图 25/25 相等；
    按"wire 上真实出现过哪些字段"（presence 位）重建对象后重新 encode，22/22 **字节完全一致**；
    仅 3 例有**已登记**差异（重复 map key 折叠、非最短 varint 规范化、未知字段按设计丢弃）。

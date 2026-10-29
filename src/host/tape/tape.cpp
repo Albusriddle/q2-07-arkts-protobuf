@@ -252,7 +252,7 @@ uint32_t section_crc(const uint8_t* data, size_t size, const Header& h) {
   return crc;
 }
 
-VerifyReport verify(const uint8_t* data, size_t size) {
+VerifyReport verify(const uint8_t* data, size_t size, const Limits& lim) {
   VerifyReport rep;
   rep.total_bytes = size;
   auto bad = [&](const char* what) {
@@ -290,6 +290,10 @@ VerifyReport verify(const uint8_t* data, size_t size) {
   if (h.user_record_size != kUserRecordSize) return bad("E_TAPE_USER_RECORD_SIZE");
   if (h.profile_record_size != kProfileRecordSize) return bad("E_TAPE_PROFILE_RECORD_SIZE");
   if (h.presence_words != 1) return bad("E_TAPE_PRESENCE_WORDS");
+  if (h.roots_count > lim.max_objects) return bad("E_TAPE_ROOTS_BUDGET");
+  if (h.tape_bytes > lim.max_tape_bytes) return bad("E_TAPE_TAPE_BUDGET");
+  if (h.blob_bytes > lim.max_blob_bytes) return bad("E_TAPE_BLOB_BUDGET");
+  if (h.values_bytes > lim.max_values_bytes) return bad("E_TAPE_VALUES_BUDGET");
 
   // section bounds + alignment
   if (h.roots_off < kHeaderBytes || h.roots_off % 8 != 0) return bad("E_TAPE_ROOTS_OFF");
@@ -301,6 +305,20 @@ VerifyReport verify(const uint8_t* data, size_t size) {
   if (!range_ok(h.blob_off, h.blob_bytes, 0, size)) return bad("E_TAPE_BLOB_RANGE");
   if (h.values_off % 8 != 0) return bad("E_TAPE_VALUES_OFF_ALIGN");
   if (!range_ok(h.values_off, h.values_bytes, 0, size)) return bad("E_TAPE_VALUES_RANGE");
+
+  // Section order: header | roots | tape | blob | values, no overlap.
+  {
+    const uint64_t roots_end = static_cast<uint64_t>(h.roots_off) +
+                               static_cast<uint64_t>(h.roots_count) * 4;
+    const uint64_t tape_end = static_cast<uint64_t>(h.tape_off) + h.tape_bytes;
+    const uint64_t blob_end = static_cast<uint64_t>(h.blob_off) + h.blob_bytes;
+    const uint64_t values_end = static_cast<uint64_t>(h.values_off) + h.values_bytes;
+    if (h.roots_off != kHeaderBytes) return bad("E_TAPE_ROOTS_OFF");
+    if (roots_end > h.tape_off) return bad("E_TAPE_SECTION_ORDER_ROOTS_TAPE");
+    if (tape_end > h.blob_off) return bad("E_TAPE_SECTION_ORDER_TAPE_BLOB");
+    if (blob_end > h.values_off) return bad("E_TAPE_SECTION_ORDER_BLOB_VALUES");
+    if (values_end > size) return bad("E_TAPE_SECTION_END");
+  }
 
   // crc32
   uint32_t crc = 0;
@@ -384,10 +402,11 @@ VerifyReport verify(const uint8_t* data, size_t size) {
 }
 
 // ---- reader -------------------------------------------------------------
-Reader::Reader(const uint8_t* data, size_t size) : data_(data), size_(size) {}
+Reader::Reader(const uint8_t* data, size_t size, const Limits& limits)
+    : data_(data), size_(size), lim_(limits) {}
 
 Code Reader::load() {
-  VerifyReport rep = verify(data_, size_);
+  VerifyReport rep = verify(data_, size_, lim_);
   if (!rep.ok) return Code::Internal;
   h_ = rep.header;
   loaded_ = true;
@@ -418,6 +437,7 @@ Code Reader::user_at(uint32_t rec_off, pod::User* out) const {
 
   const uint32_t tag_count = get_u32(rec + 32);
   const uint32_t tag_off = get_u32(rec + 36);
+  if (tag_count > lim_.max_repeated_elements) return Code::FieldBudget;
   out->tags.reserve(tag_count);
   for (uint32_t i = 0; i < tag_count; ++i) {
     const uint8_t* slot = data_ + h_.values_off + tag_off + i * kTagSlotBytes;
@@ -438,6 +458,7 @@ Code Reader::user_at(uint32_t rec_off, pod::User* out) const {
 
   const uint32_t score_count = get_u32(rec + 64);
   const uint32_t score_off = get_u32(rec + 68);
+  if (score_count > lim_.max_repeated_elements) return Code::FieldBudget;
   out->scores.reserve(score_count);
   for (uint32_t i = 0; i < score_count; ++i) {
     const uint8_t* slot = data_ + h_.values_off + score_off + i * kScoreSlotBytes;

@@ -19,7 +19,7 @@
 ## 重要限制
 
 - **不可安装**：根 CA 是本地自签的，不在设备信任根内；且没有设备 UDID，无法签 debug profile。签出来的 HAP 只能**本地验签**，不能上真机（详见 `docs/v0-signing.md` §4）。
-- 口令 `Q207Local#2026` 是**本地测试值**，硬编码在 `scripts/sign_hap.sh` 里；任何发布用途都必须换掉并改由密钥管理提供。
+- 签名口令**不入库**：通过 `Q207_SIGN_STORE_PWD` 环境变量或 gitignored `signing/.local_pwd` 提供；任何发布用途都必须改用密钥管理系统。
 - 重新生成：`bash scripts/sign_hap.sh --force`（删掉生成的密钥/证书/profile/日志并重建，保留本 README）；日常重跑 `bash scripts/sign_hap.sh`（复用 p12，只重建 profile 与 signed HAP）。
 
 ## 提交前自检

@@ -77,5 +77,7 @@
     "ping/add 真机返回",
     "任何性能数字"
   ],
-  "device": "none: hdc list targets = [Empty]"
+  "device": "none: hdc list targets = [Empty]",
+  "historical": true,
+  "current_artifact_note": "This is the native-integration snapshot; use evidence/v0_build.json and evidence/sign_check.json for current HAP bytes."
 }

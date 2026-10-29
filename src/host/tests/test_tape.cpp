@@ -165,6 +165,22 @@ void suite_tape() {
       w.add_user(make_min_user());
       good = w.finish();
     }
+    {
+      // roots section may not overlap the tape section
+      std::vector<uint8_t> m = good;
+      tape::Header h = tape::parse_header(m.data(), m.size());
+      put_u32(&m, 40, h.roots_off);  // tape_off = roots_off -> overlap
+      refresh_crc(&m);
+      TCHECK(verify_fails_with(m, "E_TAPE_SECTION_ORDER_ROOTS_TAPE"));
+    }
+    {
+      // tape section may not overlap the blob section
+      std::vector<uint8_t> m = good;
+      tape::Header h = tape::parse_header(m.data(), m.size());
+      put_u32(&m, 48, h.tape_off);  // blob_off = tape_off -> overlap
+      refresh_crc(&m);
+      TCHECK(verify_fails_with(m, "E_TAPE_SECTION_ORDER_TAPE_BLOB"));
+    }
     TCHECK(verify_fails_with(std::vector<uint8_t>(good.begin(), good.begin() + 8), "E_TAPE_SIZE"));
     {
       std::vector<uint8_t> m = good;

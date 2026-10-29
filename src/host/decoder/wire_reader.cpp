@@ -107,6 +107,11 @@ Code Reader::read_tag(uint32_t* field, uint32_t* wire) {
     error_offset_ = start;
     return fail(Code::FieldZero);
   }
+  // Protobuf field numbers are limited to 2^29-1 (the tag itself may use 32 bits).
+  if (f > 0x1FFFFFFFu) {
+    error_offset_ = start;
+    return fail(Code::FieldRange);
+  }
   if (w == 6 || w == 7) {
     error_offset_ = start;
     return fail(Code::WireTypeInvalid);
