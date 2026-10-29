@@ -1,13 +1,13 @@
 {
   "schema": "q207.v0.artifact_check/1",
-  "generated_utc": "2026-10-29T06:19:07.024485+00:00",
+  "generated_utc": "2026-10-29T06:24:43.163398+00:00",
   "generator": {
     "script": "scripts/inspect_hap.py",
     "python": "3.13.0"
   },
   "repo": {
     "branch": "feature/p1-v0-min",
-    "commit": "8401e9c",
+    "commit": "388ec6d",
     "root": "D:/DSHws4TSCsingle/repo"
   },
   "mode": "read-only: no rebuild, no re-sign, no patch, no write into the HAP",
