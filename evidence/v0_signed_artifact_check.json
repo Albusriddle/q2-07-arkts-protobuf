@@ -1,0 +1,238 @@
+{
+  "schema": "q207.v0.artifact_check/1",
+  "generated_utc": "2026-10-29T06:24:43.401810+00:00",
+  "generator": {
+    "script": "scripts/inspect_hap.py",
+    "python": "3.13.0"
+  },
+  "repo": {
+    "branch": "feature/p1-v0-min",
+    "commit": "388ec6d",
+    "root": "D:/DSHws4TSCsingle/repo"
+  },
+  "mode": "read-only: no rebuild, no re-sign, no patch, no write into the HAP",
+  "input": {
+    "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
+    "exists": true,
+    "size": 1455119,
+    "sha256": "8802b3ba50b4fce893f060861dffe14a8bd0dc749f8a3bc1b3fb86b2d1128b7f",
+    "mtime_utc": "2026-10-29T06:20:37.647476+00:00"
+  },
+  "container": {
+    "is_zip": true,
+    "crc_check": "ok",
+    "entry_count": 16,
+    "entries": [
+      {
+        "name": ".pages.info",
+        "size": 160,
+        "compressed": 160
+      },
+      {
+        "name": "ets/modules.abc",
+        "size": 12596,
+        "compressed": 12596
+      },
+      {
+        "name": "ets/sourceMaps.map",
+        "size": 3037,
+        "compressed": 3037
+      },
+      {
+        "name": "ets/types/libentry/oh-package.json5",
+        "size": 77,
+        "compressed": 77
+      },
+      {
+        "name": "libs/arm64-v8a/libc++_shared.so",
+        "size": 1262504,
+        "compressed": 1262504
+      },
+      {
+        "name": "libs/arm64-v8a/libentry.so",
+        "size": 7176,
+        "compressed": 7176
+      },
+      {
+        "name": "module.json",
+        "size": 1587,
+        "compressed": 1587
+      },
+      {
+        "name": "pack.info",
+        "size": 655,
+        "compressed": 655
+      },
+      {
+        "name": "pkgSdkInfo.json",
+        "size": 197,
+        "compressed": 197
+      },
+      {
+        "name": "resources.index",
+        "size": 1162,
+        "compressed": 1162
+      },
+      {
+        "name": "resources/base/media/background.png",
+        "size": 70283,
+        "compressed": 70283
+      },
+      {
+        "name": "resources/base/media/foreground.png",
+        "size": 9325,
+        "compressed": 9325
+      },
+      {
+        "name": "resources/base/media/layered_image.json",
+        "size": 81,
+        "compressed": 81
+      },
+      {
+        "name": "resources/base/media/startIcon.png",
+        "size": 20093,
+        "compressed": 20093
+      },
+      {
+        "name": "resources/base/profile/backup_config.json",
+        "size": 29,
+        "compressed": 29
+      },
+      {
+        "name": "resources/base/profile/main_pages.json",
+        "size": 23,
+        "compressed": 23
+      }
+    ]
+  },
+  "module_manifest": {
+    "present": true,
+    "size": 1587,
+    "sha256": "db7e9bd2a1ce87c6d544822d07eb71de417627764411062397b1942282bb2868",
+    "missing_keys": [],
+    "empty_keys": [],
+    "bundle_name": "com.example.q207",
+    "version_name": "1.0.0",
+    "version_code": 1000000,
+    "compile_sdk_version": "6.1.1.125",
+    "compile_sdk_type": "HarmonyOS",
+    "build_mode": "debug",
+    "min_api_version_raw": 60101024,
+    "target_api_version_raw": 60101024,
+    "module_name": "entry",
+    "module_type": "entry",
+    "device_types": [
+      "phone",
+      "tablet",
+      "2in1",
+      "wearable"
+    ],
+    "virtual_machine": "ark24.0.0.0",
+    "abilities": [
+      "EntryAbility"
+    ],
+    "main_element": "EntryAbility"
+  },
+  "native_lib": {
+    "entry": "libs/arm64-v8a/libentry.so",
+    "present": true,
+    "bundled_by_abi": {
+      "arm64-v8a": [
+        "libs/arm64-v8a/libc++_shared.so",
+        "libs/arm64-v8a/libentry.so"
+      ]
+    },
+    "bundled_count": 2,
+    "size": 7176,
+    "sha256": "3dd94a91055549ea05ec43126bb136c9e3c28aca70174d7e441614d3197b8c30",
+    "elf": {
+      "is_elf": true,
+      "magic": "7f454c46",
+      "class": "ELF64",
+      "endian": "little",
+      "type": "DYN",
+      "machine": "AArch64",
+      "e_machine": 183,
+      "e_type": 3
+    },
+    "needed": [
+      "libace_napi.z.so",
+      "libc++_shared.so",
+      "libc.so"
+    ],
+    "soname": "libentry.so",
+    "needed_resolution": {
+      "libace_napi.z.so": "system_provided_assumed",
+      "libc++_shared.so": "bundled",
+      "libc.so": "system_provided_assumed"
+    }
+  },
+  "signature": {
+    "signed": true,
+    "signature_entries": [],
+    "checked_for": [
+      "META-INF/*",
+      "*.SF",
+      "*.RSA",
+      "*.EC",
+      "*.DSA",
+      "*.P7B",
+      "*signature*",
+      "hap-sign-tool verify-app"
+    ],
+    "evidence": "hap-sign-tool verify-app exit=0, digest=SHA-256 (reported by verify-app); sign_check hash matches this HAP",
+    "source": "sign_check+verify-app",
+    "note": "signed is derived from zip entries OR a matching verify-app result; 'false' is never a placeholder and 'true' is never assumed"
+  },
+  "cross_checks": {
+    "build/napi/libentry.so": {
+      "exists": true,
+      "size": 15128,
+      "sha256": "d4ff70951c187440b703ab5d70ff5f93209ee9c9a17b7fd05b4584e93f2c5939",
+      "identical_to_hap_entry": false
+    },
+    "app/entry/libs/arm64-v8a/libentry.so": {
+      "exists": false
+    },
+    "size_ratio_vs_repo_copy": 0.474,
+    "likely_stripped": true
+  },
+  "api_alignment": {
+    "sdk_api_version": "24",
+    "sdk_version": "6.1.1.125",
+    "hap_compile_sdk_version": "6.1.1.125",
+    "hap_min_api": {
+      "raw": 60101024,
+      "decoded": "6.1.1",
+      "build": 24,
+      "confidence": "INFERRED",
+      "note": "packed <major><minor:02><patch:02><build:03>; not DOC_VERIFIED"
+    },
+    "hap_target_api": {
+      "raw": 60101024,
+      "decoded": "6.1.1",
+      "build": 24,
+      "confidence": "INFERRED",
+      "note": "packed <major><minor:02><patch:02><build:03>; not DOC_VERIFIED"
+    },
+    "sdk_package": "D:/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/ets/oh-uni-package.json",
+    "min_api_matches_sdk_version": true
+  },
+  "status": "PASS",
+  "failures": [],
+  "warnings": [
+    "SDK apiVersion=24 and compileSdkVersion=6.1.1.125: this artifact targets the API 23+/6.x generation, NOT the conservative 'API 18 + NAPI-only' baseline recorded in the V0 plan; V0 owner must confirm the target device generation in writing"
+  ],
+  "unverified": [
+    "NEEDED libace_napi.z.so, libc.so are assumed to be provided by the target image; not verified on a device",
+    "signature is cryptographically verified via sign_check/verify-app, but installability on a stock device / trusted root was NOT checked",
+    "libs/arm64-v8a/libentry.so is 7176 B while the repo copy is 15128 B (likely stripped); local callback names cannot be re-checked from the HAP copy",
+    "device install / launch / ping() / add() were NOT executed (read-only check, no hdc call in this script)",
+    "module.json minAPIVersion/targetAPIVersion decode is INFERRED from the packed integer layout, not from a documented mapping",
+    "ArkTS .d.ts wiring is tracked in docs/v0-dts-notes.md; this script does not re-run the ArkTS compiler",
+    "runtime loading of libs/arm64-v8a/libentry.so by the ArkTS runtime was not observed"
+  ],
+  "blocked": [
+    "no target device: evidence/env_check.json records board.status='no target' (hdc list targets empty)"
+  ]
+}

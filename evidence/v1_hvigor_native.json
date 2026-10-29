@@ -1,0 +1,84 @@
+{
+  "slice": "V1-hvigor-native: externalNativeOptions 接入，一键 assembleHap",
+  "timestamp_utc": "2026-10-29T05:11:06.186443Z",
+  "status": "PASS",
+  "commands": [
+    {
+      "command": "hvigorw assembleHap --mode module -p product=default -p buildMode=debug --no-daemon",
+      "cwd": "repo/app",
+      "exit_code": 0,
+      "log": "evidence/hvigor_native_build.log"
+    }
+  ],
+  "toolchain": {
+    "deveco_sdk": "D:/Program Files/Huawei/DevEco Studio/sdk/default/openharmony",
+    "api_version": "24",
+    "clang": "15.0.4 (OHOS dev)",
+    "cmake": "sdk native build-tools (3.16 baseline)",
+    "ninja": "sdk native build-tools"
+  },
+  "config_change": {
+    "file": "app/entry/build-profile.json5",
+    "added": {
+      "buildOption.externalNativeOptions": {
+        "path": "./src/main/cpp/CMakeLists.txt",
+        "abiFilters": [
+          "arm64-v8a"
+        ]
+      }
+    },
+    "cmake_entry": "app/entry/src/main/cpp/CMakeLists.txt",
+    "napi_source": "host/napi/entry.cpp (未移动，避免破坏 v0 旁路构建)"
+  },
+  "hvigor_stages_observed": [
+    "BuildNativeWithCmake",
+    "BuildNativeWithNinja",
+    "ProcessLibs",
+    "DoNativeStrip",
+    "CacheNativeLibs",
+    "PackageHap"
+  ],
+  "artifacts": {
+    "hap": {
+      "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
+      "size": 1390057,
+      "sha256": "d65c556a9a4cdd611b4a575d44f062071869149e8f76366a70e8d799c3d2fe45",
+      "signed": false
+    },
+    "native_built": {
+      "path": "app/entry/build/default/intermediates/cmake/default/obj/arm64-v8a/libentry.so",
+      "size": 35008,
+      "sha256": "ea54fcaa8cd6d96727f20925fbacd888b21ea43c950a33de2e5f7611b62b452c"
+    },
+    "native_stripped": {
+      "path": "app/entry/build/default/intermediates/stripped_native_libs/default/arm64-v8a/libentry.so",
+      "size": 6520,
+      "sha256": "72ef89e239bf45c31467088b5005a9177e3a63ebaf6682d58bda567f805ca517"
+    },
+    "hap_libs": {
+      "libs/arm64-v8a/libc++_shared.so": {
+        "size": 1262504,
+        "sha256": "388e0df23d7bfddc2ea01b4e87f8dc359e33df1a7a44705e0a672609ee45b2f9"
+      },
+      "libs/arm64-v8a/libentry.so": {
+        "size": 6520,
+        "sha256": "72ef89e239bf45c31467088b5005a9177e3a63ebaf6682d58bda567f805ca517"
+      }
+    }
+  },
+  "findings": [
+    "hvigor 现在自己构建并 strip .so（此前是旁路 cmake + 手工拷入 libs/）",
+    "HAP 体积从 127,070 B 增至 1,390,057 B：默认打包 libc++_shared.so（1,262,504 B）；若需控体积，应改 c++_static 或 vendor 内共享 STL（待决策）",
+    "app/entry/libs/arm64-v8a/libentry.so 的手工拷贝已不再需要（已改名 .manual-copy.bak，计划删除）"
+  ],
+  "not_claimed": [
+    "设备安装",
+    "启动",
+    "ping/add 真机返回",
+    "任何性能数字"
+  ],
+  "device": "none: hdc list targets = [Empty]",
+  "historical": true,
+  "current_artifact_note": "This is the native-integration snapshot; use evidence/v0_build.json and evidence/sign_check.json for current HAP bytes.",
+  "napi_source": "historical snapshot: host/napi/entry.cpp; canonical source is now app/entry/src/main/cpp/entry.cpp"
+}

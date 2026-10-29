@@ -1,0 +1,432 @@
+{
+  "scope": "HOST-ONLY",
+  "slice": "Q2-07 host vertical slice v0 (wire reader + tape + materializer + differential + bench)",
+  "device_measured": false,
+  "not_claimed": [
+    "device performance",
+    "1.5x",
+    "700ms"
+  ],
+  "explicitly_not_measured": [
+    "OpenHarmony / ArkTS runtime behaviour",
+    "NAPI bridge cost (c_call) and per-object construction cost (c_con)",
+    "device CPU / thermal / memory behaviour",
+    "any 1.5x speed-up or 700 ms end-to-end claim"
+  ],
+  "what_it_proves": [
+    "the wire reader's decision order (tag -> wire -> len<=remaining -> len<=cap -> alloc) is executable and judged by 38 W0 golden vectors",
+    "negative int32 (10-byte varint), non-shortest varint, packed/unpacked, map, oneof, proto3 optional decode correctly into POD",
+    "the row tape v0 layout round-trips, is byte-reproducible and has a verifier that rejects tampered buffers",
+    "tape -> plain-object materialization reproduces the C++ object graph exactly (8178 users, sha256 equality)",
+    "object graph and re-encoded bytes agree with protobufjs 7.6.5 on a 25-case corpus (no undocumented difference)"
+  ],
+  "toolchain": {
+    "kind": "msvc",
+    "compiler": "cl",
+    "compiler_version": "MSVC cl 19.44.35229",
+    "note": "native HOST compiler; NOT the OpenHarmony NDK cross-toolchain. Device-side C++/ASan builds remain BLOCKED (no board)."
+  },
+  "environment": {
+    "host_os": "Windows-11-10.0.22631-SP0",
+    "machine": "AMD64",
+    "cpu_count": 20,
+    "python": "3.13.0",
+    "node": "v24.18.0"
+  },
+  "git": {
+    "branch": "feature/p1-v0-min",
+    "head": "c0fc1388e1faf7b0f966d806670ab2f104abc6cd",
+    "dirty_files": 1,
+    "dirty_files_raw": 3,
+    "note": "source dirty files only; evidence outputs excluded (see dirty_files_raw)"
+  },
+  "steps": [
+    {
+      "step": "build",
+      "command": "native host compiler: cl/g++/clang++ over src/host/**, -O2, 3 binaries",
+      "exit_code": 0,
+      "duration_ms": 16156
+    },
+    {
+      "step": "unit-tests",
+      "command": "build/host/host_tests.exe (wire + 38 golden vectors + tape + decode)",
+      "exit_code": 0,
+      "duration_ms": 231
+    },
+    {
+      "step": "data-cards",
+      "command": "python bench/gen_cards.py --out bench/data",
+      "exit_code": 0,
+      "duration_ms": 2906
+    },
+    {
+      "step": "bench",
+      "command": "host_bench.exe --card bench/data/{s1_user_1kb,s3_100mb}.bin --reps 5 -> evidence/host/host_bench.csv",
+      "exit_code": 0,
+      "duration_ms": 8362
+    },
+    {
+      "step": "differential",
+      "command": "differential vs protobufjs 7.6.5 (gen_corpus + differential + materializer_check), Python golden fallback when unavailable",
+      "exit_code": 0,
+      "duration_ms": 1486
+    }
+  ],
+  "steps_all_zero": true,
+  "tests": {
+    "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
+    "passed": 425,
+    "failed": 0
+  },
+  "differential_mode": "protobufjs-7.6.5",
+  "differential": {
+    "scope": "HOST-ONLY",
+    "baseline": "protobufjs 7.6.5",
+    "schema": "proto/example.proto (q207.demo.User)",
+    "cases": 25,
+    "object_graph": {
+      "checked": 25,
+      "equal": 25,
+      "mismatches": []
+    },
+    "bytes": {
+      "checked": 22,
+      "identical": 22,
+      "explained_differences": [
+        {
+          "stem": "c22_map_dup_key",
+          "reason": "duplicate map key collapses to one entry; canonical re-encode writes 1 entry"
+        },
+        {
+          "stem": "c23_noncanonical_varint",
+          "reason": "non-shortest varint: a canonical encoder emits 1 byte instead of 2"
+        },
+        {
+          "stem": "c24_unknown_field",
+          "reason": "unknown field is discarded by design (proto3 default), so it is not re-emitted"
+        }
+      ],
+      "mismatches": []
+    },
+    "materializer": {
+      "checked": 25,
+      "equal": 25,
+      "mismatches": []
+    },
+    "cases_in_corpus": 25,
+    "tape_verified": 25,
+    "ok": true
+  },
+  "materializer": {
+    "scope": "HOST-ONLY",
+    "tape_file": "D:/DSHws4TSCsingle/repo/build/host/s1dump/s1_frame0.tape.bin",
+    "tape_bytes": 9463448,
+    "tape_sha256": "31cad95830b20e644bc54a51da943996db148ced304c5e8d37cfeed287d0bbb4",
+    "norm_file": "D:/DSHws4TSCsingle/repo/build/host/s1dump/s1_frame0.norm.json",
+    "norm_sha256": "0640ce0876a76ba50701d6b4f991c806e7e319347272aa385dd9f30f6dadfcdb",
+    "materialized_sha256": "0640ce0876a76ba50701d6b4f991c806e7e319347272aa385dd9f30f6dadfcdb",
+    "users": 8178,
+    "roots": 8178,
+    "materialize_ms": 29.939,
+    "users_per_s": 273159,
+    "json_bytes": 8997209,
+    "exact_text_match": true,
+    "graph_diffs": 0,
+    "first_diffs": [],
+    "ok": true
+  },
+  "bench": {
+    "s1_user_1kb": {
+      "scope": "HOST-ONLY",
+      "card_file": "bench/data/s1_user_1kb.bin",
+      "card_bytes": 8397700,
+      "card_sha256": "1bebc88aac56ecb9664941d14ad5de77103459232289717da8ef7a5e195cf247",
+      "payload_bytes": 8397696,
+      "frames": 1,
+      "messages": 8178,
+      "fields": 191858,
+      "reps": 5,
+      "compiler": "MSVC 19.44 (cl 1944)",
+      "host_os": "Windows (host native)",
+      "metrics": {
+        "wire_decode_mb_per_s": {
+          "value": "514.924396",
+          "unit": "MB/s (payload bytes/1e6 per s)"
+        },
+        "wire_decode_msg_per_s": {
+          "value": "501453.221000",
+          "unit": "messages/s"
+        },
+        "wire_decode_ns_per_msg": {
+          "value": "1994.203962",
+          "unit": "ns/message"
+        },
+        "wire_decode_median_ms": {
+          "value": "16.308600",
+          "unit": "ms/full card"
+        },
+        "tape_write_median_ms": {
+          "value": "100.525200",
+          "unit": "ms/full card (decode + tape write)"
+        },
+        "tape_write_only_median_ms": {
+          "value": "84.216600",
+          "unit": "ms/full card (derived: tape pass minus decode pass)"
+        },
+        "tape_write_only_ns_per_msg": {
+          "value": "10297.945708",
+          "unit": "ns/message (derived)"
+        },
+        "tape_write_ns_per_msg": {
+          "value": "12292.149670",
+          "unit": "ns/message"
+        },
+        "tape_bytes_total": {
+          "value": "9463448",
+          "unit": "bytes/full card"
+        },
+        "tape_bytes_per_msg": {
+          "value": "1157.183663",
+          "unit": "bytes/message"
+        },
+        "tape_first_frame_sha256": {
+          "value": "31cad95830b20e644bc54a51da943996db148ced304c5e8d37cfeed287d0bbb4",
+          "unit": "hex"
+        },
+        "card_payload_bytes": {
+          "value": "8397696",
+          "unit": "bytes"
+        },
+        "frames": {
+          "value": "1",
+          "unit": "count"
+        },
+        "messages": {
+          "value": "8178",
+          "unit": "count"
+        },
+        "fields": {
+          "value": "191858",
+          "unit": "count"
+        }
+      }
+    },
+    "s3_100mb": {
+      "scope": "HOST-ONLY",
+      "card_file": "bench/data/s3_100mb.bin",
+      "card_bytes": 105005840,
+      "card_sha256": "cbc9efa929665301bb81bdc4576f15f46c52dfed13028c9a15ba576f7be54715",
+      "payload_bytes": 105005440,
+      "frames": 100,
+      "messages": 102100,
+      "fields": 2393694,
+      "reps": 5,
+      "compiler": "MSVC 19.44 (cl 1944)",
+      "host_os": "Windows (host native)",
+      "metrics": {
+        "wire_decode_mb_per_s": {
+          "value": "597.274748",
+          "unit": "MB/s (payload bytes/1e6 per s)"
+        },
+        "wire_decode_msg_per_s": {
+          "value": "580748.500065",
+          "unit": "messages/s"
+        },
+        "wire_decode_ns_per_msg": {
+          "value": "1721.915769",
+          "unit": "ns/message"
+        },
+        "wire_decode_median_ms": {
+          "value": "175.807600",
+          "unit": "ms/full card"
+        },
+        "tape_write_median_ms": {
+          "value": "1184.805700",
+          "unit": "ms/full card (decode + tape write)"
+        },
+        "tape_write_only_median_ms": {
+          "value": "1008.998100",
+          "unit": "ms/full card (derived: tape pass minus decode pass)"
+        },
+        "tape_write_only_ns_per_msg": {
+          "value": "9882.449559",
+          "unit": "ns/message (derived)"
+        },
+        "tape_write_ns_per_msg": {
+          "value": "11604.365328",
+          "unit": "ns/message"
+        },
+        "tape_bytes_total": {
+          "value": "118217296",
+          "unit": "bytes/full card"
+        },
+        "tape_bytes_per_msg": {
+          "value": "1157.857943",
+          "unit": "bytes/message"
+        },
+        "tape_first_frame_sha256": {
+          "value": "0b0fc48b3c325aa45a7267daade822cec0f1f6bf0b6aaa0e3d1b2dbafcd66576",
+          "unit": "hex"
+        },
+        "card_payload_bytes": {
+          "value": "105005440",
+          "unit": "bytes"
+        },
+        "frames": {
+          "value": "100",
+          "unit": "count"
+        },
+        "messages": {
+          "value": "102100",
+          "unit": "count"
+        },
+        "fields": {
+          "value": "2393694",
+          "unit": "count"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "build/host/host_tests.exe": {
+      "bytes": 312832,
+      "sha256": "6d66b6785f89ef33c0a86f4e29e7bc2c6719f17166ca39e1239bacfcda23c623"
+    },
+    "build/host/host_decode_dump.exe": {
+      "bytes": 286208,
+      "sha256": "d05d0dc8a17edc31f42df0367178b9a2a450da2e2a0b72ee9341854233ca9b40"
+    },
+    "build/host/host_bench.exe": {
+      "bytes": 237056,
+      "sha256": "1b15c086cdc9944e75a50720ce042f57fd227ac6b3799994f7094654407d88d4"
+    },
+    "evidence/host/host_bench.csv": {
+      "bytes": 7311,
+      "sha256": "f9b30603be52a5232bb16f51b9ebe9f706bd4b1cd0cf40e281cfb9bdcde9ebd2"
+    },
+    "evidence/host/differential.json": {
+      "bytes": 918,
+      "sha256": "28f8d07812b91b5623d1af01e7862e0387a2f65e3a20ef1e7ea8b0b8b7a2b675"
+    },
+    "evidence/host/materializer_check.json": {
+      "bytes": 668,
+      "sha256": "0d1e600aac08b7810285c4acaa359c2c388f71d65073d5e3ae175bcc576ba7f6"
+    },
+    "evidence/host/corpus/corpus.json": {
+      "bytes": 12308,
+      "sha256": "1427ee0c9fc771a336ca5eb7614eb1627dbac2e14bca2e05ba85951a0b0c7622"
+    },
+    "evidence/host/corpus_cpp/meta.json": {
+      "bytes": 10964,
+      "sha256": "e0e80fde7e4b44bb759af233ec3b45acb849b6337410ee4d8e044a136563b455"
+    },
+    "bench/data/s1_user_1kb.bin": {
+      "bytes": 8397700,
+      "sha256": "1bebc88aac56ecb9664941d14ad5de77103459232289717da8ef7a5e195cf247"
+    },
+    "bench/data/s3_100mb.bin": {
+      "bytes": 105005840,
+      "sha256": "cbc9efa929665301bb81bdc4576f15f46c52dfed13028c9a15ba576f7be54715"
+    },
+    "build/host/s1dump/s1_frame0.tape.bin": {
+      "bytes": 9463448,
+      "sha256": "31cad95830b20e644bc54a51da943996db148ced304c5e8d37cfeed287d0bbb4"
+    },
+    "build/host/s1dump/s1_frame0.norm.json": {
+      "bytes": 8997209,
+      "sha256": "0640ce0876a76ba50701d6b4f991c806e7e319347272aa385dd9f30f6dadfcdb"
+    },
+    "scripts/build_host.sh": {
+      "bytes": 13506,
+      "sha256": "fce3b7469ed43bd0a2c3586da237bd88454cf38f006c2cb196751efcb0261a01"
+    },
+    "bench/gen_cards.py": {
+      "bytes": 5990,
+      "sha256": "55f97954db960783d39656b8ad554abd531b3285107338fefe7b7e0c4fe03606"
+    },
+    "src/host/materializer/materializer.ts": {
+      "bytes": 8582,
+      "sha256": "f9633d59d722c0a1dbde30e325d5eea08e522de73ac7bd9a93542b5284f083cb"
+    },
+    "src/host/tape/tape.h": {
+      "bytes": 6879,
+      "sha256": "59723ea7190a6406b56e0780845ce6ba1fc23d5b35e17ed0e58f32696b348bfd"
+    },
+    "src/host/tape/tape.cpp": {
+      "bytes": 19429,
+      "sha256": "53b0605d7f04acc0af94ea185a966b0287e7e9635557aadbfaeda25fb332b16d"
+    },
+    "src/host/decoder/wire_reader.h": {
+      "bytes": 5795,
+      "sha256": "0a0af47ebb4492c8d32843d0bf43d865740fb2254201abf5081d89a3b1691ade"
+    },
+    "src/host/decoder/wire_reader.cpp": {
+      "bytes": 11718,
+      "sha256": "1d0869c75b14b12af8912d396f6bde08fcf9c29d918137ca79091696ceef1ab7"
+    },
+    "src/host/decoder/decode_user.cpp": {
+      "bytes": 8617,
+      "sha256": "6cbbf0d4ac6f0e4f306bc301e5132c999d3b45e263ef0505e52a15758a4e2fc3"
+    },
+    "src/host/decoder/conformance.cpp": {
+      "bytes": 6281,
+      "sha256": "e74e5f552d9da8120a267556923a3a6ebc86f4594ccd37691be63c99a247c8ff"
+    },
+    "src/host/decoder/norm.cpp": {
+      "bytes": 4784,
+      "sha256": "0de5b1f289c1ab38b8b800c562877e136a535a9b2f578b4ed0a9c6ab2ef997bd"
+    },
+    "src/host/tests/test_wire.cpp": {
+      "bytes": 13990,
+      "sha256": "d7a17a0191dfb7123fe83eca30342df8372ec4b9535229cc20e2d70af6185d82"
+    },
+    "src/host/tests/test_vectors.cpp": {
+      "bytes": 4251,
+      "sha256": "35c203f02e548ba6930de272947f9dabcebdec714a4f9129848e22d894cca6f3"
+    },
+    "src/host/tests/test_tape.cpp": {
+      "bytes": 11620,
+      "sha256": "18ba0a8f1b4bfa7fa0785b812a38a1ea965140641bab25b48efd6ef69d736f99"
+    },
+    "src/host/tests/test_decode.cpp": {
+      "bytes": 9057,
+      "sha256": "86867caa702cbe73f717984c3b82b4d19bcd97a31ff643be6e3a94ce3f39661b"
+    },
+    "src/host/ts/gen_corpus.mjs": {
+      "bytes": 6002,
+      "sha256": "574e172ea620e348299385d2d4b1dd8444f4d36d55140e408bc8036cf1e71bb2"
+    },
+    "src/host/ts/differential.mjs": {
+      "bytes": 5737,
+      "sha256": "6fb7133a09b506708170d136674eb31d1c580caff23d886ac452e6f4dc09bb20"
+    },
+    "src/host/ts/materializer_check.mjs": {
+      "bytes": 2746,
+      "sha256": "92b648ad0bc0070c7f2e8e54c51888144fefa30a049576d850bfa093c86c55e1"
+    }
+  },
+  "commands": [
+    "bash repo/scripts/build_host.sh",
+    "python repo/bench/gen_cards.py --out repo/bench/data",
+    "repo/build/host/host_tests.exe",
+    "repo/build/host/host_bench.exe --card bench/data/s1_user_1kb.bin --dataset s1_user_1kb --reps 5",
+    "repo/build/host/host_bench.exe --card bench/data/s3_100mb.bin --dataset s3_100mb --reps 5",
+    "node repo/src/host/ts/gen_corpus.mjs repo/evidence/host/corpus",
+    "repo/build/host/host_decode_dump.exe --corpus repo/evidence/host/corpus --out repo/evidence/host/corpus_cpp --meta repo/evidence/host/corpus_cpp/meta.json",
+    "node repo/src/host/ts/differential.mjs --corpus repo/evidence/host/corpus --cpp repo/evidence/host/corpus_cpp --out repo/evidence/host/differential.json",
+    "node repo/src/host/ts/materializer_check.mjs --tape build/host/s1dump/s1_frame0.tape.bin --norm build/host/s1dump/s1_frame0.norm.json --out repo/evidence/host/materializer_check.json"
+  ],
+  "results": {
+    "build_and_tests_ok": true,
+    "golden_vectors_ok": true,
+    "differential_ok": true,
+    "materializer_ok": true,
+    "bench_csv": "evidence/host/host_bench.csv"
+  },
+  "limitations": [
+    "no ASan/UBSan run in this slice: the allocation-order property is asserted with an instrumented counter and an overridden global operator new, not with a sanitizer",
+    "the 100 MB S3-like card is a synthetic data card, not a real application trace",
+    "map iteration order, unknown-field retention and protobufjs 8.x semantics are out of scope for v0",
+    "oneof is decoded keep-all (protobufjs 7.6.5 behaviour); the spec/last-wins arm only records the discriminator"
+  ]
+}
