@@ -33,8 +33,8 @@
     "map_reject_dangerous": true
   },
   "host_evidence": {
-    "head": "516ffdba35dac3887d8b8772c24f3fc641b608f1",
-    "dirty_files": 34,
+    "head": "f2732f235934c5a1ba43cd6f9dc7c76c93911241",
+    "dirty_files": 1,
     "tests": {
       "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
       "passed": 464,
