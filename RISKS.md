@@ -42,3 +42,10 @@
 
 - 允许：本地工作区写代码、建分支、构建、跑本机测试。
 - 禁止：采购、真实设备、远程推送、公开仓库、提交申报、伪造设备/性能证据。
+
+## R7 hvigor 原生构建后 HAP 体积 +1.26 MB（2026-10-29 新增）
+
+- 现象：接入 `externalNativeOptions` 后，hvigor 默认按 `c++_shared` 打包 `libc++_shared.so`（1,262,504 B），HAP 由 127,070 B 增至 1,390,057 B。
+- 影响：若以 HAR/HSP 分发，每个包都背这个成本；若改 `c++_static`，多 native 库时 STL 重复且跨库 `std::string` 有 ABI 风险。
+- 现状：**未决策**。证据见 `evidence/v1_hvigor_native.json`、文档 `docs/v1-hvigor-native.md` §3.1。
+- 处置：在 HAR 承载 native 的验证（W1 必做）之前先定；不阻塞当前 host 切片与 V0 设备侧。

@@ -49,6 +49,14 @@ scripts/               codegen / validation / CI helpers (planned)
 docs/                  feasibility, W0 summary, assumptions
 ```
 
+## 构建（一键，含 native）
+
+```bash
+bash scripts/build_hap.sh     # hvigor 通过 externalNativeOptions 自己跑 CMake/Ninja
+```
+
+> 2026-10-29 起 native 构建已接进 hvigor（见 `docs/v1-hvigor-native.md`、`evidence/v1_hvigor_native.json`）；`scripts/build.sh` 的旁路构建保留给 host 侧工具链使用。
+
 ## Next 7 days (host-only, no board required)
 
 1. lock `protobufjs` 7.6.5 vs 8.x and the target API/ArkTS generation;
