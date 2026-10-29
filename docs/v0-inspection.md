@@ -15,9 +15,9 @@
 
 ## 0. 一句话结论
 
-**两个产物都通过结构检查**（`inspect_so.sh` exit 0，`inspect_hap.py` exit 0），**但都还不能上真实设备**：HAP 未签名，且没有目标板；`libc++_shared.so` / `libace_napi.z.so` 依赖系统镜像提供，未在设备侧验证。
+**unsigned / signed 两个产物都通过结构检查**（`inspect_so.sh` exit 0，`inspect_hap.py` exit 0）；unsigned HAP 未签名，signed HAP 仅本地自签且 `installable=false`。没有目标板，设备安装/启动/运行未验证；`libace_napi.z.so`/`libc.so` 仍假设由系统镜像提供。
 
-**本次检查新发现 3 个需要 V0 owner 决策的风险**（见 §4）：`libc++_shared.so` 未打包、SDK/HAP 是 **API 24** 而非方案基线的 API 18/23、HAP 未签名。
+**本次检查记录的 3 个风险**（见 §4）：SDK/HAP 是 **API 24** 而非方案基线的 API 18/23；HAP 签名不可被设备信任（unsigned + 本地自签）；`libc++_shared.so` 已打包（1,262,504 B）但设备 `dlopen` 未验证。
 
 ---
 
@@ -163,12 +163,12 @@ python scripts/inspect_hap.py --wait 90     # HAP 正在被并发构建重写时
 
 ## 4. 检查发现的三个风险（交给 V0 owner）
 
-### R1｜`libc++_shared.so` 是 NEEDED，但没有打包进 HAP
+### R1｜`libc++_shared.so` 已打包，体积 +1.26 MB
 
-- 事实：`.so` 的 `DT_NEEDED` 含 `libc++_shared.so`（因为 `OHOS_STL=c++_shared`）；HAP 的 `libs/` 下**只有** `libentry.so`。
-- 含义：加载 `.so` 时，`libc++_shared.so` 只能由**系统镜像**提供。若目标镜像没有该库，安装成功但 `dlopen` 失败，表现为 `import libentry.so` 直接报错。
-- 状态：**未在设备验证**。脚本已把它记为 `needed_resolution.libc++_shared.so = "system_provided_assumed"` 并写入 `unverified`，同时进 `warnings`。
-- 处置（板到位后二选一）：① 证伪/证实系统是否提供，实测 `import`；② 改 `OHOS_STL=c++_static` 或把 `libc++_shared.so` 一并拷入 `libs/arm64-v8a/`。**本次不改构建脚本。**
+- 事实：`.so` 的 `DT_NEEDED` 含 `libc++_shared.so`（因为 `OHOS_STL=c++_shared`）；当前 HAP 的 `libs/arm64-v8a/` 同时包含 `libentry.so`（7,176 B）和 `libc++_shared.so`（1,262,504 B）。
+- 含义：不再依赖目标镜像额外提供 STL；代价是每个 HAP 多约 1.26 MB。这是分发形态（HAR/HSP）与 `c++_shared`/`c++_static` 决策的输入。
+- 状态：**已打包并记录**；设备侧 `dlopen` 仍未验证。`needed_resolution.libc++_shared.so` 现为 `bundled`，不再标 `system_provided_assumed`。
+- 处置：在 HAR 承载 native 前决定 `c++_shared` vs `c++_static`；若保持 shared，保留当前打包方式。
 
 ### R2｜产物是 API 24，与方案基线的 API 18/23 不一致
 
@@ -192,7 +192,7 @@ python scripts/inspect_hap.py --wait 90     # HAP 正在被并发构建重写时
 | # | UNVERIFIED | 为什么无法确认 | 何时能确认 |
 |---:|---|---|---|
 | U1 | 设备安装 / 启动 / `ping()` / `add()` 行为 | 无目标板（`evidence/env_check.json` 记录 `board.status="no target"`），且本脚本不调用 `hdc` | 板 + 签名后 |
-| U2 | `libace_napi.z.so`、`libc++_shared.so`、`libc.so` 是否由目标镜像提供 | 纯静态检查无法回答；只能在设备上 `dlopen` 实测 | 板到位 |
+| U2 | `libace_napi.z.so`、`libc++_shared.so`、`libc.so` 的设备侧解析/`dlopen` | `libc++_shared.so` 已打包；`libace_napi.z.so`/`libc.so` 仍假设由系统镜像提供，纯静态检查无法确认 | 板到位 |
 | U3 | 签名证书链 / profile 有效期 / 权限 | 当前无签名；脚本也不做密码学验签 | 拿到签名材料后用 `hap-sign-tool verify-app` |
 | U4 | `minAPIVersion`/`targetAPIVersion` 的语义 | `60101024` 的解码是 `INFERRED`（与 `5.0.0.12→50000012` 的已知编码类比所得），无官方映射文档入库 | 官方文档或发榜方确认 |
 | U5 | ArkTS 侧 `import libentry.so` 的类型检查 | 打包物里有 `ets/types/libentry/oh-package.json5`，但 `.d.ts` 是否被 ArkTS 类型系统接受、是否清掉了构建 warning，本脚本不解析 `.abc` | 复跑 `hvigorw assembleHap` 看 warning，或 IDE 检查 |
