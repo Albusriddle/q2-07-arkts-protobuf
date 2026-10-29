@@ -12,7 +12,7 @@
 | `scripts/build_hap.sh` | 新增一键脚本（只调 hvigor） | 复跑入口，替代手工两条命令 |
 | `app/entry/libs/arm64-v8a/libentry.so` | **删除**（手工拷贝已无必要） | 避免 HAP 里出现两份 `.so` |
 
-> NAPI 源文件仍保留在 `host/napi/entry.cpp`（v0 的旁路构建仍在引用它），`app/entry/src/main/cpp/CMakeLists.txt` 使用 app 内的 `entry.cpp` 作为唯一 canonical 源；`host/napi/CMakeLists.txt` 反过来引用这份 app 源，不再保留第二份源码。
+> NAPI canonical 源在 `app/entry/src/main/cpp/entry.cpp`；`host/napi/CMakeLists.txt` 反向引用这份 app 源，不再保留第二份源码（原 `host/napi/entry.cpp` 已移入 app）。
 
 ## 2. 结果（E2：本机实测）
 
