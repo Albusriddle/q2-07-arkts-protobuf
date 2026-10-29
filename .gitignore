@@ -1,0 +1,46 @@
+# Node / TypeScript
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# C/C++
+build/
+cmake-build-*/
+*.o
+*.so
+*.a
+*.dylib
+*.dll
+*.exe
+
+# DevEco / OpenHarmony
+oh_modules/
+.hvigor/
+build/default/
+*.hap
+*.hsp
+*.har
+
+# Bench outputs
+bench/data/*.bin
+bench/data/*.pb
+bench/report/*.csv
+bench/report/*.md
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Secrets
+.env
+*.pem
+*.p12
+*.jks

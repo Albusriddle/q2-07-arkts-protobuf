@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package q207.demo;
+
+message Profile {
+  string city = 1;
+  int32 age = 2;
+}
+
+message User {
+  int64 id = 1;
+  string name = 2;
+  repeated string tags = 3;
+  Profile profile = 4;
+
+  oneof contact {
+    string email = 5;
+    string phone = 6;
+  }
+
+  optional int32 level = 7;
+  map<string, int32> scores = 8;
+}
+
+message UserBatch {
+  repeated User users = 1;
+}
