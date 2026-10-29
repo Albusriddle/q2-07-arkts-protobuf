@@ -1,5 +1,6 @@
 {
   "name": "libentry.so",
   "version": "1.0.0",
+  "license": "Apache-2.0",
   "types": "./index.d.ts"
 }
