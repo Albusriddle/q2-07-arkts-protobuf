@@ -49,8 +49,7 @@ wire 解码约 0.57–0.65 GB/s（host，参考实现）。**设备侧仍未测�
    （magic/version/record size/crc/未对齐 root/越界 root/presence 位/oneof 位/blob 越界/
    values 越界/profile 未对齐/记录数撒谎/段未对齐）全部拒绝。
 5. **tape → 普通对象可重建**：`materializer.ts` 从 9,463,448 B tape 重建 8,178 个对象，
-   与 C++ norm dump **JSON 文本级完全一致**（sha256 `0640ce08…` 相同，0 处差异），27.3 ms
-   （≈300k users/s，host，仅供量级参考；以 `evidence/host_slice.json` 为准）。
+   与 C++ norm dump **JSON 文本级完全一致**（sha256 `0640ce08…` 相同，0 处差异）；耗时/吞吐以 `evidence/host_slice.json` 的 `materializer.materialize_ms` / `users_per_s` 为准（HOST-ONLY）。
 6. **与 protobufjs 7.6.5 无未登记差异**：25 例语料上对象图 25/25 相等；
    按"wire 上真实出现过哪些字段"（presence 位）重建对象后重新 encode，22/22 **字节完全一致**；
    仅 3 例有**已登记**差异（重复 map key 折叠、非最短 varint 规范化、未知字段按设计丢弃）。
