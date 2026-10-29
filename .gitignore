@@ -44,3 +44,21 @@ Thumbs.db
 *.pem
 *.p12
 *.jks
+
+# hvigor native (CMake/Ninja 中间产物)
+.cxx/
+
+# Local HAP signing materials (self-signed, local test only; NEVER commit private keys)
+# 允许进库的只有说明文档与无密钥的 profile 明文，其余（p12/certs/p7b/logs/verify）全部忽略。
+signing/*
+!signing/README.md
+!signing/profile/
+signing/profile/*
+!signing/profile/q207-profile.json
+
+
+# 编译中间产物 / 测试输出
+*.obj
+app/entry/.test/
+t.obj
+signing/.local_pwd

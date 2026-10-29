@@ -1,0 +1,13 @@
+V0 environment probe
+  DevEco: /d/Program Files/Huawei/DevEco Studio
+  SDK: /d/Program Files/Huawei/DevEco Studio/sdk/default/openharmony (API 24)
+  NDK clang: OHOS (dev) clang version 15.0.4 (llvm-project 99548401bd80576251755b185ab95945e5fe7884)
+  cmake: /d/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/build-tools/cmake/bin/cmake
+  ninja: /d/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/build-tools/cmake/bin/ninja
+  hdc: /d/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/toolchains/hdc.exe (no target)
+  hvigorw: /d/Program Files/Huawei/DevEco Studio/tools/hvigor/bin/hvigorw
+  protoc: MISSING
+  buf: MISSING
+  required missing: none
+  optional missing: protoc buf target board
+wrote D:/DSHws4TSCsingle/repo\evidence\env_check.json

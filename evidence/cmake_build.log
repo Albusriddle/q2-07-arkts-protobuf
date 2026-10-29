@@ -1,0 +1,3 @@
+[1/2] Building CXX object CMakeFiles/entry.dir/D_/DSHws4TSCsingle/repo/app/entry/src/main/cpp/entry.cpp.o
+clang++: warning: argument unused during compilation: '--gcc-toolchain=D:/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/llvm' [-Wunused-command-line-argument]
+[2/2] Linking CXX shared library libentry.so

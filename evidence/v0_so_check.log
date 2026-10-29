@@ -1,0 +1,113 @@
+### Q2-07 V0 .so inspection transcript
+### generated: 2026-10-29T05:02:13Z  (runner-appended header, script stdout verbatim below)
+
+===== RUN 1: bash scripts/inspect_so.sh =====
+== inspect_so ==
+target : /d/DSHws4TSCsingle/repo/build/napi/libentry.so
+size   : 14696 bytes
+sha256 : 9879c20a69282be91181cb152744e14f2532c4f143ccd7f99d5aed6f1b86f48e
+readelf: /d/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/llvm/bin/llvm-readelf.exe
+nm     : /d/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/llvm/bin/llvm-nm.exe
+
+[1] ELF identity
+  [PASS] ELF magic 7f454c46
+  [PASS] class ELF64
+  [PASS] machine AArch64
+  [PASS] type DYN (shared object)
+  [info] data: little endian (expected for AArch64)
+
+[2] NEEDED / SONAME
+  [info] NEEDED (3):
+  [info]   - libace_napi.z.so
+  [info]   - libc++_shared.so
+  [info]   - libc.so
+  [info] SONAME: libentry.so
+  [PASS] NEEDED contains libace_napi.z.so (NAPI runtime)
+  [info] NEEDED contains libc++_shared.so (OHOS_STL=c++_shared): the loader must find it at runtime
+  [info] BIND_NOW / FLAGS_1 NOW: full RELRO-style eager binding
+
+[3] napi_module_register
+  [PASS] napi_module_register is an undefined import (U) - resolved by libace_napi.z.so
+
+[4] exported symbols (dynamic, defined)
+  [info] count: 2
+  [info]   + _fini
+  [info]   + _init
+  [PASS] exports are limited to linker boilerplate (_init/_fini) - normal for a NAPI module
+
+[5] undefined imports (dynamic)
+  [info] count: 12
+  [info]   - __at_fini
+  [info]   - __cxa_finalize
+  [info]   - __deregister_frame_info
+  [info]   - __register_frame_info
+  [info]   - __stack_chk_fail
+  [info]   - __stack_chk_guard
+  [info]   - napi_create_double
+  [info]   - napi_create_string_utf8
+  [info]   - napi_define_properties
+  [info]   - napi_get_cb_info
+  [info]   - napi_get_value_double
+  [info]   - napi_module_register
+  [PASS] 6 napi_* imports are resolvable through libace_napi.z.so
+
+[6] local NAPI callbacks (non-dynamic, informational)
+  [info] count: 3
+  [info]   ~ 0000000000001c20 t (anonymous namespace)::Add(napi_env__*, napi_callback_info__*)
+  [info]   ~ 0000000000001b38 t (anonymous namespace)::Init(napi_env__*, napi_value__*)
+  [info]   ~ 0000000000001bc0 t (anonymous namespace)::Ping(napi_env__*, napi_callback_info__*)
+
+RESULT: PASS (passed=8 failed=0 warnings=0)
+[runner] command="bash scripts/inspect_so.sh" exit_code=0
+
+===== RUN 2 (negative control): non-ELF file =====
+input: a plain text file named notelf.so, created under the system temp dir
+== inspect_so ==
+target : C:/Users/Albus/AppData/Local/Temp/q207_inspect/notelf.so
+size   : 18 bytes
+sha256 : 0771f6617605e31f6fdc2311c59c477e7ead61b6edcb4855fd2305fcce555630
+readelf: /d/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/llvm/bin/llvm-readelf.exe
+nm     : /d/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/llvm/bin/llvm-nm.exe
+
+[1] ELF identity
+  [FAIL] not an ELF file (magic=6e6f7420)
+  [FAIL] class is '?', required ELF64
+  [FAIL] machine is '?', required AArch64
+  [FAIL] type is '?', required DYN (shared object)
+  [WARN] data: ? (expected little endian)
+
+[2] NEEDED / SONAME
+  [FAIL] no DT_NEEDED entries (no dynamic section, or statically linked)
+  [WARN] no SONAME
+  [FAIL] NEEDED is missing libace_napi.z.so - napi_* imports would be unresolvable
+
+[3] napi_module_register
+  [FAIL] napi_module_register is absent from the dynamic symbol table (not a NAPI module)
+
+[4] exported symbols (dynamic, defined)
+  [FAIL] no exported dynamic symbols at all (expected at least _init/_fini)
+
+[5] undefined imports (dynamic)
+  [WARN] no undefined dynamic symbols - module cannot call the NAPI runtime
+
+[6] local NAPI callbacks (non-dynamic, informational)
+  [info] none - local symbols absent (file is stripped); callback names cannot be re-checked here
+
+failed checks:
+  - not an ELF file (magic=6e6f7420)
+  - class is '?', required ELF64
+  - machine is '?', required AArch64
+  - type is '?', required DYN (shared object)
+  - no DT_NEEDED entries (no dynamic section, or statically linked)
+  - NEEDED is missing libace_napi.z.so - napi_* imports would be unresolvable
+  - napi_module_register is absent from the dynamic symbol table (not a NAPI module)
+  - no exported dynamic symbols at all (expected at least _init/_fini)
+RESULT: FAIL (passed=0 failed=8 warnings=3)
+[runner] command="bash scripts/inspect_so.sh <tmp>/notelf.so" exit_code=1
+
+===== RUN 3 (negative control): missing path =====
+== inspect_so ==
+target : /d/DSHws4TSCsingle/repo/does/not/exist.so
+ERROR: file not found. Build it first (bash scripts/build.sh) or pass a path.
+RESULT: ERROR (cannot inspect)
+[runner] command="bash scripts/inspect_so.sh does/not/exist.so" exit_code=2

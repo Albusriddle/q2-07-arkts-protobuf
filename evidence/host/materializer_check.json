@@ -1,0 +1,18 @@
+{
+  "scope": "HOST-ONLY",
+  "tape_file": "D:/DSHws4TSCsingle/repo/build/host/s1dump/s1_frame0.tape.bin",
+  "tape_bytes": 9463448,
+  "tape_sha256": "31cad95830b20e644bc54a51da943996db148ced304c5e8d37cfeed287d0bbb4",
+  "norm_file": "D:/DSHws4TSCsingle/repo/build/host/s1dump/s1_frame0.norm.json",
+  "norm_sha256": "0640ce0876a76ba50701d6b4f991c806e7e319347272aa385dd9f30f6dadfcdb",
+  "materialized_sha256": "0640ce0876a76ba50701d6b4f991c806e7e319347272aa385dd9f30f6dadfcdb",
+  "users": 8178,
+  "roots": 8178,
+  "materialize_ms": 29.939,
+  "users_per_s": 273159,
+  "json_bytes": 8997209,
+  "exact_text_match": true,
+  "graph_diffs": 0,
+  "first_diffs": [],
+  "ok": true
+}

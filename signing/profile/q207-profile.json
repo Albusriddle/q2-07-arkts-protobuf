@@ -1,0 +1,27 @@
+{
+    "version-name": "2.0.0",
+    "version-code": 2,
+    "app-distribution-type": "os_integration",
+    "uuid": "a2450817-e5f3-424e-9a72-56f917c3a8cf",
+    "validity": {
+        "not-before": 1793251234,
+        "not-after": 1819174834
+    },
+    "type": "release",
+    "bundle-info": {
+        "developer-id": "Q207Local",
+        "distribution-certificate": "-----BEGIN CERTIFICATE-----\nMIIB9zCCAZ2gAwIBAgIFANafPF4wCgYIKoZIzj0EAwIwTjELMAkGA1UEBhMCQ04x\nDTALBgNVBAoMBFEyMDcxEjAQBgNVBAsMCUxvY2FsIERldjEcMBoGA1UEAwwTUTIw\nNyBBcHAgU2lnbmluZyBDQTAeFw0yNjEwMjkwNjIwMzJaFw0yNzEwMjkwNjIwMzJa\nMEsxCzAJBgNVBAYTAkNOMQ0wCwYDVQQKDARRMjA3MRIwEAYDVQQLDAlMb2NhbCBE\nZXYxGTAXBgNVBAMMEFEyMDcgQXBwIFJlbGVhc2UwWTATBgcqhkjOPQIBBggqhkjO\nPQMBBwNCAATIySmwi8lnHI/E6NDhd73Fh7EFxUaVDjzxN0K5BVwKZwkrvhHjg2yv\n+48U6L3TOo8VDOBswwQ/WuWfAbGeIss3o2swaTAdBgNVHQ4EFgQUwsvVLpx2SCAF\na1d0ps7Bil5zeRAwCQYDVR0TBAIwADAOBgNVHQ8BAf8EBAMCB4AwEwYDVR0lBAww\nCgYIKwYBBQUHAwMwGAYMKwYBBAGPWwKCeAEDBAgwBgIBAQoBADAKBggqhkjOPQQD\nAgNIADBFAiEAtoXiqW3UJ1jYiUPM7dUfxFwUFyE4fGb/8nxsGdzdAZICICquUikf\nXTd74KmqpDwbctvwLAmavd7UvJoqcNx93daO\n-----END CERTIFICATE-----\n",
+        "bundle-name": "com.example.q207",
+        "apl": "normal",
+        "app-feature": "hos_normal_app"
+    },
+    "acls": {
+        "allowed-acls": [
+            ""
+        ]
+    },
+    "permissions": {
+        "restricted-permissions": []
+    },
+    "issuer": "pki_internal"
+}
