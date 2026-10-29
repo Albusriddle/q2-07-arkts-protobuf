@@ -1,0 +1,106 @@
+{
+  "slice": "V0-sign: local self-signed HAP (no device, no install)",
+  "timestamp_utc": "2026-10-29T05:21:14Z",
+  "branch": "feature/p1-v0-min",
+  "commit": "b9d0086",
+  "status": "PASS-SIGNED-NOT-INSTALLABLE",
+  "signing": {
+    "tool": "<DevEco>/sdk/default/openharmony/toolchains/lib/hap-sign-tool.jar",
+    "java": "<DevEco>/jbr/bin/java.exe (JBR 21)",
+    "sign_alg": "SHA256withECDSA",
+    "key_alg": "ECC NIST-P-256",
+    "ca": "self-signed local root -> app sub-CA / profile sub-CA -> leaf (3-level chain)",
+    "keystore": "signing/q207-local.p12 (contains PRIVATE KEYS; git-ignored, local test only)",
+    "profile_type": "release",
+    "profile_issuer": "pki_internal (local value; NOT an OpenHarmony-issued profile)",
+    "bundle_name": "com.example.q207",
+    "compatible_version": 24,
+    "sign_code": true,
+    "store_password_source": "hard-coded local test value in scripts/sign_hap.sh (never used for a real release)"
+  },
+  "commands": [
+    {
+      "command": "sign-profile",
+      "exit_code": 0,
+      "log": "signing/logs/sign-profile.log"
+    },
+    {
+      "command": "verify-profile",
+      "exit_code": 0,
+      "log": "signing/logs/verify-profile.log"
+    },
+    {
+      "command": "sign-app",
+      "exit_code": 0,
+      "log": "signing/logs/sign-app.log"
+    },
+    {
+      "command": "verify-app",
+      "exit_code": 0,
+      "log": "signing/logs/verify-app.log"
+    }
+  ],
+  "artifacts": {
+    "hap_unsigned": {
+      "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
+      "size": 1390057,
+      "sha256": "d65c556a9a4cdd611b4a575d44f062071869149e8f76366a70e8d799c3d2fe45",
+      "signed": false
+    },
+    "hap_signed": {
+      "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
+      "size": 1455790,
+      "sha256": "05aaa39fbee910d4bbec516f1a98d41c15bd92a3d66f691f3d25929327d08851",
+      "signed": true,
+      "installable": false
+    },
+    "profile_signed": {
+      "path": "signing/profile/q207-profile.p7b",
+      "size": 3065,
+      "sha256": "65c6f80ac29ddc538b8da8cf22cb336015b12670a66bf15a703b25c658715684"
+    },
+    "profile_json": {
+      "path": "signing/profile/q207-profile.json",
+      "size": 1427,
+      "sha256": "56c38195c58d64d9e415b384fc26376fe908d0636aae7b66e8362649d25f2438"
+    },
+    "app_cert_chain": {
+      "path": "signing/certs/q207-app-cert.pem",
+      "size": 2159,
+      "sha256": "52d6a4b0c41a9fc14a8d3ce620ad41b963cc80f6d40cdbb8dac0de4f88811b19"
+    },
+    "profile_cert_chain": {
+      "path": "signing/certs/q207-profile-cert.pem",
+      "size": 2171,
+      "sha256": "cfcc98823ac897de6993c91b96f75facefb58ae760e5ad4332f47b46ea4ad78a"
+    },
+    "root_ca": {
+      "path": "signing/certs/q207-root-ca.cer",
+      "size": 709,
+      "sha256": "3c5c4f06c507c076d45cf70c0c0360e7dc7adf811f4b1e1b24546c3633bdd491"
+    }
+  },
+  "signed_hap_zip_entries": 16,
+  "verification": {
+    "verify_app_exit_code": 0,
+    "verify_app_ok": true,
+    "verify_app_log": "signing/logs/verify-app.log",
+    "verify_app_cert_chain_out": "signing/verify/verified-certchain.cer",
+    "verify_app_profile_out": "signing/verify/verified-profile.p7b",
+    "verify_profile_passed": true,
+    "verify_profile_message": "OK",
+    "digest_verify": "SHA-256 (reported by verify-app)"
+  },
+  "installable": false,
+  "installable_reason": "self-signed CA (not in device trust store) + no device UDID for a debug profile; release-type profile signed locally only",
+  "blocked": [
+    "install/verify-with-system-signature not possible: no board/device (no UDID, no hdc target)",
+    "HAP signature is anchor-less for a stock device: local self-signed CA is not in the OpenHarmony trusted root store, so a real device would reject the profile/cert chain"
+  ],
+  "next_materials_needed": [
+    "OpenHarmony-issued app signing cert chain + Provision Profile (release) for the issuer/developer-id used by the target device image",
+    "OR a debug profile signed by the official debug CA with this device's UDID (hdc shell bm get -u) to install a debug HAP",
+    "a target board/flash image to run 'hdc install' and verify on-device acceptance"
+  ],
+  "notes": "Signed HAP is signature-verifiable locally (verify-app exit 0) but is NOT installed and NOT claimed installable. No device was touched. Private key material stays in signing/ and is git-ignored."
+}

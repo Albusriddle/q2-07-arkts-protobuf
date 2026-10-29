@@ -1,8 +1,8 @@
 {
   "slice": "V0-min: NAPI .so + ArkTS caller",
-  "timestamp_utc": "2026-10-29T02:56:36.063281+00:00",
+  "timestamp_utc": "2026-10-29T05:21:01.603160+00:00",
   "branch": "feature/p1-v0-min",
-  "commit": "6d57ed9",
+  "commit": "b9d0086",
   "status": "PARTIAL",
   "commands": [
     {
@@ -21,6 +21,11 @@
       "log": "cmake_build.log"
     },
     {
+      "command": "ohpm-install",
+      "exit_code": 0,
+      "log": "ohpm_install.log"
+    },
+    {
       "command": "hvigor-assembleHap",
       "exit_code": 0,
       "log": "hap_build.log"
@@ -32,18 +37,13 @@
         "path": "build/napi/libentry.so",
         "size": 14696,
         "sha256": "9879c20a69282be91181cb152744e14f2532c4f143ccd7f99d5aed6f1b86f48e"
-      },
-      {
-        "path": "app/entry/libs/arm64-v8a/libentry.so",
-        "size": 14696,
-        "sha256": "9879c20a69282be91181cb152744e14f2532c4f143ccd7f99d5aed6f1b86f48e"
       }
     ],
     "hap": [
       {
         "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
-        "size": 127070,
-        "sha256": "42f6f41212ae3ee3d9e29e52752a90a21da5ad6a94e9a1f40890dc2562913617",
+        "size": 1390057,
+        "sha256": "d65c556a9a4cdd611b4a575d44f062071869149e8f76366a70e8d799c3d2fe45",
         "signed": false
       }
     ]

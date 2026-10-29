@@ -1,0 +1,4 @@
+ohpm INFO: MetaDataFetcher fetching meta info of package '@ohos/hypium' from https://ohpm.openharmony.cn/ohpm/
+ohpm INFO: fetch meta info of package '@ohos/hypium' success https://ohpm.openharmony.cn/ohpm/@ohos/hypium
+ohpm INFO: fetch package done 1 @ohos/hypium from https://ohpm.openharmony.cn/ohpm/@ohos/hypium/-/hypium-1.0.30.har
+[32minstall completed in 0s 770ms[39m
