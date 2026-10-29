@@ -11,7 +11,7 @@
 | 项 | 结果 |
 |---|---|
 | 自签名材料 | **已生成**（本地根 CA → 应用子 CA / profile 子 CA → 叶子证书，三级链） |
-| signed HAP | `app/entry/build/default/outputs/default/entry-default-signed.hap`（**1,455,782 B**，本次运行） |
+| signed HAP | `app/entry/build/default/outputs/default/entry-default-signed.hap`（大小/hash 以 `evidence/sign_check.json` 为准） |
 | `sign-app` 退出码 | **0**（`Sign Hap success!`） |
 | `verify-profile` 退出码 | **0**（`verifiedPassed: true`） |
 | **`verify-app` 退出码** | **0**（`verify: Verify success`，`Digest verify result: true`，codesign 覆盖 `libc++_shared.so` + `libentry.so`） |
@@ -29,13 +29,13 @@
 | Java | `/d/Program Files/Huawei/DevEco Studio/jbr/bin/java.exe` → `openjdk 21.0.8 (JBR-21.0.8)` |
 | 签名工具 | `/d/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/toolchains/lib/hap-sign-tool.jar`（12,639,504 B） |
 | 未签名 HAP | `app/entry/build/default/outputs/default/entry-default-unsigned.hap` |
-| 未签名 HAP 大小 / sha256 | **1,390,057 B** / `d65c556a…c3d2fe45`（见 `evidence/sign_check.json`） |
+| 未签名 HAP 大小 / sha256 | 以 `evidence/sign_check.json` 为准 |
 | bundleName | `com.example.q207`（`app/AppScope/app.json5`） |
 | compatibleSdkVersion | `6.1.1(24)` → `sign-app -compatibleVersion 24` |
 | 设备 | **无**（`hdc list targets` 空；无 UDID） |
 | `signingConfigs` | 无（`app/build-profile.json5` 为空数组，本流程不依赖 hvigor 签名配置） |
 
-> 注意：未签名 HAP 在本次签名前被重新构建过（13:10，包含 `libs/arm64-v8a/libc++_shared.so`，故从先前的 127,135 B 变为 1,390,057 B）。**以 `evidence/sign_check.json` 中记录的 sha256 为准**，因为该文件锁定"签的到底是哪个字节流"。
+> 注意：未签名 HAP 在本次签名前被重新构建过（13:10，包含 `libs/arm64-v8a/libc++_shared.so`，故从先前的约 127 KB 变为约 1.39 MB）。**以 `evidence/sign_check.json` 中记录的 sha256 为准**，因为该文件锁定"签的到底是哪个字节流"。
 
 ---
 
@@ -181,14 +181,14 @@ verify: Verify success
 
 | 产物 | 大小 | 说明 |
 |---|---:|---|
-| `entry-default-unsigned.hap` | 1,390,057 B | 15 个 zip 条目 |
-| `entry-default-signed.hap` | 1,455,782 B | 16 个条目（签名后新增 `.pages.info`，并按签名要求改为未压缩存储，故体积增大） |
+| `entry-default-unsigned.hap` | 以 `evidence/sign_check.json` 为准 | 15 个 zip 条目 |
+| `entry-default-signed.hap` | 以 `evidence/sign_check.json` 为准 | 16 个条目（签名后新增 `.pages.info`，并按签名要求改为未压缩存储，故体积增大） |
 | `signing/profile/q207-profile.p7b` | ~3.0 KB | 已签 profile |
 | `signing/certs/q207-app-cert.pem` | ~2.1 KB | 应用证书链（3 张） |
 | `signing/certs/q207-profile-cert.pem` | ~2.2 KB | profile 证书链（3 张） |
 | `signing/q207-local.p12` | ~5 KB | **含私钥，仅本地** |
 
-> 每次重签，profile 的 `uuid` 与 `validity` 时间戳会变，signed HAP 大小/哈希会有几十字节级差异（例如 1,455,763 / 1,455,782 B）。**以 `evidence/sign_check.json` 中的 size/sha256 为唯一准确值**。
+> 每次重签，profile 的 `uuid` 与 `validity` 时间戳会变，signed HAP 大小/哈希会有几十字节级差异（每次重签有几十字节级差异）。**以 `evidence/sign_check.json` 中的 size/sha256 为唯一准确值**。
 
 签名前后 HAP 内业务内容一致（`module.json` / `resources.index` / `ets/modules.abc` / `libs/arm64-v8a/libentry.so` / `libc++_shared.so` 均在）；`sign-app` 只追加签名块与 `.pages.info`。
 

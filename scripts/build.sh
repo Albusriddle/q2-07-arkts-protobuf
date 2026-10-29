@@ -124,6 +124,7 @@ fi
 if [ -n "$SO_PATH" ]; then
   case "$HAP_STATUS" in
     built:*) STATUS="PASS" ;;
+    built\ unsigned:*) STATUS="PASS-UNSIGNED" ;;
     *) STATUS="PARTIAL" ;;
   esac
 else

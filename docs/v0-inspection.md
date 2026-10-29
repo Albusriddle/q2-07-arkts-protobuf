@@ -109,10 +109,10 @@ python scripts/inspect_hap.py --wait 90     # HAP 正在被并发构建重写时
 
 | 项 | 类别 | 实测值 |
 |---|---|---|
-| 大小 / 外层 SHA-256 | **不稳定** | 产物正被并行任务反复重建，外层 SHA 每次变化。**以 `evidence/v0_artifact_check.json → input.size / input.sha256` 为准**（写作期间观测到 127,070 / 127,135 / 127,137 B 三种外层大小，见 §2.3 快照表） |
-| 容器 | 稳定 | 有效 ZIP，**14 个条目**，CRC 校验 ok |
+| 大小 / 外层 SHA-256 | **不稳定** | 以 `evidence/v0_artifact_check.json → input.size / input.sha256` 为准；当前 unsigned = 1,390,057 B（native 集成后），signed = 1,455,790 B |
+| 容器 | 稳定 | 有效 ZIP，**15 个条目**（unsigned）/16（signed），CRC 校验 ok |
 | `module.json` | **稳定** | 1587 B，`sha256 db7e9bd2a1ce87c6d544822d07eb71de417627764411062397b1942282bb2868`，JSON 合法，**必需键 0 缺失** |
-| `libs/arm64-v8a/libentry.so` | **稳定** | 6,240 B，`sha256 fb8483d7b6d3fb4b4bcc9f55c9b9b39da1b696f0fc03d74e02601f9fb1270cd4`，`ELF64`/`AArch64`/`DYN` |
+| `libs/arm64-v8a/libentry.so` | **稳定** | 6,520 B，`sha256 72ef89e239bf45c31467088b5005a9177e3a63ebaf6682d58bda567f805ca517`，`ELF64`/`AArch64`/`DYN` |
 | `ets/modules.abc` | 稳定 | 12,596 B |
 | `pkgSdkInfo.json` | 不稳定 | 64 → 129 B（随依赖登记变化） |
 | bundleName / 版本 | 稳定 | `com.example.q207` / `1.0.0`（code `1000000`） |
@@ -129,7 +129,7 @@ python scripts/inspect_hap.py --wait 90     # HAP 正在被并发构建重写时
 | 核对 | 结果 |
 |---|---|
 | `build/napi/libentry.so` vs `app/entry/libs/arm64-v8a/libentry.so` | **完全相同**（14,696 B，SHA-256 均为 `9879c20a…86f48e`） |
-| HAP 内 `.so` vs 仓库副本 | **不同**：6,240 B vs 14,696 B（0.425×）→ 打包时被 strip |
+| HAP 内 `.so` vs 仓库副本 | **不同**：6,520 B vs 14,696 B（0.444×）→ 打包时被 strip |
 | strip 是否改变了动态段 | **没有**：两份 `.so` 的 `NEEDED`（3 项）与动态符号（导出 2 / 导入 12）**逐项一致**，仅本地符号被移除 |
 | `module.json` 的 API 与 SDK | SDK `apiVersion=24`（`version=6.1.1.125`）；HAP `compileSdkVersion=6.1.1.125` → 同代 |
 
@@ -247,6 +247,6 @@ bash scripts/inspect_so.sh > evidence/v0_so_check.log 2>&1
 
 | 文档 | 关系 |
 |---|---|
-| `docs/v0-slice.md` | 该文的产物清单与本次实测一致（14,696 B / 127,070 B / 6,240 B 内层）；但第 43 行"导出 `napi_module_register`（动态未定义）"表述矛盾，**以本文件 §1.1 的澄清为准**；该文未记录 SHA-256，本文件补齐 |
+| `docs/v0-slice.md` | 该文已更新为 unsigned 1,390,057 B / signed 1,455,790 B / 内层 6,520 B；所有数字以 `evidence/v0_artifact_check.json` 与 `v0_signed_artifact_check.json` 为准 |
 | `evidence/v0_build.json`、`evidence/env_check.json` | 本文件消费其 `board.status` 与 `api_version`，不覆盖 |
 | `evidence/v0_artifact_check.json` | 本文件的机器可读版本；两者数字必须一致，改动以重跑脚本为准 |

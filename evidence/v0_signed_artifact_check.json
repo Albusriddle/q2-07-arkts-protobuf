@@ -1,22 +1,22 @@
 {
   "schema": "q207.v0.artifact_check/1",
-  "generated_utc": "2026-10-29T05:28:17.929708+00:00",
+  "generated_utc": "2026-10-29T05:34:23.490859+00:00",
   "generator": {
     "script": "scripts/inspect_hap.py",
     "python": "3.13.0"
   },
   "repo": {
     "branch": "feature/p1-v0-min",
-    "commit": "b9d0086",
+    "commit": "d70f912",
     "root": "D:/DSHws4TSCsingle/repo"
   },
   "mode": "read-only: no rebuild, no re-sign, no patch, no write into the HAP",
   "input": {
     "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
     "exists": true,
-    "size": 1455790,
-    "sha256": "05aaa39fbee910d4bbec516f1a98d41c15bd92a3d66f691f3d25929327d08851",
-    "mtime_utc": "2026-10-29T05:21:12.716043+00:00"
+    "size": 1455792,
+    "sha256": "51db209d6ca6dae7763b9440c273228aa4be23ad5f95e45f660accc7d12f1c8e",
+    "mtime_utc": "2026-10-29T05:34:21.450835+00:00"
   },
   "container": {
     "is_zip": true,
@@ -65,8 +65,8 @@
       },
       {
         "name": "pkgSdkInfo.json",
-        "size": 129,
-        "compressed": 129
+        "size": 197,
+        "compressed": 197
       },
       {
         "name": "resources.index",

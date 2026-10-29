@@ -11,7 +11,7 @@ def sha256(path):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--status', required=True, choices=['PASS', 'PARTIAL', 'FAIL'])
+    ap.add_argument('--status', required=True, choices=['PASS', 'PASS-UNSIGNED', 'PARTIAL', 'FAIL'])
     ap.add_argument('--so', action='append', default=[])
     ap.add_argument('--hap', action='append', default=[])
     ap.add_argument('--hap-status', required=True)
