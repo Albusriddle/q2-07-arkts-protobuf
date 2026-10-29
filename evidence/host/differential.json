@@ -1,0 +1,38 @@
+{
+  "scope": "HOST-ONLY",
+  "baseline": "protobufjs 7.6.5",
+  "schema": "proto/example.proto (q207.demo.User)",
+  "cases": 25,
+  "object_graph": {
+    "checked": 25,
+    "equal": 25,
+    "mismatches": []
+  },
+  "bytes": {
+    "checked": 22,
+    "identical": 22,
+    "explained_differences": [
+      {
+        "stem": "c22_map_dup_key",
+        "reason": "duplicate map key collapses to one entry; canonical re-encode writes 1 entry"
+      },
+      {
+        "stem": "c23_noncanonical_varint",
+        "reason": "non-shortest varint: a canonical encoder emits 1 byte instead of 2"
+      },
+      {
+        "stem": "c24_unknown_field",
+        "reason": "unknown field is discarded by design (proto3 default), so it is not re-emitted"
+      }
+    ],
+    "mismatches": []
+  },
+  "materializer": {
+    "checked": 25,
+    "equal": 25,
+    "mismatches": []
+  },
+  "cases_in_corpus": 25,
+  "tape_verified": 25,
+  "ok": true
+}

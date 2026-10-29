@@ -1,0 +1,387 @@
+{
+  "scope": "HOST-ONLY",
+  "schema": "proto/example.proto (q207.demo.User)",
+  "baseline": "protobufjs 7.6.5",
+  "toObject_options": {
+    "defaults": true,
+    "longs": "String"
+  },
+  "items": [
+    {
+      "stem": "c01_empty",
+      "wire_bytes": 0,
+      "wire_hex": "",
+      "wire_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pbjs_sha256": "ac8b24b5e4fa21f761774de25687ca3f7f7a65df2840fbf392e8783b134794d1",
+      "own_keys": [
+        "tags",
+        "scores"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c02_id_only",
+      "wire_bytes": 2,
+      "wire_hex": "0801",
+      "wire_sha256": "fb8da7eb5b1b399e7321179dac9e9f65773d7331e1e30554e3911e4325e1ef19",
+      "pbjs_sha256": "7967520c3a1fab9ca355206673f1245544dd1d7122e31e591dd58dde964436ff",
+      "own_keys": [
+        "tags",
+        "scores",
+        "id"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c03_explicit_zeros",
+      "wire_bytes": 4,
+      "wire_hex": "08001200",
+      "wire_sha256": "16375cbc94bece9e83d4f0743e053b4fec23112ec34ba526222ab6e8150f4d18",
+      "pbjs_sha256": "ac8b24b5e4fa21f761774de25687ca3f7f7a65df2840fbf392e8783b134794d1",
+      "own_keys": [
+        "tags",
+        "scores",
+        "id",
+        "name"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c04_int64_min",
+      "wire_bytes": 11,
+      "wire_hex": "0880808080808080808001",
+      "wire_sha256": "7fec89eeefd63ea1aca6ce06a208480bb639de29666671f3aa50c967826e0efd",
+      "pbjs_sha256": "5d55fadf25bf4fda43eed6c7a677db1eddf1e11a98e205f8ef23f71de8ad7ec8",
+      "own_keys": [
+        "tags",
+        "scores",
+        "id"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c05_int64_max",
+      "wire_bytes": 10,
+      "wire_hex": "08ffffffffffffffff7f",
+      "wire_sha256": "7956155a3cbfdcea8d83f6eb286a4e7b8b38f416a5f96138d837cba6660cd4cf",
+      "pbjs_sha256": "519947e00a0913183f5007fc7f96d1465d3df24cfe3c437a36502386258e3e1f",
+      "own_keys": [
+        "tags",
+        "scores",
+        "id"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c06_int64_negative",
+      "wire_bytes": 11,
+      "wire_hex": "08ffffffffffffffffff01",
+      "wire_sha256": "99ef7fe3588ef1ec2dfe21c4901e9c3ff1d9412c32ef03f91c245c51b7a57b8d",
+      "pbjs_sha256": "35182e5c17bd33f176e8d3afa22803938f4ba7d9d2f91907b11eaaa27d485db8",
+      "own_keys": [
+        "tags",
+        "scores",
+        "id"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c07_unicode_name",
+      "wire_bytes": 12,
+      "wire_hex": "120ae4bda0e5a5bdf09f9880",
+      "wire_sha256": "ba1b62a8a762032af8d50cd7e2271934b891c2d89f0ed201ca047827fb74ebec",
+      "pbjs_sha256": "be66bd026e88fe318d895efb241400df556bf15e5bb6546121689a102c730c55",
+      "own_keys": [
+        "tags",
+        "scores",
+        "name"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c08_escaped_name",
+      "wire_bytes": 10,
+      "wire_hex": "12086122625c630a0901",
+      "wire_sha256": "ad0c3b8c2ae206f93c30eb57d6a7c9a74dba1673c1ad75c2eef53e425d008700",
+      "pbjs_sha256": "c1d8904162fd11dfe1238e7d46c3fcc90e54fcf05ccbb6ecf399496c380423c0",
+      "own_keys": [
+        "tags",
+        "scores",
+        "name"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c09_tags",
+      "wire_bytes": 8,
+      "wire_hex": "1a01611a001a0163",
+      "wire_sha256": "67140c92f70edc5ab685735d0780b3320af2094b14394b56b8bbaf5fa26a663f",
+      "pbjs_sha256": "5a427388ed040740f41343ae61d3ff0c4e90267eb605bcad3dec96eeef932d86",
+      "own_keys": [
+        "tags",
+        "scores"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c10_tags_many",
+      "wire_bytes": 118,
+      "wire_hex": "1a057461672d301a057461672d311a057461672d321a057461672d331a057461672d341a057461672d351a057461672d361a057461672d371a057461672d381a057461672d391a067461672d31301a067461672d31311a067461672d31321a067461672d31331a067461672d31341a067461672d3135",
+      "wire_sha256": "fe248eaee6a1070de81e293a8ff2437ea57abde1db965ee59b30a00a1dd98c41",
+      "pbjs_sha256": "cd772230c038a8dc8caa4714e32e0eae7f5f4a03090de5013f3e452152df50cf",
+      "own_keys": [
+        "tags",
+        "scores"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c11_profile_empty",
+      "wire_bytes": 2,
+      "wire_hex": "2200",
+      "wire_sha256": "37aa3970b6801c9d286464f7d86e50bf41c88e54c7b4d08f3ff61935b3f59c3c",
+      "pbjs_sha256": "4190454c56aa59ab3f6a8526590dab2801c479e9aa98b9bac15237da07a5e196",
+      "own_keys": [
+        "tags",
+        "scores",
+        "profile"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c12_profile_city",
+      "wire_bytes": 12,
+      "wire_hex": "220a0a0848616e677a686f75",
+      "wire_sha256": "cb099b7c1672850660a71405d1398da787385a3444830c5edc56b83fc2576058",
+      "pbjs_sha256": "1b3d24d305ba4bb5a8b96173fe270868a85cb7aebe98256a108f664c604cde24",
+      "own_keys": [
+        "tags",
+        "scores",
+        "profile"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c13_profile_age0",
+      "wire_bytes": 7,
+      "wire_hex": "22050a01581000",
+      "wire_sha256": "b2e8224dbede437c964de0163f9633cf365ab86d0b62cda7a9f833520ac5e717",
+      "pbjs_sha256": "a0bd350bf037f26e48a976dd643edd61ed372207d63f88350ba2ccfbd5c9bf6a",
+      "own_keys": [
+        "tags",
+        "scores",
+        "profile"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c14_oneof_email",
+      "wire_bytes": 5,
+      "wire_hex": "2a03654078",
+      "wire_sha256": "6d0f73fb97cc64f08a53ec0320589feefd12e092660f8bc141f6d1b5b4b29dd8",
+      "pbjs_sha256": "4b217bc95fa373140be4858d8eed43728b78aa3cb88b4c85fb9a749a9abced18",
+      "own_keys": [
+        "tags",
+        "scores",
+        "email"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c15_oneof_phone",
+      "wire_bytes": 5,
+      "wire_hex": "3203313233",
+      "wire_sha256": "8cc982bd1916e3f8b7a6477f8ed5a31512df657b88c557689f0ad92cafde2000",
+      "pbjs_sha256": "37668aa407d7bf45e17ff90963b9bb9bba5595676348570c38c98993a4293e1c",
+      "own_keys": [
+        "tags",
+        "scores",
+        "phone"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c16_level_zero",
+      "wire_bytes": 2,
+      "wire_hex": "3800",
+      "wire_sha256": "0c59629d81806b2b169bcd633f8a9cb7da43a8d692dbc95bc201d0f5cf5e08d5",
+      "pbjs_sha256": "a8d3b70f3f3420299da7ebbd85a12dd010b25f4b55ca0d4e9cffb364251cdc2c",
+      "own_keys": [
+        "tags",
+        "scores",
+        "level"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c17_level_negative",
+      "wire_bytes": 11,
+      "wire_hex": "38fbffffffffffffffff01",
+      "wire_sha256": "54011b3c1a574465544cfec5bfcca94607a85e0a8a7053e776803d9c05a86c2c",
+      "pbjs_sha256": "d5fd273148c5289af01a9f8cc514cd109ad7687df62b07593fac426d6e2cb643",
+      "own_keys": [
+        "tags",
+        "scores",
+        "level"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c18_level_max",
+      "wire_bytes": 6,
+      "wire_hex": "38ffffffff07",
+      "wire_sha256": "3721fc27247c63765b64f41ca683f554b2ad780417777ceabc2e1f851990df63",
+      "pbjs_sha256": "d4f41e7d81f0adb02a47c484ff2992557e2672bd9f86932ab6f68e4b32cb6b1f",
+      "own_keys": [
+        "tags",
+        "scores",
+        "level"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c19_map_multi",
+      "wire_bytes": 38,
+      "wire_hex": "42080a046d617468105f42100a0361727410ffffffffffffffffff0142080a047a65726f1000",
+      "wire_sha256": "31d993989575cf014c8e1d8579f8ac330b900a9c93415b7ae1c42a914ab7e8db",
+      "pbjs_sha256": "177767311a543c411cf00d0b2c644be1ca6653fa87555c143053eda12925afda",
+      "own_keys": [
+        "tags",
+        "scores"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c20_full",
+      "wire_bytes": 52,
+      "wire_hex": "0881808080808080101205616c6963651a01611a016222050a015810032a03654078380742060a026b31100142060a026b321002",
+      "wire_sha256": "4906a96314c18ff19cafe7b44b1bcb4bd4c8e9429e86958f990713a27e885c2b",
+      "pbjs_sha256": "8a5d790a8ad48b51859f2cbcdd4360bbb8e2a0b4bed72d3c3ff78e009cd72988",
+      "own_keys": [
+        "tags",
+        "scores",
+        "id",
+        "name",
+        "profile",
+        "email",
+        "level"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": ""
+    },
+    {
+      "stem": "c21_oneof_both",
+      "wire_bytes": 10,
+      "wire_hex": "2a036540783203313233",
+      "wire_sha256": "23d915179d654120a33b5e4f1120d62010fbf608b9bade3306277d3378bc3a0d",
+      "pbjs_sha256": "fdcb4db822090701c9cde7fe87b935bc1fa8812aea9392d4e648b75f7f3a5757",
+      "own_keys": [
+        "tags",
+        "scores",
+        "email",
+        "phone"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": "two encodes concatenated: protobufjs 7.6.5 keeps BOTH oneof members"
+    },
+    {
+      "stem": "c22_map_dup_key",
+      "wire_bytes": 14,
+      "wire_hex": "42050a016b100142050a016b1002",
+      "wire_sha256": "56021d5de148de15656116d0bdae06b44fa60b7d09245a9dbcd15e2d8221c437",
+      "pbjs_sha256": "86c5fc7db0d0bb908d2edee765b637bda7f8af6ac3c0fefe0899da41a23d9ad6",
+      "own_keys": [
+        "tags",
+        "scores"
+      ],
+      "bytes_expected_identical": false,
+      "byte_diff_reason": "duplicate map key collapses to one entry; canonical re-encode writes 1 entry",
+      "note": "duplicate map key: last value wins"
+    },
+    {
+      "stem": "c23_noncanonical_varint",
+      "wire_bytes": 3,
+      "wire_hex": "088000",
+      "wire_sha256": "794868f025617ce59da46c7df06dbab8af58702a6312168382082f3c2c6d7bb3",
+      "pbjs_sha256": "ac8b24b5e4fa21f761774de25687ca3f7f7a65df2840fbf392e8783b134794d1",
+      "own_keys": [
+        "tags",
+        "scores",
+        "id"
+      ],
+      "bytes_expected_identical": false,
+      "byte_diff_reason": "non-shortest varint: a canonical encoder emits 1 byte instead of 2",
+      "note": "id=0 encoded as a non-shortest 2-byte varint (must be accepted)"
+    },
+    {
+      "stem": "c24_unknown_field",
+      "wire_bytes": 4,
+      "wire_hex": "08054807",
+      "wire_sha256": "5ced654675e8afe34451ee454537913ef0658e8327f75f5fc03c7ee6dc1aee6e",
+      "pbjs_sha256": "094e055224a0a9536cb6f613b81ae382ee76ad11943c8adcff2a83712720b55d",
+      "own_keys": [
+        "tags",
+        "scores",
+        "id"
+      ],
+      "bytes_expected_identical": false,
+      "byte_diff_reason": "unknown field is discarded by design (proto3 default), so it is not re-emitted",
+      "note": "one unknown varint field appended; unknown fields are skipped"
+    },
+    {
+      "stem": "c25_neg_int32_10byte",
+      "wire_bytes": 11,
+      "wire_hex": "38ffffffffffffffffff01",
+      "wire_sha256": "c4cb14418bf960e5c7d0f36999ceac19bcf0f3c645342e51381db1ba698a20f3",
+      "pbjs_sha256": "f2f9eeb4bbcea32015530171f54141780907a7e1fff3bd87f6bcf45316890130",
+      "own_keys": [
+        "tags",
+        "scores",
+        "level"
+      ],
+      "bytes_expected_identical": true,
+      "byte_diff_reason": "",
+      "note": "negative int32 (level) as a 10-byte varint"
+    }
+  ]
+}

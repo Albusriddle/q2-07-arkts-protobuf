@@ -1,0 +1,3 @@
+# Generated data cards (deterministic, see ../gen_cards.py). Never commit binaries.
+*
+!.gitignore
