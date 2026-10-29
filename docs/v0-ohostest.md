@@ -7,11 +7,11 @@
 | 项 | 值 |
 |---|---|
 | 测试文件 | `app/entry/src/ohosTest/ets/test/EntryNapi.test.ets` |
-| 用例 | `ping() == 'pong'`；`add(2,3) == 5`；`decodeUser(c20_full)`（V0.1，编译；设备可运行） |
+| 用例 | `ping() == 'pong'`；`add(2,3) == 5`；`decodeUser(c20_full)`、`decodeMany(c20+empty)`（V0.2，编译；设备可运行） |
 | 依赖 | `@ohos/hypium 1.0.30`（`app/entry/oh-package.json5` devDependencies） |
 | 构建命令 | `hvigorw assembleHap --mode module -p module=entry@ohosTest -p product=default -p buildMode=debug --no-daemon` |
 | 构建结果 | **BUILD SUCCESSFUL**，exit 0 |
-| 产物 | `app/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap`（V0.1：1,458,236 B） |
+| 产物 | `app/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap`（V0.2：1,460,043 B） |
 | 设备执行 | **未执行**（`hdc list targets` 为空，无板）；`decodeUser` 测试仅编译 |
 | 证据 | `evidence/v0_ohostest_build.json`、`evidence/hap_build_ohostest.log` |
 

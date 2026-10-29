@@ -35,8 +35,15 @@ struct UserView {
   std::vector<std::pair<std::string, int32_t>> scores;
 };
 
+struct BatchView {
+  std::vector<UserView> users;
+};
+
 void build_user_view(const pod::User& u, UserView* out);
 std::string user_view_json(const UserView& v);
+
+void build_batch_view(const pod::UserBatch& b, BatchView* out);
+std::string batch_view_json(const BatchView& v);
 
 }  // namespace view
 }  // namespace q207
