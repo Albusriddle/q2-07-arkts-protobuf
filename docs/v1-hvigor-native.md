@@ -20,7 +20,7 @@
 
 | 产物 | 大小 | 说明 |
 |---|---:|---|
-| `libentry.so`（hvigor 构建，未 strip） | 35,008 B | `intermediates/cmake/default/obj/arm64-v8a/` |
+| `libentry.so`（hvigor 构建，未 strip） | 37,264 B | `intermediates/cmake/default/obj/arm64-v8a/` |
 | `libentry.so`（strip 后进 HAP） | 7,176 B | `intermediates/stripped_native_libs/...` |
 | `entry-default-unsigned.hap` | 以 `evidence/v0_build.json` 为准 | 未签名（HAP 大小随构建变化） |
 | HAP 内 `libs/arm64-v8a/libc++_shared.so` | 1,262,504 B | **新增**，见下方发现 |
