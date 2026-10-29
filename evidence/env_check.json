@@ -1,0 +1,27 @@
+{
+  "timestamp": "2026-10-29T02:55:53.019116+00:00",
+  "deveco": "D:/Program Files/Huawei/DevEco Studio",
+  "sdk": "D:/Program Files/Huawei/DevEco Studio/sdk/default/openharmony",
+  "api_version": "24",
+  "clang": "OHOS (dev) clang version 15.0.4 (llvm-project 99548401bd80576251755b185ab95945e5fe7884)",
+  "tools": {
+    "cmake": "D:/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/build-tools/cmake/bin/cmake",
+    "ninja": "D:/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/build-tools/cmake/bin/ninja",
+    "hdc": "D:/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/toolchains/hdc.exe",
+    "hvigorw": "D:/Program Files/Huawei/DevEco Studio/tools/hvigor/bin/hvigorw",
+    "protoc": null,
+    "buf": null
+  },
+  "board": {
+    "status": "no target",
+    "targets": "[Empty]\r"
+  },
+  "missing_required": [],
+  "missing_optional": [
+    "protoc",
+    "buf",
+    "target",
+    "board"
+  ],
+  "status": "PASS"
+}

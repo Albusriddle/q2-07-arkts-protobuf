@@ -1,0 +1,55 @@
+{
+  "slice": "V0-min: NAPI .so + ArkTS caller",
+  "timestamp_utc": "2026-10-29T02:55:56.878533+00:00",
+  "branch": "feature/p1-v0-min",
+  "commit": "3d2385a",
+  "status": "PARTIAL",
+  "commands": [
+    {
+      "command": "check_env",
+      "exit_code": 0,
+      "log": "check_env.log"
+    },
+    {
+      "command": "cmake-configure",
+      "exit_code": 0,
+      "log": "cmake_configure.log"
+    },
+    {
+      "command": "cmake-build",
+      "exit_code": 0,
+      "log": "cmake_build.log"
+    },
+    {
+      "command": "hvigor-assembleHap",
+      "exit_code": 0,
+      "log": "hap_build.log"
+    }
+  ],
+  "artifacts": {
+    "so": [
+      {
+        "path": "build/napi/libentry.so",
+        "size": 14696,
+        "sha256": "9879c20a69282be91181cb152744e14f2532c4f143ccd7f99d5aed6f1b86f48e"
+      },
+      {
+        "path": "app/entry/libs/arm64-v8a/libentry.so",
+        "size": 14696,
+        "sha256": "9879c20a69282be91181cb152744e14f2532c4f143ccd7f99d5aed6f1b86f48e"
+      }
+    ],
+    "hap": [
+      {
+        "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
+        "size": 127070,
+        "sha256": "d12203371110e4f8f4a8af2046425c3074c049ff8041dbef56adbd65e93db136",
+        "signed": false
+      }
+    ]
+  },
+  "hap_status": "built unsigned: /d/DSHws4TSCsingle/repo/app/entry/build/default/outputs/default/entry-default-unsigned.hap (no signingConfig; not installed)",
+  "hdc_status": "blocked: hdc present but no target",
+  "blocked": [],
+  "notes": "No device run. No installation result is claimed. HAP status is recorded independently."
+}
