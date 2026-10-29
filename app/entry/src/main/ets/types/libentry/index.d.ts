@@ -16,14 +16,20 @@ export interface DecodedUser {
   scores: Record<string, number>;
 }
 
+export interface DecodedBatch {
+  users: DecodedUser[];
+}
+
 export const ping: () => string;
 export const add: (a: number, b: number) => number;
 export const decodeUser: (bytes: Uint8Array) => DecodedUser;
+export const decodeMany: (bytes: Uint8Array) => DecodedBatch;
 
 declare const entry: {
   ping: () => string;
   add: (a: number, b: number) => number;
   decodeUser: (bytes: Uint8Array) => DecodedUser;
+  decodeMany: (bytes: Uint8Array) => DecodedBatch;
 };
 
 export default entry;

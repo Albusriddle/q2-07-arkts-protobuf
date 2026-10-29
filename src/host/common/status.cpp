@@ -27,6 +27,7 @@ const char* code_name(Code c) {
     case Code::Utf8Invalid: return "E_UTF8_INVALID";
     case Code::ObjectBudget: return "E_OBJECT_BUDGET";
     case Code::FieldBudget: return "E_FIELD_BUDGET";
+    case Code::BatchTooLarge: return "E_BATCH_TOO_LARGE";
     case Code::MessageTooLarge: return "E_MESSAGE_TOO_LARGE";
     case Code::FieldTooLarge: return "E_FIELD_TOO_LARGE";
     case Code::Internal: return "E_INTERNAL";

@@ -1,0 +1,185 @@
+{
+  "scope": "V0.2 batch decodeMany",
+  "claim_level": "host_decoder_verified(batch) + napi_shim_compiled_not_executed",
+  "napi_executed": false,
+  "device_run": false,
+  "installable": false,
+  "napi_surface": [
+    {
+      "name": "ping",
+      "signature": "ping(): string"
+    },
+    {
+      "name": "add",
+      "signature": "add(a:number,b:number): number"
+    },
+    {
+      "name": "decodeUser",
+      "signature": "decodeUser(bytes: Uint8Array): DecodedUser"
+    },
+    {
+      "name": "decodeMany",
+      "signature": "decodeMany(bytes: Uint8Array): DecodedBatch"
+    }
+  ],
+  "limits": {
+    "max_message_bytes": 67108864,
+    "max_batch_users": 100000,
+    "max_objects": 1000000,
+    "max_fields": 2000000,
+    "max_repeated_elements": 100000,
+    "strict_wire_type": true,
+    "utf8_strict": true,
+    "map_reject_dangerous": true
+  },
+  "host_evidence": {
+    "head": "516ffdba35dac3887d8b8772c24f3fc641b608f1",
+    "dirty_files": 34,
+    "tests": {
+      "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
+      "passed": 464,
+      "failed": 0
+    },
+    "differential": {
+      "ok": true,
+      "cases": 25
+    },
+    "materializer": {
+      "ok": true,
+      "users": 8178
+    }
+  },
+  "samples": [
+    {
+      "scope": "HOST-ONLY",
+      "stem": "user_batch_c20_plus_empty",
+      "composition": "0a + varint(52) + c20_full.wire + 0a00",
+      "wire_bytes": 56,
+      "wire_hex": "0a340881808080808080101205616c6963651a01611a016222050a015810032a03654078380742060a026b31100142060a026b3210020a00",
+      "wire_sha256": "951ddfb3386b1556ee9a1a51dc8fac05f99688aa7d5c1de79c37a012904da6b7",
+      "c20_full_sha256": "4906a96314c18ff19cafe7b44b1bcb4bd4c8e9429e86958f990713a27e885c2b",
+      "expected": {
+        "users": 2,
+        "first_id": "9007199254740993",
+        "second": "defaults"
+      }
+    }
+  ],
+  "artifacts": {
+    "so": {
+      "path": "build/napi/libentry.so",
+      "size": 239392,
+      "sha256": "c80e08bc4f53b9a5b6e000f7b195ee5028542fdcd4a3f720a1745ac79c92b549"
+    },
+    "hap_unsigned": {
+      "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
+      "size": 1634048,
+      "sha256": "251b4beb165ac822f3ae7d4c77c8d6a08b1c0e8cd5e2df8255735c11a78d9c79"
+    },
+    "hap_signed": {
+      "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
+      "size": 1696904,
+      "sha256": "c8603b30d91661a8a4cbc5411fcab379cd2e208b35c8df33a586b0154db088fb"
+    },
+    "hap_test": {
+      "path": "app/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap",
+      "size": 1460043,
+      "sha256": "d951ada82c2e31805ce6af41e0de20790c4e1e904ed9b7f51b4f120eca3c7286"
+    },
+    "hap_unsigned_native_lib": {
+      "entry": "libs/arm64-v8a/libentry.so",
+      "present": true,
+      "bundled_by_abi": {
+        "arm64-v8a": [
+          "libs/arm64-v8a/libc++_shared.so",
+          "libs/arm64-v8a/libentry.so"
+        ]
+      },
+      "bundled_count": 2,
+      "size": 243128,
+      "sha256": "1a9cc3aeab6c2557ca6c21af32eb1a128aaa7c5df94b23482f52ed54b514ac4c",
+      "elf": {
+        "is_elf": true,
+        "magic": "7f454c46",
+        "class": "ELF64",
+        "endian": "little",
+        "type": "DYN",
+        "machine": "AArch64",
+        "e_machine": 183,
+        "e_type": 3
+      },
+      "needed": [
+        "libace_napi.z.so",
+        "libc++_shared.so",
+        "libc.so"
+      ],
+      "soname": "libentry.so",
+      "needed_resolution": {
+        "libace_napi.z.so": "system_provided_assumed",
+        "libc++_shared.so": "bundled",
+        "libc.so": "system_provided_assumed"
+      }
+    },
+    "hap_signed_native_lib": {
+      "entry": "libs/arm64-v8a/libentry.so",
+      "present": true,
+      "bundled_by_abi": {
+        "arm64-v8a": [
+          "libs/arm64-v8a/libc++_shared.so",
+          "libs/arm64-v8a/libentry.so"
+        ]
+      },
+      "bundled_count": 2,
+      "size": 243128,
+      "sha256": "1a9cc3aeab6c2557ca6c21af32eb1a128aaa7c5df94b23482f52ed54b514ac4c",
+      "elf": {
+        "is_elf": true,
+        "magic": "7f454c46",
+        "class": "ELF64",
+        "endian": "little",
+        "type": "DYN",
+        "machine": "AArch64",
+        "e_machine": 183,
+        "e_type": 3
+      },
+      "needed": [
+        "libace_napi.z.so",
+        "libc++_shared.so",
+        "libc.so"
+      ],
+      "soname": "libentry.so",
+      "needed_resolution": {
+        "libace_napi.z.so": "system_provided_assumed",
+        "libc++_shared.so": "bundled",
+        "libc.so": "system_provided_assumed"
+      }
+    }
+  },
+  "symbols": {
+    "unstripped_decode_many": true,
+    "unstripped_decode_user": true,
+    "bundled_decode_many_string": true,
+    "bundled_napi_handle_scope_import": true,
+    "bundled_napi_array_import": true
+  },
+  "blocked": [
+    "no target device: decodeMany not executed",
+    "NAPI handle scope/array construction not runtime-tested",
+    "self-signed HAP is not installable (no device trust/UDID)"
+  ],
+  "not_claimed": [
+    "batch usable on device",
+    "batch performance",
+    "1.5x",
+    "700ms"
+  ],
+  "commands": [
+    "python scripts/gen_fields.py --check",
+    "python scripts/check_batch_sample.py --check",
+    "bash scripts/build_host.sh",
+    "bash scripts/build.sh",
+    "hvigorw assembleHap -p module=entry@ohosTest",
+    "bash scripts/sign_hap.sh",
+    "bash scripts/inspect_so.sh"
+  ]
+}
