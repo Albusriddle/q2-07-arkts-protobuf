@@ -1,0 +1,140 @@
+{
+  "scope": "V0.1 codegen field table + NAPI decodeUser",
+  "claim_level": "host_decoder_verified + napi_shim_compiled_not_executed",
+  "napi_executed": false,
+  "device_run": false,
+  "installable": false,
+  "napi_surface": [
+    "ping",
+    "add",
+    "decodeUser"
+  ],
+  "codegen": {
+    "command": "python scripts/gen_fields.py --check",
+    "exit_code": 0,
+    "proto_sha256": "05ef0e9ec2f5351efa5c3216977c99c37625e657199649cba1d81f58b68d6891",
+    "generated_header": {
+      "path": "src/host/decoder/generated/q207_demo_fields.h",
+      "size": 1603,
+      "sha256": "8420b5819ebf30cbffa39e57e98d962c92f3f46e17345b375f24c1017c171b79"
+    }
+  },
+  "host_evidence": {
+    "head": "484eeb91b7ad162913bced599b6f2090726379bb",
+    "tests": {
+      "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
+      "passed": 433,
+      "failed": 0
+    },
+    "differential_ok": true,
+    "materializer_ok": true
+  },
+  "artifacts": {
+    "so": {
+      "path": "build/napi/libentry.so",
+      "size": 230888,
+      "sha256": "a8b61f1f060bf18abcafb80c78c8ba83daa99f9532a0f1e1dfb6e84d8aa3d521"
+    },
+    "hap_unsigned": {
+      "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
+      "size": 1610530,
+      "sha256": "43a58a1d1537ed1ed2a085c993cbe21984cb798b0af0d903eeffab912a7110d0"
+    },
+    "hap_signed": {
+      "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
+      "size": 1670442,
+      "sha256": "9b49ec199bffcd251bfa46f3e9ca5f395b06ff16994ef946f310e44faffdbb8f"
+    },
+    "hap_test": {
+      "path": "app/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap",
+      "size": 1458236,
+      "sha256": "08b6f6708a030c5524116d01fa64b627a6a5d0f44ee3d15a9660f56a5dc2f861"
+    },
+    "hap_unsigned_native_lib": {
+      "entry": "libs/arm64-v8a/libentry.so",
+      "present": true,
+      "bundled_by_abi": {
+        "arm64-v8a": [
+          "libs/arm64-v8a/libc++_shared.so",
+          "libs/arm64-v8a/libentry.so"
+        ]
+      },
+      "bundled_count": 2,
+      "size": 223216,
+      "sha256": "df54a17fd57942ad48cf90f721cbda310b6c61292d99bfcb4d89bf5a1128648d",
+      "elf": {
+        "is_elf": true,
+        "magic": "7f454c46",
+        "class": "ELF64",
+        "endian": "little",
+        "type": "DYN",
+        "machine": "AArch64",
+        "e_machine": 183,
+        "e_type": 3
+      },
+      "needed": [
+        "libace_napi.z.so",
+        "libc++_shared.so",
+        "libc.so"
+      ],
+      "soname": "libentry.so",
+      "needed_resolution": {
+        "libace_napi.z.so": "system_provided_assumed",
+        "libc++_shared.so": "bundled",
+        "libc.so": "system_provided_assumed"
+      }
+    },
+    "hap_signed_native_lib": {
+      "entry": "libs/arm64-v8a/libentry.so",
+      "present": true,
+      "bundled_by_abi": {
+        "arm64-v8a": [
+          "libs/arm64-v8a/libc++_shared.so",
+          "libs/arm64-v8a/libentry.so"
+        ]
+      },
+      "bundled_count": 2,
+      "size": 223216,
+      "sha256": "df54a17fd57942ad48cf90f721cbda310b6c61292d99bfcb4d89bf5a1128648d",
+      "elf": {
+        "is_elf": true,
+        "magic": "7f454c46",
+        "class": "ELF64",
+        "endian": "little",
+        "type": "DYN",
+        "machine": "AArch64",
+        "e_machine": 183,
+        "e_type": 3
+      },
+      "needed": [
+        "libace_napi.z.so",
+        "libc++_shared.so",
+        "libc.so"
+      ],
+      "soname": "libentry.so",
+      "needed_resolution": {
+        "libace_napi.z.so": "system_provided_assumed",
+        "libc++_shared.so": "bundled",
+        "libc.so": "system_provided_assumed"
+      }
+    }
+  },
+  "static_checks": {
+    "decode_symbol_unstripped": true,
+    "decode_string_in_so": true,
+    "napi_imports_checked_by": "scripts/inspect_so.sh"
+  },
+  "commands": [
+    "bash scripts/gen_fields.py --check (via build.sh/build_host.sh)",
+    "bash scripts/build_host.sh",
+    "bash scripts/build.sh",
+    "bash scripts/build_hap.sh (or hvigor assembleHap)",
+    "bash scripts/sign_hap.sh"
+  ],
+  "blocked": [
+    "no target device: decodeUser not executed",
+    "self-signed HAP is not installable (no device trust/UDID)",
+    "NAPI object construction is not runtime-tested (only host object model + compile)"
+  ],
+  "notes": "HAP decoded .so is stripped; do not claim device runtime from this file."
+}

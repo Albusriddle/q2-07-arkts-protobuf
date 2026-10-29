@@ -39,6 +39,17 @@ CHECK_LOG="$EVIDENCE/check_env.log"
 CHECK_EXIT=$?
 CMD_RECORDS+=("check_env|$CHECK_EXIT|check_env.log")
 
+CODEGEN_LOG="$EVIDENCE/codegen_check.log"
+python "$ROOT/scripts/gen_fields.py" --check >"$CODEGEN_LOG" 2>&1
+CODEGEN_EXIT=$?
+CMD_RECORDS+=("codegen-check|$CODEGEN_EXIT|codegen_check.log")
+if [ "$CODEGEN_EXIT" -ne 0 ]; then
+  BLOCKED+=("generated field table is stale; run scripts/codegen.sh --write")
+  python "$ROOT/scripts/record_build.py" --status FAIL --hap-status "blocked: stale generated field table" \
+    --hdc-status "unknown" --command "${CMD_RECORDS[@]}" --blocked "${BLOCKED[@]}" || true
+  exit 1
+fi
+
 if [ ! -x "$CMAKE" ] || [ ! -x "$NINJA" ]; then
   BLOCKED+=("cmake/ninja missing; cannot build .so")
   python "$ROOT/scripts/record_build.py" --status FAIL --hap-status "blocked: cmake/ninja missing" --hdc-status "unknown" --command "${CMD_RECORDS[@]}" --blocked "${BLOCKED[@]}" || true
@@ -92,6 +103,9 @@ fi
 HAP_FILE=""
 HAP_STATUS="blocked: hvigorw not found"
 if [ -x "$HVIGORW" ] && [ -f "$ROOT/app/build-profile.json5" ]; then
+  # hvigor's up-to-date check only sees inputs inside the module; decoder sources
+  # live in src/host/.  Force a clean native build for evidence.
+  rm -rf "$ROOT/app/entry/build" "$ROOT/app/entry/.cxx"
   HAP_LOG="$EVIDENCE/hap_build.log"
   (
     cd "$ROOT/app" || exit 1

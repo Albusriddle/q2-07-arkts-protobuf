@@ -1,0 +1,3 @@
+# generated code must stay LF on all checkouts
+src/host/decoder/generated/*.h text eol=lf
+scripts/gen_fields.py text eol=lf

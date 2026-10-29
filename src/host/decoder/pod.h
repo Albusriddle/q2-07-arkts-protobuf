@@ -10,29 +10,12 @@
 #include <string>
 #include <vector>
 
+// Field numbers and wire-type constants are generated from proto/example.proto.
+#include "generated/q207_demo_fields.h"
+
 namespace q207 {
 namespace pod {
 
-// proto/example.proto -- field numbers (kept next to the POD so a schema change
-// is a single-file edit; codegen replaces this file later).
-namespace f {
-// message Profile
-constexpr uint32_t kProfileCity = 1;
-constexpr uint32_t kProfileAge = 2;
-// message User
-constexpr uint32_t kUserId = 1;
-constexpr uint32_t kUserName = 2;
-constexpr uint32_t kUserTags = 3;
-constexpr uint32_t kUserProfile = 4;
-constexpr uint32_t kUserEmail = 5;
-constexpr uint32_t kUserPhone = 6;
-constexpr uint32_t kUserLevel = 7;
-constexpr uint32_t kUserScores = 8;
-// message UserBatch
-constexpr uint32_t kUserBatchUsers = 1;
-// Highest field number in User; presence bits live in one uint32.
-constexpr uint32_t kUserMaxField = 8;
-}  // namespace f
 
 struct Profile {
   bool present = false;

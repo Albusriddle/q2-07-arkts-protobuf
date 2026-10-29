@@ -162,14 +162,15 @@ compile_bin() {
 # ---------------------------------------------------------------------------
 SHARED="src/host/common/status.cpp src/host/common/sha256.cpp src/host/decoder/wire_reader.cpp \
 src/host/decoder/conformance.cpp src/host/decoder/decode_user.cpp src/host/decoder/norm.cpp \
-src/host/tape/tape.cpp"
+src/host/decoder/map_order.cpp src/host/decoder/object_model.cpp src/host/tape/tape.cpp"
 
 build_all() {
   detect_compiler
   say "build (host_tests / host_decode_dump / host_bench)"
   # shellcheck disable=SC2086
   compile_bin host_tests $SHARED src/host/tests/test_wire.cpp src/host/tests/test_vectors.cpp \
-    src/host/tests/test_tape.cpp src/host/tests/test_decode.cpp src/host/tests/main.cpp \
+    src/host/tests/test_tape.cpp src/host/tests/test_decode.cpp \
+    src/host/tests/test_object_model.cpp src/host/tests/main.cpp \
     || return 1
   # shellcheck disable=SC2086
   compile_bin host_decode_dump $SHARED src/host/tools/host_decode_dump.cpp || return 1
@@ -322,6 +323,10 @@ collect_evidence() {
 }
 
 # ---------------------------------------------------------------------------
+run_codegen_check() {
+  python "$ROOT/scripts/gen_fields.py" --check
+}
+
 NO_NPM=0
 for arg in "$@"; do
   case "$arg" in
@@ -331,6 +336,7 @@ for arg in "$@"; do
   esac
 done
 
+run_step "codegen-check" "python scripts/gen_fields.py --check (proto -> generated/q207_demo_fields.h)" run_codegen_check
 run_step "build" "native host compiler: cl/g++/clang++ over src/host/**, -O2, 3 binaries" build_all
 run_step "unit-tests" "build/host/host_tests.exe (wire + 38 golden vectors + tape + decode)" run_tests
 run_step "data-cards" "python bench/gen_cards.py --out bench/data" gen_cards
