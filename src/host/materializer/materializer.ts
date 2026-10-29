@@ -107,6 +107,20 @@ export class TapeReader {
     if (this.header.profileRecordSize !== TAPE_LAYOUT.PROFILE_RECORD_SIZE) {
       throw new Error(`unexpected profile record size ${this.header.profileRecordSize}`);
     }
+    // The C++ verifier is authoritative, but this reader is also used directly by
+    // the TS harness; reject malformed section order/overlap before any access.
+    const h = this.header;
+    if (h.headerBytes !== TAPE_LAYOUT.HEADER_BYTES) throw new Error(`bad headerBytes ${h.headerBytes}`);
+    if (h.presenceWords !== 1) throw new Error(`bad presenceWords ${h.presenceWords}`);
+    if (h.rootsOff !== TAPE_LAYOUT.HEADER_BYTES) throw new Error(`bad rootsOff ${h.rootsOff}`);
+    const rootsEnd = h.rootsOff + h.rootsCount * 4;
+    const tapeEnd = h.tapeOff + h.tapeBytes;
+    const blobEnd = h.blobOff + h.blobBytes;
+    const valuesEnd = h.valuesOff + h.valuesBytes;
+    if (rootsEnd > h.tapeOff || tapeEnd > h.blobOff || blobEnd > h.valuesOff) {
+      throw new Error('tape sections overlap or are out of order');
+    }
+    if (valuesEnd > bytes.byteLength) throw new Error('tape sections exceed buffer');
   }
 
   private u32(off: number): number {
@@ -124,15 +138,23 @@ export class TapeReader {
   /** UTF-8 bytes from the blob region.  Strict UTF-8 was validated by the decoder. */
   blob(off: number, len: number): string {
     const start = this.header.blobOff + off;
-    if (off + len > this.header.blobBytes) throw new RangeError('blob reference out of range');
+    if (off + len > this.header.blobBytes || start + len > this.bytes.byteLength) {
+      throw new RangeError('blob reference out of range');
+    }
     return textDecoder.decode(this.bytes.subarray(start, start + len));
   }
 
   rootAt(i: number): number {
+    if (!Number.isInteger(i) || i < 0 || i >= this.header.rootsCount) {
+      throw new RangeError('root index out of range');
+    }
     return this.u32(this.header.rootsOff + i * 4);
   }
 
   userAt(recOff: number): MaterializedUser {
+    if (recOff < 0 || recOff + TAPE_LAYOUT.USER_RECORD_SIZE > this.header.tapeBytes) {
+      throw new RangeError('user record out of range');
+    }
     const base = this.header.tapeOff + recOff;
     const presence = this.u32(base + 0);
     const contactBits = this.u32(base + 4);
@@ -169,7 +191,11 @@ export class TapeReader {
     // proto3 optional: primary presence bit decides "assign or not"
     if ((presence & (1 << 6)) !== 0) u.level = this.i32(base + 60);
 
-    u.scores = {};
+    // Null-prototype object: a wire map key such as "__proto__" can never
+    // mutate Object.prototype (C++ strict mode rejects those keys, but the
+    // materializer must be safe even when handed a compat-mode tape).
+    const scores: Record<string, number> = Object.create(null);
+    u.scores = scores;
 
     // map<string,int32>: slots of {u32 key_off, u32 key_len, i32 value}
     const scoreCount = this.u32(base + 64);
@@ -178,7 +204,7 @@ export class TapeReader {
       const slot = this.header.valuesOff + scoreOff + i * TAPE_LAYOUT.SCORE_SLOT_BYTES;
       const key = this.blob(this.u32(slot), this.u32(slot + 4));
       // last value wins, first insertion position kept (JS object semantics)
-      u.scores[key] = this.i32(slot + 8);
+      scores[key] = this.i32(slot + 8);
     }
     return u;
   }

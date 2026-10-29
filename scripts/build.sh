@@ -71,6 +71,7 @@ if [ -f "$BUILD_DIR/libentry.so" ]; then
 fi
 
 OHPM_CLI="$DEVECO/tools/ohpm/bin/pm-cli.js"
+OHPM_FAILED=0
 if [ -f "$ROOT/app/oh-package.json5" ] && [ -f "$OHPM_CLI" ]; then
   OHPM_LOG="$EVIDENCE/ohpm_install.log"
   (
@@ -79,7 +80,12 @@ if [ -f "$ROOT/app/oh-package.json5" ] && [ -f "$OHPM_CLI" ]; then
   ) >"$OHPM_LOG" 2>&1
   OHPM_EXIT=$?
   CMD_RECORDS+=("ohpm-install|$OHPM_EXIT|ohpm_install.log")
+  if [ "$OHPM_EXIT" -ne 0 ]; then
+    OHPM_FAILED=1
+    BLOCKED+=("ohpm install failed (exit $OHPM_EXIT); dependencies may be stale")
+  fi
 else
+  OHPM_FAILED=1
   BLOCKED+=("ohpm install skipped: pm-cli.js or app/oh-package.json5 missing")
 fi
 
@@ -93,7 +99,10 @@ if [ -x "$HVIGORW" ] && [ -f "$ROOT/app/build-profile.json5" ]; then
   ) >"$HAP_LOG" 2>&1
   HAP_EXIT=$?
   CMD_RECORDS+=("hvigor-assembleHap|$HAP_EXIT|hap_build.log")
-  HAP_FILE="$(find "$ROOT/app/entry/build" -name '*.hap' -type f 2>/dev/null | head -1 || true)"
+  # Only the main unsigned artifact is evidence for this slice.  A plain
+  # `find ... *.hap | head -1` can pick the signed HAP or the ohosTest HAP.
+  HAP_FILE="$ROOT/app/entry/build/default/outputs/default/entry-default-unsigned.hap"
+  [ -f "$HAP_FILE" ] || HAP_FILE=""
   if [ "$HAP_EXIT" -eq 0 ] && [ -n "$HAP_FILE" ]; then
     HAP_STATUS="built unsigned: $HAP_FILE (no signingConfig; not installed)"
   elif [ "$HAP_EXIT" -eq 0 ]; then
@@ -127,6 +136,7 @@ if [ -n "$SO_PATH" ]; then
     built\ unsigned:*) STATUS="PASS-UNSIGNED" ;;
     *) STATUS="PARTIAL" ;;
   esac
+  [ "$OHPM_FAILED" -eq 1 ] && STATUS="PARTIAL"
 else
   STATUS="FAIL"
 fi

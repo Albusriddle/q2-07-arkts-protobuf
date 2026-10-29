@@ -251,7 +251,7 @@ bash scripts/sign_hap.sh
 
 ## 8. 安全注意
 
-- `signing/q207-local.p12` **包含私钥**；口令是脚本里的本地测试值 `***REMOVED***`，**只能用于本地演示**，不得用于任何发布物。
+- `signing/q207-local.p12` **包含私钥**；口令**不在仓库内**：由 `Q207_SIGN_STORE_PWD` 环境变量或 gitignored `signing/.local_pwd` 提供；只能用于本地演示，不得用于任何发布物。
 - `.gitignore` 已补 `signing/*.p12`、`signing/*.jks`、`signing/*.pem`、`signing/*.cer`、`signing/*.csr`、`signing/*.key`、`signing/*.p7b`、`signing/logs/`、`signing/verify/`；**私钥与证书链不进版本库**。
 - 提交前自检：`git status --porcelain signing/` 应只显示 `signing/README.md` 与 `signing/profile/q207-profile.json`（无密钥/证书）。
 - 本流程**没有**安装任何软件、**没有**连接/刷写任何设备、**没有**推远程。
@@ -262,4 +262,4 @@ bash scripts/sign_hap.sh
 
 - `evidence/v0_build.json`（上一阶段构建证据）**未改动**；该文件记录 `signed: false` 的 unsigned HAP，本文件不覆盖它，只新增 `evidence/sign_check.json` 作为签名阶段的独立记录。
 - `evidence/sign_check.json` 的 `artifacts.hap_unsigned.sha256` 锁定了本次实际签名的 unsigned HAP，便于事后核对"HAP 是否被重建过"。
-- `scripts/sign_hap.sh` 是**新增**脚本，不修改 `scripts/build.sh`；`host/napi`、`Index.ets`、`RISKS.md` 均未触碰。
+- `scripts/sign_hap.sh` 是**新增**脚本，不修改 `scripts/build.sh`；签名流程不触碰 app 源码。

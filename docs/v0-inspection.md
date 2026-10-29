@@ -92,7 +92,7 @@ python scripts/inspect_hap.py --wait 90     # HAP 正在被并发构建重写时
 
 | 项 | 实测值 |
 |---|---|
-| 大小 | `14,696` B |
+| 大小 | `15,128` B |
 | SHA-256 | `9879c20a69282be91181cb152744e14f2532c4f143ccd7f99d5aed6f1b86f48e` |
 | 类型 | `ELF64` / `AArch64` / `DYN (Shared object file)` / 小端 |
 | `SONAME` | `libentry.so` |
@@ -112,7 +112,7 @@ python scripts/inspect_hap.py --wait 90     # HAP 正在被并发构建重写时
 | 大小 / 外层 SHA-256 | **不稳定** | 以 `evidence/v0_artifact_check.json` / `v0_signed_artifact_check.json` 的 `input.size / input.sha256` 为准（数字随构建变化，以 JSON 为准） |
 | 容器 | 稳定 | 有效 ZIP，**15 个条目**（unsigned）/16（signed），CRC 校验 ok |
 | `module.json` | **稳定** | 1587 B，`sha256 db7e9bd2a1ce87c6d544822d07eb71de417627764411062397b1942282bb2868`，JSON 合法，**必需键 0 缺失** |
-| `libs/arm64-v8a/libentry.so` | **稳定** | 6,520 B，`sha256 72ef89e239bf45c31467088b5005a9177e3a63ebaf6682d58bda567f805ca517`，`ELF64`/`AArch64`/`DYN` |
+| `libs/arm64-v8a/libentry.so` | **稳定** | 7,176 B，`sha256 3dd94a91055549ea05ec43126bb136c9e3c28aca70174d7e441614d3197b8c30`，`ELF64`/`AArch64`/`DYN` |
 | `ets/modules.abc` | 稳定 | 12,596 B |
 | `pkgSdkInfo.json` | 不稳定 | 64 → 129 B（随依赖登记变化） |
 | bundleName / 版本 | 稳定 | `com.example.q207` / `1.0.0`（code `1000000`） |
@@ -128,8 +128,8 @@ python scripts/inspect_hap.py --wait 90     # HAP 正在被并发构建重写时
 
 | 核对 | 结果 |
 |---|---|
-| `build/napi/libentry.so` vs `app/entry/libs/arm64-v8a/libentry.so` | **完全相同**（14,696 B，SHA-256 均为 `9879c20a…86f48e`） |
-| HAP 内 `.so` vs 仓库副本 | **不同**：6,520 B vs 14,696 B（0.444×）→ 打包时被 strip |
+| `build/napi/libentry.so` vs HAP 内副本 | 不同（15,128 B vs 7,176 B；HAP 内已 strip） |
+| HAP 内 `.so` vs 仓库副本 | **不同**：7,176 B vs 15,128 B（0.474×）→ 打包时被 strip |
 | strip 是否改变了动态段 | **没有**：两份 `.so` 的 `NEEDED`（3 项）与动态符号（导出 2 / 导入 12）**逐项一致**，仅本地符号被移除 |
 | `module.json` 的 API 与 SDK | SDK `apiVersion=24`（`version=6.1.1.125`）；HAP `compileSdkVersion=6.1.1.125` → 同代 |
 

@@ -129,7 +129,7 @@ def git_info(repo: str) -> dict:
         "branch": branch,
         "head": rev,
         "dirty_files": len([l for l in dirty.splitlines() if l.strip()]),
-        "note": "this slice does not commit; the Lead commits",
+        "note": "captured at evidence-generation time; see git.head/dirty_files",
     }
 
 
@@ -226,6 +226,8 @@ def main() -> int:
     steps_ok = all(s["exit_code"] == 0 for s in steps) if steps else False
     diff_ok = bool(diff and diff.get("ok"))
     mat_ok = bool(mat and mat.get("ok"))
+    mat_users = (mat or {}).get("users", "?")
+    diff_cases = (diff or {}).get("cases_in_corpus", "?")
 
     evidence = {
         "scope": "HOST-ONLY",
@@ -242,8 +244,8 @@ def main() -> int:
             "the wire reader's decision order (tag -> wire -> len<=remaining -> len<=cap -> alloc) is executable and judged by 38 W0 golden vectors",
             "negative int32 (10-byte varint), non-shortest varint, packed/unpacked, map, oneof, proto3 optional decode correctly into POD",
             "the row tape v0 layout round-trips, is byte-reproducible and has a verifier that rejects tampered buffers",
-            "tape -> plain-object materialization reproduces the C++ object graph exactly (8,178 users, sha256 equality)",
-            "object graph and re-encoded bytes agree with protobufjs 7.6.5 on a 25-case corpus (no undocumented difference)",
+            f"tape -> plain-object materialization reproduces the C++ object graph exactly ({mat_users} users, sha256 equality)",
+            f"object graph and re-encoded bytes agree with protobufjs 7.6.5 on a {diff_cases}-case corpus (no undocumented difference)",
         ],
         "toolchain": {
             "kind": args.compiler_kind,

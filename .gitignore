@@ -56,10 +56,9 @@ signing/*
 signing/profile/*
 !signing/profile/q207-profile.json
 
-# ohpm 本地 lock（构建生成）
-app/entry/oh-package-lock.json5
 
 # 编译中间产物 / 测试输出
 *.obj
 app/entry/.test/
 t.obj
+signing/.local_pwd

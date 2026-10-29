@@ -21,8 +21,10 @@ void suite_vectors() {
   for (unsigned i = 0; i < kGoldenVectorCount; ++i) {
     const GoldenVector& v = kGoldenVectors[i];
     std::vector<uint8_t> bytes = unhex(v.hex);
-    // A non-empty hex string that fails to parse would be a copy bug.
-    TCHECK(v.hex[0] == '\0' || !bytes.empty());
+    // A non-empty hex string that fails to parse / has odd length would be a copy bug.
+    const size_t hex_len = std::strlen(v.hex);
+    TCHECK(hex_len % 2 == 0);
+    TCHECK(v.hex[0] == '\0' || bytes.size() == hex_len / 2);
 
     Limits lim;
     if (v.max_string_bytes || v.max_objects || v.max_fields) {

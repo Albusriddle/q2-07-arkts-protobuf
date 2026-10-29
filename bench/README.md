@@ -18,7 +18,7 @@ python bench/gen_cards.py --out bench/data
 | Card | Class | Shape | Size | Payload |
 |---|---|---|---|---|
 | `s1_user_1kb.bin` | S1 (10–30 fields, ≈1 KiB) | 1 frame, 8,178 `User` messages, 191,858 fields | 8,397,700 B | 8,397,696 B |
-| `s3_100mb.bin` | S3 (100 MB 合成) | 100 frames × ≈1 MiB, 102,100 messages, 2,393,694 fields | 105,005,840 B | 105,005,440 B |
+| `s3_100mb.bin` | S3 (100 MiB payload 目标) | 100 frames × ≈1 MiB, 102,100 messages, 2,393,694 fields | 105,005,840 B（整帧边界导致略超 100 MiB） | 105,005,440 B |
 
 Exact sizes/sha256 for the recorded run are in `evidence/host_slice.json`
 (`bench.<dataset>.card_bytes` / `card_sha256`), and every CSV row carries them too.

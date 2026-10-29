@@ -18,9 +18,9 @@
 
 ## R3 HAP 签名/安装不确定（不阻塞）
 
-- 本切片实际产出了 **unsigned HAP**：`app/entry/build/default/outputs/default/entry-default-unsigned.hap`。
-- 没有 `signingConfigs`/profile，hvigor 明确 `Will skip sign`；因此 **HAP 不能安装到真实设备**。
-- 签名、profile、安装、启动均未执行；不得把“unsigned HAP 构建成功”写成“设备可运行”。
+- 本切片产出 **unsigned HAP** 与 **本地自签名 HAP**：`app/entry/build/default/outputs/default/entry-default-unsigned.hap`、`entry-default-signed.hap`。
+- hvigor 没有 `signingConfigs`，明确 `Will skip sign`；`scripts/sign_hap.sh` 仅本地自签并 `verify-app` 通过。
+- 自签 CA 不在设备信任根、无 UDID，`installable=false`；安装、启动、真机运行均未执行。
 
 ## R4 未采购（不阻塞）
 
@@ -45,7 +45,7 @@
 
 ## R7 hvigor 原生构建后 HAP 体积 +1.26 MB（2026-10-29 新增）
 
-- 现象：接入 `externalNativeOptions` 后，hvigor 默认按 `c++_shared` 打包 `libc++_shared.so`（1,262,504 B），HAP 由 127,070 B 增至 1,390,057 B。
+- 现象：接入 `externalNativeOptions` 后，hvigor 默认按 `c++_shared` 打包 `libc++_shared.so`（1,262,504 B），HAP 由约 127 KB 增至约 1.39 MB（当前值以 `evidence/v0_build.json` 为准）。
 - 影响：若以 HAR/HSP 分发，每个包都背这个成本；若改 `c++_static`，多 native 库时 STL 重复且跨库 `std::string` 有 ABI 风险。
 - 现状：**未决策**。证据见 `evidence/v1_hvigor_native.json`、文档 `docs/v1-hvigor-native.md` §3.1。
 - 处置：在 HAR 承载 native 的验证（W1 必做）之前先定；不阻塞当前 host 切片与 V0 设备侧。

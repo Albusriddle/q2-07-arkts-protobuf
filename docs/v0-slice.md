@@ -6,7 +6,7 @@
 
 | 产物 | 路径 | 状态 |
 |---|---|---|
-| NAPI 动态库（未 strip） | `build/napi/libentry.so` | **built**，14,696 B，ELF64 AArch64 |
+| NAPI 动态库（未 strip） | `build/napi/libentry.so` | **built**，15,128 B，ELF64 AArch64 |
 | 放入 app 的 NAPI 库 | 由 hvigor `externalNativeOptions` 构建 | **native build**（不再手工拷 `.so`） |
 | 未签名 HAP | `app/entry/build/default/outputs/default/entry-default-unsigned.hap` | **built unsigned**；大小/hash 以 `evidence/v0_build.json` 为准 |
 | 自签名 HAP | `app/entry/build/default/outputs/default/entry-default-signed.hap` | **signed + verify-app 通过**；大小/hash 以 `evidence/sign_check.json` 为准；**installable=false** |
@@ -43,13 +43,13 @@ cd app && hvigorw assembleHap --mode module -p product=default -p buildMode=debu
 ## 产物核验
 
 - `libentry.so`：ELF64 AArch64，`NEEDED` = `libace_napi.z.so`, `libc++_shared.so`, `libc.so`；导入 `napi_module_register`（未定义符号，由 NAPI 运行时 `libace_napi.z.so` 解析；不是导出）。
-- HAP：ZIP 内 `libs/arm64-v8a/libentry.so`（6,520 B，已 strip）和 `libs/arm64-v8a/libc++_shared.so`（1,262,504 B）存在，`module.json` 存在。
+- HAP：ZIP 内 `libs/arm64-v8a/libentry.so`（7,176 B，已 strip）和 `libs/arm64-v8a/libc++_shared.so`（1,262,504 B）存在，`module.json` 存在。
 - 未签名 HAP 的 `signingConfigs` 为空；`scripts/sign_hap.sh` 用本地自签 CA 生成 signed HAP，`verify-app` 通过，但**自签 CA 不在设备信任根、无 UDID/profile，installable=false**。
 - 未执行 `hdc install`，未启动应用，未验证 `ping()`/`add()` 真机行为。
 
 ## 代码接口
 
-`host/napi/entry.cpp`：
+`app/entry/src/main/cpp/entry.cpp`（canonical；`host/napi/CMakeLists.txt` 复用该文件）：
 
 - `ping()` → `"pong"`
 - `add(a, b)` → `a + b`（double）

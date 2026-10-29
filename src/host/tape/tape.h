@@ -5,11 +5,14 @@
 // addressed by BYTE offset and counted in ELEMENTS, and `roots` holds byte
 // offsets into `tape`, never record indices.
 //
-//   +--------+----------------+--------+----------+---------+-------------+
-//   | header | tape records   | roots  | blob     | values  |  (padding)  |
-//   +--------+----------------+--------+----------+---------+-------------+
-//    80 B      80 B / user      4 B/root  raw bytes  4 B-aligned slots
-//              16 B / profile
+//   +--------+--------+----------------+----------+---------+-------------+
+//   | header | roots  | tape records   | blob     | values  |  (padding)  |
+//   +--------+--------+----------------+----------+---------+-------------+
+//    80 B     4 B/root  80 B / user      raw bytes  4/8/12 B slots
+//                        16 B / profile
+//
+// NOTE: roots comes BEFORE tape (roots_off = 80; tape_off = align8(80+roots_bytes)).
+//       Older drafts had tape before roots; the code below is authoritative.
 //
 // Header (80 bytes, little endian):
 //   0   magic       8 B   "Q207TAP0"
@@ -27,7 +30,7 @@
 //   52  blob_bytes u32
 //   56  values_off u32
 //   60  values_bytes u32
-//   64  crc32 u32       (over tape|roots|blob|values, in that order)
+//   64  crc32 u32       (over roots|tape|blob|values, in that order)
 //   68  flags u32       bit0: oneof keep-all (compat arm)
 //   72  presence_words u32 (== 1; segmented bitmap hook for wide messages)
 //   76  reserved u32    (0)
@@ -148,13 +151,13 @@ uint32_t section_crc(const uint8_t* data, size_t size, const Header& h);
 // Full structural verification: magic/version/sizes, section bounds and
 // 8-byte alignment, crc32, then every root record: presence bits, blob ranges,
 // values ranges, profile pointer.  Also re-derives record counts.
-VerifyReport verify(const uint8_t* data, size_t size);
+VerifyReport verify(const uint8_t* data, size_t size, const Limits& limits = Limits());
 
 // ---- reader ------------------------------------------------------------
 class Reader {
  public:
   // NOTE: `data` must outlive the reader.  Call load() and check it first.
-  Reader(const uint8_t* data, size_t size);
+  Reader(const uint8_t* data, size_t size, const Limits& limits = Limits());
   Code load();
   const Header& header() const { return h_; }
 
@@ -171,6 +174,7 @@ class Reader {
   const uint8_t* data_;
   size_t size_;
   Header h_;
+  Limits lim_;
   bool loaded_ = false;
 };
 

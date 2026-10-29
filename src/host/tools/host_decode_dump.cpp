@@ -54,8 +54,8 @@ bool write_text(const std::string& path, const std::string& s) {
 
 struct Item {
   std::string stem;
-  std::string present_fields;   // JSON array of field numbers present on the wire
-  std::string profile_fields;   // JSON array for nested Profile fields
+  std::string present_fields = "[]";   // JSON array; valid even on a failed item
+  std::string profile_fields = "[]";   // JSON array; valid even on a failed item
   uint32_t oneof_case = 0;
   std::string code;
   std::string wire_sha256;
@@ -230,7 +230,8 @@ int main(int argc, char** argv) {
       it.unknown_fields = st.unknown_fields;
       if (code == Code::Ok) {
         emit(u, out_dir, s, wire, &it);
-        it.ok = true;
+        it.ok = it.tape_verified;
+        if (!it.tape_verified) ++failures;
       } else {
         it.stem = s;
         it.wire_bytes = wire.size();

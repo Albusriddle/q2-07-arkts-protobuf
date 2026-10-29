@@ -42,8 +42,22 @@ SIGNED_HAP="${SIGNED_HAP:-$(dirname "$UNSIGNED_HAP")/entry-default-signed.hap}"
 BUNDLE_NAME="com.example.q207"
 COMPATIBLE_VERSION=24        # matches app/build-profile.json5 compatibleSdkVersion 6.1.1(24)
 KEYSTORE="$SIGNING/q207-local.p12"
-STORE_PWD="***REMOVED***"   # local test value only; never used for a real release
-KEY_PWD="***REMOVED***"
+
+# Never commit a signing password.  Resolution order:
+#   1) Q207_SIGN_STORE_PWD / Q207_SIGN_KEY_PWD env vars
+#   2) gitignored signing/.local_pwd (local-only convenience file)
+#   3) fail closed
+STORE_PWD="${Q207_SIGN_STORE_PWD:-}"
+if [ -z "$STORE_PWD" ] && [ -f "$SIGNING/.local_pwd" ]; then
+  IFS= read -r STORE_PWD < "$SIGNING/.local_pwd" || true
+fi
+KEY_PWD="${Q207_SIGN_KEY_PWD:-$STORE_PWD}"
+if [ -z "$STORE_PWD" ]; then
+  echo "FAIL: signing password is not set." >&2
+  echo "      export Q207_SIGN_STORE_PWD=... (and optionally Q207_SIGN_KEY_PWD)" >&2
+  echo "      or create gitignored $SIGNING/.local_pwd for local runs." >&2
+  exit 2
+fi
 
 ROOT_SUBJECT="C=CN,O=Q207,OU=Local Dev,CN=Q207 Local Root CA"
 APP_CA_SUBJECT="C=CN,O=Q207,OU=Local Dev,CN=Q207 App Signing CA"
@@ -315,8 +329,7 @@ doc = {
         "bundle_name": bundle,
         "compatible_version": int(compat_ver),
         "sign_code": True,
-        "store_password_source": "hard-coded local test value in scripts/sign_hap.sh "
-                                 "(never used for a real release)",
+        "store_password_source": "Q207_SIGN_STORE_PWD env var or gitignored signing/.local_pwd; never used for a real release",
     },
     "commands": commands,
     "artifacts": {

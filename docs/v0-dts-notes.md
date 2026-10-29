@@ -14,7 +14,7 @@
 | 真正原因 | 依赖声明了 `file:` 本地包，但**从未执行 `ohpm install`** → `app/entry/oh_modules/` 不存在 → ArkTS 解析不到 `libentry.so` 的类型 → 走"模块未找到"分支，对这一类 `.so` 只报 **warning（TS 28014）而不报 error**，所以 HAP 照样成功 |
 | 这个 warning 是不是纯噪音 | **不是**。实测：`oh_modules` 缺失时，把 `index.d.ts` 故意写错类型，构建**依然成功** → 说明 .d.ts 之前**完全没被消费**，`import entry from 'libentry.so'` 退化为隐式 `any` |
 | 修复动作 | 在 `app/` 下执行一次 `ohpm install`（生成 `app/entry/oh_modules/libentry.so`，含 `types: ./index.d.ts`） |
-| HAP | **构建成功**，`entry-default-unsigned.hap`，127,135 B（native 集成前历史快照；当前以 `evidence/v0_artifact_check.json` 为准），未签名 |
+| HAP | **构建成功**，`entry-default-unsigned.hap`，约 127 KB（native 集成前历史快照；当前以 `evidence/v0_artifact_check.json` 为准），未签名 |
 | 仍未解除 | **BLOCKED**：无目标板（`hdc list targets` 为空）、HAP 未签名 → 不能安装/运行。**UNVERIFIED**：`ping()`/`add()` 真机行为 |
 
 ## 1. 证据（每次实验都做了 clean 重编，`CompileArkTS` 均实际执行）
@@ -27,7 +27,7 @@
 | 3 | d.ts 是否真被消费（反例） | 同上错误 d.ts，但移走 `oh_modules` | **BUILD SUCCESSFUL** + warning → 证明 .d.ts 未生效 | `evidence/hap_build_dts_wrongtype_nodeps.log` |
 | 4 | 因果验证 | 正确 d.ts，移走 `oh_modules` | warning 复现 → 证明"缺 `oh_modules`"就是原因 | `evidence/hap_build_dts_nodeps.log` |
 | 5 | 依赖 key 反例 | key/包名改 `libentry`（去掉 `.so`），安装后构建 | warning 复现 → **依赖 key 必须与 import 说明符逐字一致** | `evidence/hap_build_dts_keylibentry.log` |
-| 6 | 最终状态 | 全部回滚 + `ohpm install` + clean build | **无 warning**；`BUILD SUCCESSFUL`；HAP 127,135 B（历史快照） | `evidence/hap_build.log`、`evidence/hap_build_dts_fixed_final.log` |
+| 6 | 最终状态 | 全部回滚 + `ohpm install` + clean build | **无 warning**；`BUILD SUCCESSFUL`；HAP 约 127 KB（历史快照） | `evidence/hap_build.log`、`evidence/hap_build_dts_fixed_final.log` |
 
 ¹ 10:55 的历史日志 `evidence/hap_build_dts.log`（warning 在第 27 行）；本次的等价复现是实验 4 的 `hap_build_dts_nodeps.log`（同一状态：原接线 + 无 `oh_modules`）。
 
@@ -67,7 +67,7 @@ B) if (moduleNotFoundError) { ... if (isSoFile) { warn } else { error } }   # �
 }
 ```
 
-`app/entry/src/main/ets/types/libentry/index.d.ts`：声明 `ping` / `add`（与 `host/napi/entry.cpp` 导出一致）。
+`app/entry/src/main/ets/types/libentry/index.d.ts`：声明 `ping` / `add`（与 `app/entry/src/main/cpp/entry.cpp` 导出一致）。
 
 要点：
 
@@ -102,7 +102,7 @@ bash scripts/build.sh
 | `evidence/hap_build.log`、`v0_build.json`、`env_check.json`、`check_env.log`、`cmake_*.log`、`hdc_targets.log` | 由 `scripts/build.sh` 正常重写 |
 | `docs/v0-dts-notes.md` | 本文 |
 
-**未改动**（已用 `git diff --stat` 确认）：`host/napi/entry.cpp`、`app/entry/src/main/ets/pages/Index.ets`、`scripts/build.sh`、`RISKS.md`、`app/entry/oh-package.json5`、`types/libentry/**`（验证用的临时改动已全部回滚，最终内容与原始字节一致）。
+**未改动**（当时快照）：`app/entry/src/main/cpp/entry.cpp`（原 `host/napi/entry.cpp`）、`Index.ets`、`scripts/build.sh`、`RISKS.md`、`app/entry/oh-package.json5`、`types/libentry/**`。
 
 ## 6. `scripts/build.sh` 的两点观察（只记录，未改）
 
@@ -114,7 +114,7 @@ bash scripts/build.sh
 | 项 | 状态 |
 |---|---|
 | ArkTS `libentry.so` warning | **已消除**（clean 与增量构建均无） |
-| HAP 构建 | **成功**，unsigned，127,135 B（历史快照；当前以 `v0_artifact_check.json` 为准） |
+| HAP 构建 | **成功**，unsigned，约 127 KB（历史快照；当前以 `v0_artifact_check.json` 为准） |
 | 设备安装 / 运行 | **BLOCKED**：`hdc list targets` 为空；HAP 无 signingConfig，不可安装到真机 |
 | `ping()` / `add()` 真机行为 | **UNVERIFIED** |
 | 签名 / profile | **BLOCKED**（无 `signingConfigs`，hvigor 明确 `Will skip sign`） |
