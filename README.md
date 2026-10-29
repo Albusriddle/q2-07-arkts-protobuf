@@ -104,4 +104,6 @@ bash scripts/build_host.sh
 
 ## License
 
-**TBD.** No license is granted yet. Apache-2.0 is the proposed outbound license, pending the school/club IP and open-source authorization record. Do not redistribute until `LICENSE` is added.
+This repository is licensed under the **Apache License, Version 2.0**. See [LICENSE](LICENSE).
+
+Third-party dependencies retain their own licenses (for example, `protobufjs` is BSD-3-Clause); their license texts are not relicensed by this repository.
