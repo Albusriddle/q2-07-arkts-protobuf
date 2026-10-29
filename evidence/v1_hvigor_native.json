@@ -79,5 +79,6 @@
   ],
   "device": "none: hdc list targets = [Empty]",
   "historical": true,
-  "current_artifact_note": "This is the native-integration snapshot; use evidence/v0_build.json and evidence/sign_check.json for current HAP bytes."
+  "current_artifact_note": "This is the native-integration snapshot; use evidence/v0_build.json and evidence/sign_check.json for current HAP bytes.",
+  "napi_source": "historical snapshot: host/napi/entry.cpp; canonical source is now app/entry/src/main/cpp/entry.cpp"
 }
