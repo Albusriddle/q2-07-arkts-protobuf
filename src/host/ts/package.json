@@ -2,6 +2,7 @@
   "name": "q207-host-ts",
   "version": "0.1.0",
   "private": true,
+  "license": "Apache-2.0",
   "description": "HOST-ONLY differential/golden harness for the Q2-07 host vertical slice (protobufjs 7.6.5 baseline)",
   "dependencies": {
     "protobufjs": "7.6.5"
