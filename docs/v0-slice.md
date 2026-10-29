@@ -7,8 +7,9 @@
 | 产物 | 路径 | 状态 |
 |---|---|---|
 | NAPI 动态库（未 strip） | `build/napi/libentry.so` | **built**，14,696 B，ELF64 AArch64 |
-| 放入 app 的 NAPI 库 | `app/entry/libs/arm64-v8a/libentry.so` | **copied** |
-| 未签名 HAP | `app/entry/build/default/outputs/default/entry-default-unsigned.hap` | **built unsigned**，127,070 B |
+| 放入 app 的 NAPI 库 | 由 hvigor `externalNativeOptions` 构建 | **native build**（不再手工拷 `.so`） |
+| 未签名 HAP | `app/entry/build/default/outputs/default/entry-default-unsigned.hap` | **built unsigned**，1,390,057 B |
+| 自签名 HAP | `app/entry/build/default/outputs/default/entry-default-signed.hap` | **signed + verify-app 通过**，1,455,790 B；**installable=false** |
 | 设备安装/运行 | — | **BLOCKED**：`hdc list targets` 为空，无板 |
 
 ## 构建命令
@@ -16,6 +17,7 @@
 ```bash
 bash scripts/check_env.sh
 bash scripts/build.sh
+bash scripts/sign_hap.sh   # 自签名 + verify，不安装
 ```
 
 `scripts/build.sh` 内部：
@@ -28,7 +30,7 @@ cmake -S host/napi -B build/napi -G Ninja \
 cmake --build build/napi --target entry -j 4
 ```
 
-HAP 构建额外需要：
+HAP 构建额外需要（native 已接进 hvigor `externalNativeOptions`，见 `docs/v1-hvigor-native.md`）：
 
 ```bash
 export DEVECO_SDK_HOME="$DEVECO/sdk"
@@ -40,9 +42,9 @@ cd app && hvigorw assembleHap --mode module -p product=default -p buildMode=debu
 
 ## 产物核验
 
-- `libentry.so`：ELF64 AArch64，`NEEDED` = `libace_napi.z.so`, `libc++_shared.so`, `libc.so`；导出 `napi_module_register`（动态未定义，由 NAPI 运行时提供）。
-- HAP：ZIP 内 `libs/arm64-v8a/libentry.so` 存在（6240 B，已 strip），`module.json` 存在。
-- HAP **未签名**：`build-profile.json5` 没有 `signingConfigs`，hvigor 明确 `Will skip sign`；因此不可安装到真实设备。
+- `libentry.so`：ELF64 AArch64，`NEEDED` = `libace_napi.z.so`, `libc++_shared.so`, `libc.so`；导入 `napi_module_register`（未定义符号，由 NAPI 运行时 `libace_napi.z.so` 解析；不是导出）。
+- HAP：ZIP 内 `libs/arm64-v8a/libentry.so`（6,520 B，已 strip）和 `libs/arm64-v8a/libc++_shared.so`（1,262,504 B）存在，`module.json` 存在。
+- 未签名 HAP 的 `signingConfigs` 为空；`scripts/sign_hap.sh` 用本地自签 CA 生成 signed HAP，`verify-app` 通过，但**自签 CA 不在设备信任根、无 UDID/profile，installable=false**。
 - 未执行 `hdc install`，未启动应用，未验证 `ping()`/`add()` 真机行为。
 
 ## 代码接口
@@ -63,12 +65,12 @@ this.sumText = `${entry.add(2, 3)}`;
 ## 当前 BLOCKED
 
 - 设备：无目标板，`hdc list targets` 为空 → 无法安装/运行。
-- 签名：无 signingConfig/profile → 只能产出 unsigned HAP。
+- 签名：hvigor 无 signingConfigs → 只产出 unsigned HAP；`scripts/sign_hap.sh` 产出本地自签、可 verify 的 HAP，但因 CA 不在设备信任根/无 UDID，`installable=false`。
 - `protoc`/`buf`：未安装；本切片不依赖。
-- ArkTS 对 `libentry.so` 的类型声明仍缺 `.d.ts`，编译有 warning，但 HAP 构建成功。
+- ArkTS `.d.ts` 已接通；执行 `ohpm install` 后 warning 消失，证据见 `docs/v0-dts-notes.md`。
 
 ## 下一步（本地）
 
-1. 补 `types/libentry/index.d.ts`，消除 NAPI 模块 warning。
-2. 用 `llvm-readelf`/`llvm-nm` 做 `.so` 证据归档。
-3. 板到后：签名/配置 profile → `hdc install` → 启动 → 记录 `ping/add` 真机日志。
+1. 用官方证书/profile（或设备 UDID 的 debug profile）签可安装 HAP；`hdc install` → 启动 → 记录 `ping/add` 真机日志。
+2. 确认目标 API 24 与方案基线 API 18/23 的验收口径；当前 HAP 是 API24/compileSdk 6.1.1.125。
+3. 继续用 `scripts/inspect_so.sh` / `inspect_hap.py --sign-check evidence/sign_check.json` 作为证据门禁。

@@ -65,8 +65,22 @@ fi
 SO_PATH=""
 if [ -f "$BUILD_DIR/libentry.so" ]; then
   SO_PATH="$BUILD_DIR/libentry.so"
-  mkdir -p "$ROOT/app/entry/libs/arm64-v8a"
-  cp "$SO_PATH" "$ROOT/app/entry/libs/arm64-v8a/libentry.so"
+  # native build is now owned by hvigor externalNativeOptions; a manual copy in
+  # app/entry/libs would be a duplicate and fail ProcessLibs.
+  rm -f "$ROOT/app/entry/libs/arm64-v8a/libentry.so"
+fi
+
+OHPM_CLI="$DEVECO/tools/ohpm/bin/pm-cli.js"
+if [ -f "$ROOT/app/oh-package.json5" ] && [ -f "$OHPM_CLI" ]; then
+  OHPM_LOG="$EVIDENCE/ohpm_install.log"
+  (
+    cd "$ROOT/app" || exit 1
+    node "$OHPM_CLI" install
+  ) >"$OHPM_LOG" 2>&1
+  OHPM_EXIT=$?
+  CMD_RECORDS+=("ohpm-install|$OHPM_EXIT|ohpm_install.log")
+else
+  BLOCKED+=("ohpm install skipped: pm-cli.js or app/oh-package.json5 missing")
 fi
 
 HAP_FILE=""
@@ -108,14 +122,16 @@ if [ -x "$HDC" ]; then
 fi
 
 if [ -n "$SO_PATH" ]; then
-  [ "$HAP_STATUS" = "built" ] && STATUS="PASS" || STATUS="PARTIAL"
+  case "$HAP_STATUS" in
+    built:*) STATUS="PASS" ;;
+    *) STATUS="PARTIAL" ;;
+  esac
 else
   STATUS="FAIL"
 fi
 
 ARGS=(--status "$STATUS" --hap-status "$HAP_STATUS" --hdc-status "$HDC_STATUS")
 [ -n "$SO_PATH" ] && ARGS+=(--so "$SO_PATH")
-[ -f "$ROOT/app/entry/libs/arm64-v8a/libentry.so" ] && ARGS+=(--so "$ROOT/app/entry/libs/arm64-v8a/libentry.so")
 [ -n "$HAP_FILE" ] && ARGS+=(--hap "$HAP_FILE")
 for c in "${CMD_RECORDS[@]}"; do ARGS+=(--command "$c"); done
 for b in "${BLOCKED[@]}"; do ARGS+=(--blocked "$b"); done
@@ -126,4 +142,11 @@ echo "status=$STATUS"
 echo "so=${SO_PATH:-MISSING}"
 echo "hap_status=$HAP_STATUS"
 echo "hdc_status=$HDC_STATUS"
-[ -n "$SO_PATH" ] && exit 0 || exit 1
+if [ -z "$SO_PATH" ]; then
+  exit 1
+fi
+case "$HAP_STATUS" in
+  built:*) exit 0 ;;
+  built\ unsigned:*) exit 0 ;;
+  *) exit 3 ;;
+esac

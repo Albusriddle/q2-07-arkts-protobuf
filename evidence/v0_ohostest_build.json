@@ -1,0 +1,22 @@
+{
+  "slice": "V0-ohosTest build only (not executed)",
+  "timestamp_utc": "2026-10-29T05:29:39.559233+00:00",
+  "command": "hvigorw assembleHap --mode module -p module=entry@ohosTest -p product=default -p buildMode=debug --no-daemon",
+  "exit_code": 0,
+  "hap": {
+    "path": "app/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap",
+    "size": 1455938,
+    "sha256": "6c2f24d3c329d6d87fb3e624f8bf1920860f3a9f91d769352db650aa20fdac0e",
+    "signed": false
+  },
+  "tests": [
+    "ping_returns_pong",
+    "add_2_3_returns_5"
+  ],
+  "device_run": false,
+  "hdc_status": "blocked: no target",
+  "blocked": [
+    "no target device: tests built but not executed"
+  ],
+  "notes": "Test HAP compiled; no installation/execution. @ohos/hypium 1.0.30 installed."
+}
