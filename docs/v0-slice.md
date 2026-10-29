@@ -8,7 +8,7 @@
 |---|---|---|
 | NAPI 动态库（未 strip） | `build/napi/libentry.so` | **built**，14,696 B，ELF64 AArch64 |
 | 放入 app 的 NAPI 库 | `app/entry/libs/arm64-v8a/libentry.so` | **copied** |
-| 未签名 HAP | `app/entry/build/default/outputs/default/entry-default-unsigned.hap` | **built unsigned**，126,847 B |
+| 未签名 HAP | `app/entry/build/default/outputs/default/entry-default-unsigned.hap` | **built unsigned**，127,070 B |
 | 设备安装/运行 | — | **BLOCKED**：`hdc list targets` 为空，无板 |
 
 ## 构建命令

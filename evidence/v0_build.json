@@ -1,8 +1,8 @@
 {
   "slice": "V0-min: NAPI .so + ArkTS caller",
-  "timestamp_utc": "2026-10-29T02:55:56.878533+00:00",
+  "timestamp_utc": "2026-10-29T02:56:36.063281+00:00",
   "branch": "feature/p1-v0-min",
-  "commit": "3d2385a",
+  "commit": "6d57ed9",
   "status": "PARTIAL",
   "commands": [
     {
@@ -43,7 +43,7 @@
       {
         "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
         "size": 127070,
-        "sha256": "d12203371110e4f8f4a8af2046425c3074c049ff8041dbef56adbd65e93db136",
+        "sha256": "42f6f41212ae3ee3d9e29e52752a90a21da5ad6a94e9a1f40890dc2562913617",
         "signed": false
       }
     ]
