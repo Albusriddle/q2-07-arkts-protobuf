@@ -7,6 +7,20 @@ namespace q207 {
 namespace decode {
 namespace {
 
+// The generated table carries wire types as well as field numbers.  A proto type
+// change (e.g. int64 -> string) must fail here, not silently change decode logic.
+static_assert(pod::f::kUserIdWire == wire::kWireVarint, "User.id wire type changed");
+static_assert(pod::f::kUserNameWire == wire::kWireLength, "User.name wire type changed");
+static_assert(pod::f::kUserTagsWire == wire::kWireLength, "User.tags wire type changed");
+static_assert(pod::f::kUserProfileWire == wire::kWireLength, "User.profile wire type changed");
+static_assert(pod::f::kUserEmailWire == wire::kWireLength, "User.email wire type changed");
+static_assert(pod::f::kUserPhoneWire == wire::kWireLength, "User.phone wire type changed");
+static_assert(pod::f::kUserLevelWire == wire::kWireVarint, "User.level wire type changed");
+static_assert(pod::f::kUserScoresWire == wire::kWireLength, "User.scores wire type changed");
+static_assert(pod::f::kProfileCityWire == wire::kWireLength, "Profile.city wire type changed");
+static_assert(pod::f::kProfileAgeWire == wire::kWireVarint, "Profile.age wire type changed");
+static_assert(pod::f::kUserBatchUsersWire == wire::kWireLength, "UserBatch.users wire type changed");
+
 using wire::kWireEndGroup;
 using wire::kWireLength;
 using wire::kWireVarint;

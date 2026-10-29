@@ -1,5 +1,7 @@
 # V1 切片：把 native 构建接进 hvigor（一键 assembleHap）
 
+> **HISTORICAL**：V1 构建侧快照；当前 V0.1 尺寸/行为以 `evidence/v0_build.json`、`evidence/v0_1_decode.json` 为准。
+
 > 日期：2026-10-29 ｜ 状态：**PASS（构建侧）** ｜ 证据：`evidence/v1_hvigor_native.json`、`evidence/hvigor_native_build.log`
 > 设备侧：**未验证**（`hdc list targets` 为空；未安装、未启动）
 

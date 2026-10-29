@@ -1,22 +1,22 @@
 {
   "schema": "q207.v0.artifact_check/1",
-  "generated_utc": "2026-10-29T06:24:43.163398+00:00",
+  "generated_utc": "2026-10-29T08:00:32.945673+00:00",
   "generator": {
     "script": "scripts/inspect_hap.py",
     "python": "3.13.0"
   },
   "repo": {
-    "branch": "feature/p1-v0-min",
-    "commit": "388ec6d",
+    "branch": "feature/v0.1-decode",
+    "commit": "484eeb9",
     "root": "D:/DSHws4TSCsingle/repo"
   },
   "mode": "read-only: no rebuild, no re-sign, no patch, no write into the HAP",
   "input": {
     "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
     "exists": true,
-    "size": 1390781,
-    "sha256": "8914d1d6ecfbd46f5050f396dcc6250ddd26b0d46c9429de029b047e57544b11",
-    "mtime_utc": "2026-10-29T06:18:04.579771+00:00"
+    "size": 1610530,
+    "sha256": "43a58a1d1537ed1ed2a085c993cbe21984cb798b0af0d903eeffab912a7110d0",
+    "mtime_utc": "2026-10-29T08:00:07.797329+00:00"
   },
   "container": {
     "is_zip": true,
@@ -25,13 +25,13 @@
     "entries": [
       {
         "name": "ets/modules.abc",
-        "size": 12596,
-        "compressed": 12596
+        "size": 15376,
+        "compressed": 15376
       },
       {
         "name": "ets/sourceMaps.map",
-        "size": 3037,
-        "compressed": 3037
+        "size": 3966,
+        "compressed": 3966
       },
       {
         "name": "ets/types/libentry/oh-package.json5",
@@ -45,8 +45,8 @@
       },
       {
         "name": "libs/arm64-v8a/libentry.so",
-        "size": 7176,
-        "compressed": 7176
+        "size": 223216,
+        "compressed": 223216
       },
       {
         "name": "module.json",
@@ -138,8 +138,8 @@
       ]
     },
     "bundled_count": 2,
-    "size": 7176,
-    "sha256": "3dd94a91055549ea05ec43126bb136c9e3c28aca70174d7e441614d3197b8c30",
+    "size": 223216,
+    "sha256": "df54a17fd57942ad48cf90f721cbda310b6c61292d99bfcb4d89bf5a1128648d",
     "elf": {
       "is_elf": true,
       "magic": "7f454c46",
@@ -182,14 +182,14 @@
   "cross_checks": {
     "build/napi/libentry.so": {
       "exists": true,
-      "size": 15128,
-      "sha256": "d4ff70951c187440b703ab5d70ff5f93209ee9c9a17b7fd05b4584e93f2c5939",
+      "size": 230888,
+      "sha256": "a8b61f1f060bf18abcafb80c78c8ba83daa99f9532a0f1e1dfb6e84d8aa3d521",
       "identical_to_hap_entry": false
     },
     "app/entry/libs/arm64-v8a/libentry.so": {
       "exists": false
     },
-    "size_ratio_vs_repo_copy": 0.474,
+    "size_ratio_vs_repo_copy": 0.967,
     "likely_stripped": true
   },
   "api_alignment": {
@@ -220,7 +220,7 @@
   ],
   "unverified": [
     "NEEDED libace_napi.z.so, libc.so are assumed to be provided by the target image; not verified on a device",
-    "libs/arm64-v8a/libentry.so is 7176 B while the repo copy is 15128 B (likely stripped); local callback names cannot be re-checked from the HAP copy",
+    "libs/arm64-v8a/libentry.so is 223216 B while the repo copy is 230888 B (likely stripped); local callback names cannot be re-checked from the HAP copy",
     "device install / launch / ping() / add() were NOT executed (read-only check, no hdc call in this script)",
     "module.json minAPIVersion/targetAPIVersion decode is INFERRED from the packed integer layout, not from a documented mapping",
     "ArkTS .d.ts wiring is tracked in docs/v0-dts-notes.md; this script does not re-run the ArkTS compiler",

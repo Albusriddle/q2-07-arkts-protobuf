@@ -1,5 +1,7 @@
 # V0 产物只读核验：NAPI `.so` 与未签名 HAP
 
+> **HISTORICAL（V0）**：V0.1 的 HAP `.so` 已包含 decoder，尺寸/行为见 `docs/v0.1-decode.md` 与 `evidence/v0_1_decode.json`；本文保留 V0 快照。
+
 日期：2026-10-29 ｜ 分支：`feature/p1-v0-min` ｜ 本地执行，不推送远程
 范围：**只读检查**。不重建 HAP、不 re-sign、不 strip、不改 NAPI/ArkTS/构建脚本。
 
