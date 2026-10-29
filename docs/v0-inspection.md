@@ -109,7 +109,7 @@ python scripts/inspect_hap.py --wait 90     # HAP 正在被并发构建重写时
 
 | 项 | 类别 | 实测值 |
 |---|---|---|
-| 大小 / 外层 SHA-256 | **不稳定** | 以 `evidence/v0_artifact_check.json → input.size / input.sha256` 为准；当前 unsigned = 1,390,057 B（native 集成后），signed = 1,455,790 B |
+| 大小 / 外层 SHA-256 | **不稳定** | 以 `evidence/v0_artifact_check.json` / `v0_signed_artifact_check.json` 的 `input.size / input.sha256` 为准（数字随构建变化，以 JSON 为准） |
 | 容器 | 稳定 | 有效 ZIP，**15 个条目**（unsigned）/16（signed），CRC 校验 ok |
 | `module.json` | **稳定** | 1587 B，`sha256 db7e9bd2a1ce87c6d544822d07eb71de417627764411062397b1942282bb2868`，JSON 合法，**必需键 0 缺失** |
 | `libs/arm64-v8a/libentry.so` | **稳定** | 6,520 B，`sha256 72ef89e239bf45c31467088b5005a9177e3a63ebaf6682d58bda567f805ca517`，`ELF64`/`AArch64`/`DYN` |
@@ -247,6 +247,6 @@ bash scripts/inspect_so.sh > evidence/v0_so_check.log 2>&1
 
 | 文档 | 关系 |
 |---|---|
-| `docs/v0-slice.md` | 该文已更新为 unsigned 1,390,057 B / signed 1,455,790 B / 内层 6,520 B；所有数字以 `evidence/v0_artifact_check.json` 与 `v0_signed_artifact_check.json` 为准 |
+| `docs/v0-slice.md` | 该文已改为指向 `evidence/v0_artifact_check.json` / `v0_signed_artifact_check.json`；所有数字以这两份 JSON 为准 |
 | `evidence/v0_build.json`、`evidence/env_check.json` | 本文件消费其 `board.status` 与 `api_version`，不覆盖 |
 | `evidence/v0_artifact_check.json` | 本文件的机器可读版本；两者数字必须一致，改动以重跑脚本为准 |

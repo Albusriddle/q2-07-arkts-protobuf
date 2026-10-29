@@ -14,7 +14,7 @@
 | 真正原因 | 依赖声明了 `file:` 本地包，但**从未执行 `ohpm install`** → `app/entry/oh_modules/` 不存在 → ArkTS 解析不到 `libentry.so` 的类型 → 走"模块未找到"分支，对这一类 `.so` 只报 **warning（TS 28014）而不报 error**，所以 HAP 照样成功 |
 | 这个 warning 是不是纯噪音 | **不是**。实测：`oh_modules` 缺失时，把 `index.d.ts` 故意写错类型，构建**依然成功** → 说明 .d.ts 之前**完全没被消费**，`import entry from 'libentry.so'` 退化为隐式 `any` |
 | 修复动作 | 在 `app/` 下执行一次 `ohpm install`（生成 `app/entry/oh_modules/libentry.so`，含 `types: ./index.d.ts`） |
-| HAP | **构建成功**，`entry-default-unsigned.hap`，127,135 B（native 集成前快照；当前 1,390,057 B，以 `evidence/v0_artifact_check.json` 为准），未签名 |
+| HAP | **构建成功**，`entry-default-unsigned.hap`，127,135 B（native 集成前历史快照；当前以 `evidence/v0_artifact_check.json` 为准），未签名 |
 | 仍未解除 | **BLOCKED**：无目标板（`hdc list targets` 为空）、HAP 未签名 → 不能安装/运行。**UNVERIFIED**：`ping()`/`add()` 真机行为 |
 
 ## 1. 证据（每次实验都做了 clean 重编，`CompileArkTS` 均实际执行）
@@ -114,7 +114,7 @@ bash scripts/build.sh
 | 项 | 状态 |
 |---|---|
 | ArkTS `libentry.so` warning | **已消除**（clean 与增量构建均无） |
-| HAP 构建 | **成功**，unsigned，127,135 B（历史快照；native 集成后为 1,390,057 B，以 `v0_artifact_check.json` 为准） |
+| HAP 构建 | **成功**，unsigned，127,135 B（历史快照；当前以 `v0_artifact_check.json` 为准） |
 | 设备安装 / 运行 | **BLOCKED**：`hdc list targets` 为空；HAP 无 signingConfig，不可安装到真机 |
 | `ping()` / `add()` 真机行为 | **UNVERIFIED** |
 | 签名 / profile | **BLOCKED**（无 `signingConfigs`，hvigor 明确 `Will skip sign`） |
