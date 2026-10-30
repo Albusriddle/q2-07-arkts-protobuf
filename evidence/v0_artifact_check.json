@@ -1,22 +1,22 @@
 {
   "schema": "q207.v0.artifact_check/1",
-  "generated_utc": "2026-10-29T08:28:59.253115+00:00",
+  "generated_utc": "2026-10-30T07:28:03.777572+00:00",
   "generator": {
     "script": "scripts/inspect_hap.py",
     "python": "3.13.0"
   },
   "repo": {
-    "branch": "feature/v0.1-decode",
-    "commit": "516ffdb",
+    "branch": "feature/v0.3-schema-pod",
+    "commit": "0c03fb3",
     "root": "D:/DSHws4TSCsingle/repo"
   },
   "mode": "read-only: no rebuild, no re-sign, no patch, no write into the HAP",
   "input": {
     "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
     "exists": true,
-    "size": 1634048,
-    "sha256": "251b4beb165ac822f3ae7d4c77c8d6a08b1c0e8cd5e2df8255735c11a78d9c79",
-    "mtime_utc": "2026-10-29T08:28:23.160446+00:00"
+    "size": 1634081,
+    "sha256": "a8cc64d4861d9281a253ec7d63eb620b47851eddc90cb69fd3026319268ffea5",
+    "mtime_utc": "2026-10-30T07:27:34.766510+00:00"
   },
   "container": {
     "is_zip": true,
@@ -35,8 +35,8 @@
       },
       {
         "name": "ets/types/libentry/oh-package.json5",
-        "size": 77,
-        "compressed": 77
+        "size": 110,
+        "compressed": 110
       },
       {
         "name": "libs/arm64-v8a/libc++_shared.so",
@@ -139,7 +139,7 @@
     },
     "bundled_count": 2,
     "size": 243128,
-    "sha256": "1a9cc3aeab6c2557ca6c21af32eb1a128aaa7c5df94b23482f52ed54b514ac4c",
+    "sha256": "4613a13c8e1693618bd25b318612cce663b84bc01c9ef9a2f501e0ae0e778c3d",
     "elf": {
       "is_elf": true,
       "magic": "7f454c46",
