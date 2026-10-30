@@ -1,10 +1,10 @@
-# Host-side vertical slice (V0.7, implemented)
+# Host-side vertical slice (V0.8, implemented)
 
 HOST-ONLY. Everything under `src/host/**` is a logic/correctness harness that runs on
 the development PC. It produces **no device numbers**: no ArkTS runtime, no board.
-V0.7 includes generated message/nested/oneof/map POD/decoder, fake-NAPI host tests
-and 468 assertions. The NAPI binding is compiled and host-shim tested, but not
-executed on a device. See `docs/v0.6-generic-codegen.md` and `docs/v0.5-napi-shim.md`.
+V0.8 includes generated message/nested/oneof/map POD/decoder, fake-NAPI host tests,
+468 normal / 457 ASan assertions, and a host native vs protobufjs benchmark. The NAPI binding is compiled and host-shim tested, but not
+executed on a device. See `docs/v0.8-benchmark.md`, `docs/v0.6-generic-codegen.md` and `docs/v0.5-napi-shim.md`.
 
 ```
 proto/example.proto

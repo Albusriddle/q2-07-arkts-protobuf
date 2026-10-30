@@ -6,7 +6,7 @@
 | `gen_fields.py` / `codegen.sh` | Generate/verify field constants, POD, schema IR/header, decoder body and ArkTS types from `proto/example.proto` |
 | `build.sh` | V0: host `.so` + `ohpm install` + hvigor HAP; `PASS-UNSIGNED` / exit 0 when unsigned HAP built |
 | `build_hap.sh` | hvigor-only HAP shortcut; runs `ohpm install` first |
-| `build_host.sh` | HOST-ONLY: build C++/TS slice, 468 tests, fake-NAPI shim, data cards, bench, differential, evidence |
+| `build_host.sh` | HOST-ONLY: build C++/TS slice, 468 tests, fake-NAPI shim, data cards, native/protobufjs bench, differential, evidence |
 | `build_host_asan.sh` | Host-only ASan/UBSan capture of the core test executable (clang++/g++) |
 | `check_generated_map_compile.py` | Generate a synthetic multi-shape map POD and compile/run it with a real C++ compiler |
 | `compare_protobufjs_bench.py` | Compare native and protobufjs HOST-ONLY benchmark CSVs |

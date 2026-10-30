@@ -49,6 +49,7 @@ profile. All host numbers are labelled `HOST-ONLY`.
 | [`docs/v0.6-generic-codegen.md`](docs/v0.6-generic-codegen.md) | V0.6 message-graph POD/decoder/DTS generation and limits |
 | [`docs/v0.7-hardening.md`](docs/v0.7-hardening.md) | V0.7 map/CI/docs hardening and remaining limits |
 | [`docs/v0.8-benchmark.md`](docs/v0.8-benchmark.md) | V0.8 host-only native vs protobufjs benchmark; no 1.5x claim |
+| [`docs/history-rewrite.md`](docs/history-rewrite.md) | Old test secret history rewrite and PR-ref caveat |
 
 ## Scope and non-goals
 
@@ -106,7 +107,7 @@ bash scripts/build_host.sh   # includes fake-NAPI napi-shim step
 
 ## Current next steps
 
-1. extend the generic generator to multi-shape maps/enums/fixed types and a generic materializer;
+1. optimize native decode allocation/arena and compare protoc-gen-napi/Turbo on the same conformance card;
 2. finish the P3 path: `decode` alias/batch ergonomics, handle-scope tuning and external buffer/worker policy;
 3. lock API generation/acceptance baseline (current HAP targets API 24 / compileSdk 6.1.1.125);
 4. when a board + official signing material/UDID exist: install, run `ohosTest`, record `ping/add`
