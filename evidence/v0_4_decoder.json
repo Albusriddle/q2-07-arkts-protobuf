@@ -47,8 +47,8 @@
     "napi_bindings_handwritten": true
   },
   "host_evidence": {
-    "head": "80804a37bedccf307f3c0a892b3ad6fd84b3c45a",
-    "dirty_files": 31,
+    "head": "4a94c624ff4fce23cc8a626e93eceb653ea4f74e",
+    "dirty_files": 1,
     "tests": {
       "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
       "passed": 468,
