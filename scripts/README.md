@@ -8,6 +8,7 @@
 | `build_hap.sh` | hvigor-only HAP shortcut; runs `ohpm install` first |
 | `build_host.sh` | HOST-ONLY: build C++/TS slice, 468 tests, fake-NAPI shim, data cards, bench, differential, evidence |
 | `build_host_asan.sh` | Host-only ASan/UBSan capture of the core test executable (clang++/g++) |
+| `check_generated_map_compile.py` | Generate a synthetic multi-shape map POD and compile/run it with a real C++ compiler |
 | `inspect_so.sh` | Read-only ELF/NAPI inspection; PASS/FAIL/ERROR exit codes |
 | `inspect_hap.py` | Read-only HAP ZIP/module/native-lib/signature inspection; optional `--sign-check` |
 | `sign_hap.sh` | Local self-signed HAP: PKI/profile → sign-profile → sign-app → verify-app; **not installable** |
