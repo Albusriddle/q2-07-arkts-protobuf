@@ -6,7 +6,7 @@
   "hap": {
     "path": "app/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap",
     "size": 1460043,
-    "sha256": "96d88b6ee1ec54a04b00af4a8557254124a39d348897c4e85fa0c6a114fd0c65",
+    "sha256": "a818e9e577d3a49bd7c429a60c124b54e52b5504195c17aea6e769ee0927190d",
     "signed": false
   },
   "tests": [
