@@ -47,7 +47,7 @@
     }
   },
   "host_evidence": {
-    "head": "cfc9e18e367e5203527c914b46e8bfdb05e78211",
+    "head": "4ed55a8370e5309935eacef9a826d27ae8c0d39e",
     "tests": {
       "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
       "passed": 468,
