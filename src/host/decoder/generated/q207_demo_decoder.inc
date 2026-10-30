@@ -3,43 +3,16 @@
 // proto sha256: 05ef0e9ec2f5351efa5c3216977c99c37625e657199649cba1d81f58b68d6891
 // Included inside q207::decode's anonymous namespace; relies on mismatch/Reader/f.
 
-Code parse_profile(Reader& r, const Limits& lim, pod::Profile* p) {
-  Code e = r.count_object();
-  if (e != Code::Ok) return e;
-  p->present = true;
-  while (!r.at_end()) {
-    uint32_t field = 0, w = 0;
-    e = r.read_tag(&field, &w);
-    if (e != Code::Ok) return e;
-    if (w == kWireEndGroup) return r.fail_with(Code::GroupUnexpected);
-    e = r.count_field();
-    if (e != Code::Ok) return e;
-    switch (field) {
-      case f::kProfileCity: {
-        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, nullptr); break; }
-        p->mark(field);
-        e = r.read_string(&p->city, lim.max_string_bytes);
-        break;
-      }
-      case f::kProfileAge: {
-        if (w != wire::kWireVarint) { e = mismatch(r, lim, field, w, nullptr); break; }
-        p->mark(field);
-        e = r.read_int32(&p->age);
-        break;
-      }
-      default: e = r.skip_field(field, w); break;
-    }
-    if (e != Code::Ok) return e;
-  }
-  return Code::Ok;
-}
+Code parse_profile(Reader& r, const Limits& lim, pod::Profile* out);
+Code parse_user(Reader& r, const Limits& lim, pod::User* out);
+Code parse_user_batch(Reader& r, const Limits& lim, pod::UserBatch* out);
+Code parse_map_entry(Reader& r, const Limits& lim, pod::MapEntry* out);
 
 Code parse_map_entry(Reader& r, const Limits& lim, pod::MapEntry* out) {
   Code e = r.count_object();
   if (e != Code::Ok) return e;
-  out->key.clear();
+  out->key = {};
   out->value = 0;
-  bool key_ok = false;
   while (!r.at_end()) {
     uint32_t field = 0, w = 0;
     e = r.read_tag(&field, &w);
@@ -47,8 +20,8 @@ Code parse_map_entry(Reader& r, const Limits& lim, pod::MapEntry* out) {
     if (w == kWireEndGroup) return r.fail_with(Code::GroupUnexpected);
     e = r.count_field();
     if (e != Code::Ok) return e;
-    if (field == 1 && w == kWireLength) { e = r.read_string(&out->key, lim.max_string_bytes); key_ok = true; }
-    else if (field == 2 && w == kWireVarint) { e = r.read_int32(&out->value); }
+    if (field == 1 && w == wire::kWireLength) { e = r.read_string(&out->key, lim.max_string_bytes); }
+    else if (field == 2 && w == wire::kWireVarint) { e = r.read_int32(&out->value); }
     else { e = r.skip_field(field, w); }
     if (e != Code::Ok) return e;
   }
@@ -58,12 +31,43 @@ Code parse_map_entry(Reader& r, const Limits& lim, pod::MapEntry* out) {
         "isPrototypeOf", "propertyIsEnumerable", "__defineGetter__", "__defineSetter__",
         "__lookupGetter__", "__lookupSetter__",
     };
-    if (key_ok) for (const char* d : kDangerous) if (out->key == d) return r.fail_with(Code::MapKeyDangerous);
+    for (const char* d : kDangerous) if (out->key == d) return r.fail_with(Code::MapKeyDangerous);
   }
   return Code::Ok;
 }
 
-Code parse_user_body(Reader& r, const Limits& lim, pod::User* u) {
+Code parse_profile(Reader& r, const Limits& lim, pod::Profile* out) {
+  Code e = r.count_object();
+  if (e != Code::Ok) return e;
+  out->present = true;
+  while (!r.at_end()) {
+    uint32_t field = 0, w = 0;
+    e = r.read_tag(&field, &w);
+    if (e != Code::Ok) return e;
+    if (w == kWireEndGroup) return r.fail_with(Code::GroupUnexpected);
+    e = r.count_field();
+    if (e != Code::Ok) return e;
+    switch (field) {
+      case f::kProfileCity: {
+        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &out->unknown_fields); break; }
+        out->mark(field);
+        e = r.read_string(&out->city, lim.max_string_bytes);
+        break;
+      }
+      case f::kProfileAge: {
+        if (w != wire::kWireVarint) { e = mismatch(r, lim, field, w, &out->unknown_fields); break; }
+        out->mark(field);
+        e = r.read_int32(&out->age);
+        break;
+      }
+      default: ++out->unknown_fields; e = r.skip_field(field, w); break;
+    }
+    if (e != Code::Ok) return e;
+  }
+  return Code::Ok;
+}
+
+Code parse_user(Reader& r, const Limits& lim, pod::User* out) {
   Code e = r.count_object();
   if (e != Code::Ok) return e;
   while (!r.at_end()) {
@@ -75,78 +79,78 @@ Code parse_user_body(Reader& r, const Limits& lim, pod::User* u) {
     if (e != Code::Ok) return e;
     switch (field) {
       case f::kUserId: {
-        if (w != wire::kWireVarint) { e = mismatch(r, lim, field, w, &u->unknown_fields); break; }
-        u->mark(field);
-        e = r.read_int64(&u->id);
+        if (w != wire::kWireVarint) { e = mismatch(r, lim, field, w, &out->unknown_fields); break; }
+        out->mark(field);
+        e = r.read_int64(&out->id);
         break;
       }
       case f::kUserName: {
-        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &u->unknown_fields); break; }
-        u->mark(field);
-        e = r.read_string(&u->name, lim.max_string_bytes);
+        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &out->unknown_fields); break; }
+        out->mark(field);
+        e = r.read_string(&out->name, lim.max_string_bytes);
         break;
       }
       case f::kUserTags: {
-        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &u->unknown_fields); break; }
-        if (u->tags.size() >= lim.max_repeated_elements) {
+        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &out->unknown_fields); break; }
+        if (out->tags.size() >= lim.max_repeated_elements) {
           e = r.fail_with(Code::FieldBudget);
           break;
         }
-        u->mark(field);
-        u->tags.emplace_back();
-        e = r.read_string(&u->tags.back(), lim.max_string_bytes);
+        out->mark(field);
+        out->tags.emplace_back();
+        e = r.read_string(&out->tags.back(), lim.max_string_bytes);
         break;
       }
       case f::kUserProfile: {
-        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &u->unknown_fields); break; }
-        u->mark(field);
+        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &out->unknown_fields); break; }
+        out->mark(field);
         const uint64_t cap = std::min<uint64_t>(r.remaining(), lim.max_message_bytes);
         e = r.enter_length(cap);
         if (e != Code::Ok) break;
-        e = parse_profile(r, lim, &u->profile);
+        e = parse_profile(r, lim, &out->profile);
         if (e == Code::Ok) e = r.leave();
         break;
       }
       case f::kUserEmail: {
-        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &u->unknown_fields); break; }
-        u->contact_bits |= (1u << f::kUserEmail);
-        u->oneof_case = f::kUserEmail;
-        u->mark(field);
-        e = r.read_string(&u->email, lim.max_string_bytes);
+        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &out->unknown_fields); break; }
+        out->mark(field);
+        out->contact_bits |= (1u << f::kUserEmail);
+        out->oneof_case = f::kUserEmail;
+        e = r.read_string(&out->email, lim.max_string_bytes);
         break;
       }
       case f::kUserPhone: {
-        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &u->unknown_fields); break; }
-        u->contact_bits |= (1u << f::kUserPhone);
-        u->oneof_case = f::kUserPhone;
-        u->mark(field);
-        e = r.read_string(&u->phone, lim.max_string_bytes);
+        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &out->unknown_fields); break; }
+        out->mark(field);
+        out->contact_bits |= (1u << f::kUserPhone);
+        out->oneof_case = f::kUserPhone;
+        e = r.read_string(&out->phone, lim.max_string_bytes);
         break;
       }
       case f::kUserLevel: {
-        if (w != wire::kWireVarint) { e = mismatch(r, lim, field, w, &u->unknown_fields); break; }
-        u->has_level = true;
-        u->mark(field);
-        e = r.read_int32(&u->level);
+        if (w != wire::kWireVarint) { e = mismatch(r, lim, field, w, &out->unknown_fields); break; }
+        out->mark(field);
+        out->has_level = true;
+        e = r.read_int32(&out->level);
         break;
       }
       case f::kUserScores: {
-        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &u->unknown_fields); break; }
-        if (u->scores.size() >= lim.max_repeated_elements) {
+        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &out->unknown_fields); break; }
+        if (out->scores.size() >= lim.max_repeated_elements) {
           e = r.fail_with(Code::FieldBudget);
           break;
         }
-        u->mark(field);
+        out->mark(field);
         const uint64_t cap = std::min<uint64_t>(r.remaining(), lim.max_message_bytes);
         e = r.enter_length(cap);
         if (e != Code::Ok) break;
         pod::MapEntry entry;
         e = parse_map_entry(r, lim, &entry);
         if (e == Code::Ok) e = r.leave();
-        if (e == Code::Ok) u->scores.push_back(std::move(entry));
+        if (e == Code::Ok) out->scores.push_back(std::move(entry));
         break;
       }
-      default: ++u->unknown_fields; e = r.skip_field(field, w); break;
+      default: ++out->unknown_fields; e = r.skip_field(field, w); break;
     }
     if (e != Code::Ok) return e;
   }
@@ -155,27 +159,37 @@ Code parse_user_body(Reader& r, const Limits& lim, pod::User* u) {
 
 Code parse_user_batch(Reader& r, const Limits& lim, pod::UserBatch* out) {
   Code e = r.count_object();
-  while (e == Code::Ok && !r.at_end()) {
+  if (e != Code::Ok) return e;
+  while (!r.at_end()) {
     uint32_t field = 0, w = 0;
     e = r.read_tag(&field, &w);
-    if (e != Code::Ok) break;
-    if (w == kWireEndGroup) { e = r.fail_with(Code::GroupUnexpected); break; }
+    if (e != Code::Ok) return e;
+    if (w == kWireEndGroup) return r.fail_with(Code::GroupUnexpected);
     e = r.count_field();
-    if (e != Code::Ok) break;
-    if (field == f::kUserBatchUsers) {
-      if (w != kWireLength) { e = mismatch(r, lim, field, w, nullptr); if (e != Code::Ok) break; continue; }
-      if (out->users.size() >= lim.max_batch_users) { e = r.fail_with(Code::BatchTooLarge); break; }
-      if (out->users.size() >= lim.max_objects) { e = r.fail_with(Code::ObjectBudget); break; }
-      const uint64_t cap = std::min<uint64_t>(r.remaining(), lim.max_message_bytes);
-      e = r.enter_length(cap);
-      if (e != Code::Ok) break;
-      out->users.emplace_back();
-      e = parse_user_body(r, lim, &out->users.back());
-      if (e == Code::Ok) e = r.leave();
-      if (e != Code::Ok) break;
-    } else {
-      e = r.skip_field(field, w);
+    if (e != Code::Ok) return e;
+    switch (field) {
+      case f::kUserBatchUsers: {
+        if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &out->unknown_fields); break; }
+        if (out->users.size() >= lim.max_batch_users) {
+          e = r.fail_with(Code::BatchTooLarge);
+          break;
+        }
+        if (out->users.size() >= lim.max_objects) {
+          e = r.fail_with(Code::ObjectBudget);
+          break;
+        }
+        out->mark(field);
+        const uint64_t cap = std::min<uint64_t>(r.remaining(), lim.max_message_bytes);
+        e = r.enter_length(cap);
+        if (e != Code::Ok) break;
+        out->users.emplace_back();
+        e = parse_user(r, lim, &out->users.back());
+        if (e == Code::Ok) e = r.leave();
+        break;
+      }
+      default: ++out->unknown_fields; e = r.skip_field(field, w); break;
     }
+    if (e != Code::Ok) return e;
   }
-  return e;
+  return Code::Ok;
 }

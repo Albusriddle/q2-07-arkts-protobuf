@@ -59,7 +59,7 @@ Code user(const uint8_t* data, size_t size, const Limits& limits, pod::User* out
   }
   out->clear();
   Reader r(data, size, limits);
-  Code e = parse_user_body(r, limits, out);
+  Code e = parse_user(r, limits, out);
   if (e == Code::Ok && r.pos() != size) e = r.fail_with(Code::Truncated);
   fill_stats(r, out->unknown_fields, stats);
   return e;

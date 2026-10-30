@@ -1,0 +1,95 @@
+{
+  "scope": "V0.6 generic message/nested/oneof codegen (schema subset)",
+  "claim_level": "generic_message_codegen_host_verified + napi_shim_host_executed",
+  "napi_executed": true,
+  "napi_execution_kind": "fake NAPI shim (host-only)",
+  "device_run": false,
+  "installable": false,
+  "support": {
+    "scalars": [
+      "string",
+      "int32",
+      "int64"
+    ],
+    "constructs": [
+      "repeated",
+      "optional",
+      "oneof",
+      "nested message"
+    ],
+    "map": "single key/value shape only (current string/int32)"
+  },
+  "generated": {
+    "pod": {
+      "path": "src/host/decoder/generated/q207_demo_pod.h",
+      "size": 2109,
+      "sha256": "c1a853db2433200da7571566e68d28fe0e59bbbf1d25f13664dd9ac059090325"
+    },
+    "decoder": {
+      "path": "src/host/decoder/generated/q207_demo_decoder.inc",
+      "size": 7317,
+      "sha256": "2a88c4e8aaffbff8064f063e1cadb6ab165c3a080e2adb26cc0d525c8df5b304"
+    },
+    "schema": {
+      "path": "src/host/decoder/generated/q207_demo_schema.json",
+      "size": 3371,
+      "sha256": "68a4e5e0e1132acb81d5aa0b95421939f13f464b356fd455846dd2fb8911eeeb"
+    },
+    "fields": {
+      "path": "src/host/decoder/generated/q207_demo_fields.h",
+      "size": 1603,
+      "sha256": "8420b5819ebf30cbffa39e57e98d962c92f3f46e17345b375f24c1017c171b79"
+    },
+    "dts": {
+      "path": "app/entry/src/main/ets/types/libentry/index.d.ts",
+      "size": 903,
+      "sha256": "c5b7dd6bb352ae637e021701b059be7b64c3deb179129067dc71f510886e1433"
+    }
+  },
+  "host_evidence": {
+    "head": "4ed55a8370e5309935eacef9a826d27ae8c0d39e",
+    "tests": {
+      "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
+      "passed": 468,
+      "failed": 0
+    },
+    "steps": [
+      "codegen-check",
+      "codegen-negative",
+      "sample-check",
+      "build",
+      "unit-tests",
+      "napi-shim",
+      "data-cards",
+      "bench",
+      "differential"
+    ]
+  },
+  "artifacts": {
+    "so": {
+      "path": "build/napi/libentry.so",
+      "size": 239400,
+      "sha256": "03ca77b251fb14ae9e77d7fc2b1fdd4cee803007af705c524f6597dd28e42406"
+    },
+    "hap_unsigned": {
+      "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
+      "size": 1634833,
+      "sha256": "80cdae5bfb96788f1f2d6e30cc0267f8736ab1f35faf2b8d7103535d177d1adb"
+    },
+    "hap_signed": {
+      "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
+      "size": 1696154,
+      "sha256": "a576d918e8f0a5c5aedc38246a36779d7aae59a0f7afe649b73251cbf8c4648c"
+    },
+    "hap_test": {
+      "path": "app/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap",
+      "size": 1460043,
+      "sha256": "ac6b0109f6468894d2c958a0d7328736de4e59e90059d0574bc4738e9774431c"
+    }
+  },
+  "blocked": [
+    "real device/ArkCompiler NAPI not run",
+    "multi-shape map / enum / fixed types rejected by design",
+    "object_model/tape still User-specific"
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "slice": "V0-min: NAPI .so + ArkTS caller",
-  "timestamp_utc": "2026-10-30T08:04:14.638968+00:00",
+  "timestamp_utc": "2026-10-30T09:14:27.659717+00:00",
   "branch": "main",
-  "commit": "80804a3",
+  "commit": "cfc9e18",
   "status": "PASS-UNSIGNED",
   "commands": [
     {
@@ -40,15 +40,15 @@
     "so": [
       {
         "path": "build/napi/libentry.so",
-        "size": 239376,
-        "sha256": "f271c072ef1d80e78e3309a6ec3cd22eeda9e41489fd2fdcb8510fa0fdea838b"
+        "size": 239400,
+        "sha256": "03ca77b251fb14ae9e77d7fc2b1fdd4cee803007af705c524f6597dd28e42406"
       }
     ],
     "hap": [
       {
         "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
-        "size": 1634241,
-        "sha256": "c06d0aba5d501253dc97c6d75e8d7a6affd228f382f1428c5b5ae91c7b50886c",
+        "size": 1634833,
+        "sha256": "80cdae5bfb96788f1f2d6e30cc0267f8736ab1f35faf2b8d7103535d177d1adb",
         "signed": false
       }
     ]

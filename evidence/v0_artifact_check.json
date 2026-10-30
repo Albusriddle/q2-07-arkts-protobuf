@@ -1,22 +1,22 @@
 {
   "schema": "q207.v0.artifact_check/1",
-  "generated_utc": "2026-10-30T08:04:43.159607+00:00",
+  "generated_utc": "2026-10-30T09:14:48.233700+00:00",
   "generator": {
     "script": "scripts/inspect_hap.py",
     "python": "3.13.0"
   },
   "repo": {
     "branch": "main",
-    "commit": "80804a3",
+    "commit": "cfc9e18",
     "root": "D:/DSHws4TSCsingle/repo"
   },
   "mode": "read-only: no rebuild, no re-sign, no patch, no write into the HAP",
   "input": {
     "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
     "exists": true,
-    "size": 1634241,
-    "sha256": "c06d0aba5d501253dc97c6d75e8d7a6affd228f382f1428c5b5ae91c7b50886c",
-    "mtime_utc": "2026-10-30T08:04:14.107036+00:00"
+    "size": 1634833,
+    "sha256": "80cdae5bfb96788f1f2d6e30cc0267f8736ab1f35faf2b8d7103535d177d1adb",
+    "mtime_utc": "2026-10-30T09:14:27.210737+00:00"
   },
   "container": {
     "is_zip": true,
@@ -45,8 +45,8 @@
       },
       {
         "name": "libs/arm64-v8a/libentry.so",
-        "size": 243288,
-        "compressed": 243288
+        "size": 243880,
+        "compressed": 243880
       },
       {
         "name": "module.json",
@@ -138,8 +138,8 @@
       ]
     },
     "bundled_count": 2,
-    "size": 243288,
-    "sha256": "6905b6e5b79c9ac19e3a6123b93ee8d0ed38afebfda9971a1b0c20cd004b8753",
+    "size": 243880,
+    "sha256": "634eb798f18e066332943cb33c330780234811b36481e5c23654cce5ee95e56c",
     "elf": {
       "is_elf": true,
       "magic": "7f454c46",
@@ -182,8 +182,8 @@
   "cross_checks": {
     "build/napi/libentry.so": {
       "exists": true,
-      "size": 239376,
-      "sha256": "f271c072ef1d80e78e3309a6ec3cd22eeda9e41489fd2fdcb8510fa0fdea838b",
+      "size": 239400,
+      "sha256": "03ca77b251fb14ae9e77d7fc2b1fdd4cee803007af705c524f6597dd28e42406",
       "identical_to_hap_entry": false
     },
     "app/entry/libs/arm64-v8a/libentry.so": {
