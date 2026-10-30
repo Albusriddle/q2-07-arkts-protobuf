@@ -35,6 +35,7 @@ enum class Code : uint8_t {
   Utf8Invalid,            // E_UTF8_INVALID
   ObjectBudget,           // E_OBJECT_BUDGET
   FieldBudget,            // E_FIELD_BUDGET
+  BatchTooLarge,          // E_BATCH_TOO_LARGE (UserBatch max_batch_users)
   MessageTooLarge,        // E_MESSAGE_TOO_LARGE (single message > 64 MiB)
   FieldTooLarge,          // E_FIELD_TOO_LARGE   (single string/bytes > 16 MiB)
   Internal,               // E_INTERNAL
@@ -56,6 +57,7 @@ struct Limits {
   uint64_t max_fields = 10000000;
   uint64_t max_values_bytes = 64ull << 20;
   uint64_t max_blob_bytes = 128ull << 20;
+  uint64_t max_batch_users = 1000000;  // UserBatch only; NAPI profile lowers this
   uint64_t max_tape_bytes = 256ull << 20;
   bool strict_wire_type = true;   // known-field wire mismatch => error (compat mode skips)
   bool utf8_strict = true;        // invalid UTF-8 => error (compat mode would replace)

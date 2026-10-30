@@ -62,13 +62,9 @@ std::string user_json(const pod::User& u) {
 }
 
 std::string user_batch_json(const pod::UserBatch& b) {
-  std::string out = "{\"users\":[";
-  for (size_t i = 0; i < b.users.size(); ++i) {
-    if (i) out += ",";
-    out += user_json(b.users[i]);
-  }
-  out += "]}";
-  return out;
+  view::BatchView v;
+  view::build_batch_view(b, &v);
+  return view::batch_view_json(v);
 }
 
 }  // namespace norm

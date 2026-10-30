@@ -201,20 +201,45 @@ def main() -> int:
         "src/host/decoder/decode_user.cpp",
         "src/host/decoder/conformance.cpp",
         "src/host/decoder/norm.cpp",
+        "src/host/decoder/object_model.h",
+        "src/host/decoder/object_model.cpp",
+        "src/host/decoder/map_order.h",
+        "src/host/decoder/map_order.cpp",
+        "src/host/decoder/generated/q207_demo_fields.h",
         "src/host/tests/test_wire.cpp",
         "src/host/tests/test_vectors.cpp",
         "src/host/tests/test_tape.cpp",
         "src/host/tests/test_decode.cpp",
-        "src/host/tests/test_vectors_data.inc",
+        "src/host/tests/test_object_model.cpp",
+        "src/host/tests/wire_vectors_data.inc",
+        "src/host/tests/test_framework.h",
+        "src/host/tests/main.cpp",
+        "src/host/tests/README.md",
         "src/host/ts/gen_corpus.mjs",
         "src/host/ts/differential.mjs",
         "src/host/ts/materializer_check.mjs",
+        "proto/example.proto",
+        "scripts/gen_fields.py",
+        "scripts/check_batch_sample.py",
+        "app/entry/src/main/cpp/decode_napi.h",
+        "app/entry/src/main/cpp/decode_napi.cpp",
+        "app/entry/src/main/ets/types/libentry/index.d.ts",
+        "app/entry/src/ohosTest/ets/test/EntryNapi.test.ets",
+        "evidence/host/batch/user_batch_c20_plus_empty.wire",
+        "evidence/host/batch/user_batch_c20_plus_empty.json",
+        "build/host/logs/tests.log",
     ]
     artifacts = {}
+    missing = []
     for pat in patterns:
-        for path in sorted(glob.glob(os.path.join(repo, pat))):
-            if os.path.isfile(path):
-                artifacts[rel(repo, path)] = sha256_file(path)
+        matches = [p for p in sorted(glob.glob(os.path.join(repo, pat))) if os.path.isfile(p)]
+        if not matches:
+            missing.append(pat)
+        for path in matches:
+            artifacts[rel(repo, path)] = sha256_file(path)
+    if missing:
+        print("evidence missing required artifacts:", ", ".join(missing), file=sys.stderr)
+        return 1
 
     # ---- test counts from the test log if present ------------------------
     test_summary = {}

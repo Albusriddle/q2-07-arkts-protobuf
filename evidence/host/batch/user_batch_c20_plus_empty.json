@@ -1,0 +1,14 @@
+{
+  "scope": "HOST-ONLY",
+  "stem": "user_batch_c20_plus_empty",
+  "composition": "0a + varint(52) + c20_full.wire + 0a00",
+  "wire_bytes": 56,
+  "wire_hex": "0a340881808080808080101205616c6963651a01611a016222050a015810032a03654078380742060a026b31100142060a026b3210020a00",
+  "wire_sha256": "951ddfb3386b1556ee9a1a51dc8fac05f99688aa7d5c1de79c37a012904da6b7",
+  "c20_full_sha256": "4906a96314c18ff19cafe7b44b1bcb4bd4c8e9429e86958f990713a27e885c2b",
+  "expected": {
+    "users": 2,
+    "first_id": "9007199254740993",
+    "second": "defaults"
+  }
+}

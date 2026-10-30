@@ -34,6 +34,26 @@ void build_user_view(const pod::User& u, UserView* out) {
   out->scores = map_order::dedupe_map(u);
 }
 
+void build_batch_view(const pod::UserBatch& b, BatchView* out) {
+  out->users.clear();
+  out->users.reserve(b.users.size());
+  for (const pod::User& u : b.users) {
+    UserView v;
+    build_user_view(u, &v);
+    out->users.push_back(std::move(v));
+  }
+}
+
+std::string batch_view_json(const BatchView& v) {
+  std::string out = "{\"users\":[";
+  for (size_t i = 0; i < v.users.size(); ++i) {
+    if (i) out += ",";
+    out += user_view_json(v.users[i]);
+  }
+  out += "]}";
+  return out;
+}
+
 std::string user_view_json(const UserView& v) {
   std::string out = "{\"id\":\"";
   out += norm::json_escape(v.id);

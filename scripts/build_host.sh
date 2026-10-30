@@ -327,6 +327,10 @@ run_codegen_check() {
   python "$ROOT/scripts/gen_fields.py" --check
 }
 
+run_sample_check() {
+  python "$ROOT/scripts/check_batch_sample.py" --check
+}
+
 NO_NPM=0
 for arg in "$@"; do
   case "$arg" in
@@ -337,6 +341,7 @@ for arg in "$@"; do
 done
 
 run_step "codegen-check" "python scripts/gen_fields.py --check (proto -> generated/q207_demo_fields.h)" run_codegen_check
+run_step "sample-check" "python scripts/check_batch_sample.py --check (c20_full -> 56 B UserBatch)" run_sample_check
 run_step "build" "native host compiler: cl/g++/clang++ over src/host/**, -O2, 3 binaries" build_all
 run_step "unit-tests" "build/host/host_tests.exe (wire + 38 golden vectors + tape + decode)" run_tests
 run_step "data-cards" "python bench/gen_cards.py --out bench/data" gen_cards

@@ -1,6 +1,6 @@
 # Q2-07 · Native ArkTS High-Performance Protobuf Parsing
 
-> Status: **host vertical slice implemented; V0.1 adds generated field table + NAPI `decodeUser`**; unsigned/self-signed HAP built (not device-run).
+> Status: **host vertical slice implemented; V0.2 adds `decodeMany` batch NAPI**; unsigned/self-signed HAP built (not device-run).
 > Feasibility: **B- / conditionally viable** under “API-level compatibility + P3-batch first + hot-message P4 + 20 weeks”.
 > This repository is a working scaffold, not a claim that 1.5×/700 ms is achieved.
 
@@ -16,7 +16,7 @@ A feasibility + implementation workspace for the OpenHarmony Q2-07 challenge:
 
 - host-side C++17 wire reader, POD decoder for `proto/example.proto`, tape v0 writer/verifier,
   TS materializer and differential harness against **protobufjs 7.6.5**;
-- V0.1 NAPI bridge (`ping`/`add`/`decodeUser`) in `app/entry/src/main/cpp/`,
+- V0.2 NAPI bridge (`ping`/`add`/`decodeUser`/`decodeMany`) in `app/entry/src/main/cpp/`,
   built by hvigor `externalNativeOptions`; `decodeUser` returns the norm-v1 object shape;
 - field numbers/wire types generated from `proto/example.proto` into
   `src/host/decoder/generated/q207_demo_fields.h` (`scripts/codegen.sh --check`);
@@ -27,7 +27,7 @@ A feasibility + implementation workspace for the OpenHarmony Q2-07 challenge:
 
 - full `.proto → descriptor/IR → C++/ArkTS` code generation; only field constants + wire
   types are generated today, while `pod.h` / `decode_user.cpp` remain hand-written;
-- NAPI `decode`/`decodeMany` (only `ping`/`add` exist);
+- NAPI `decodeMany` now exists; `decode` alias / full P3 handle-scope tuning remain;
 - protobufjs **8.x**, full P3/P4, real device install/run/AOT/performance.
 
 Device-side performance numbers are **not** available: no board, no UDID, no trusted signing
@@ -43,6 +43,7 @@ profile. All host numbers are labelled `HOST-ONLY`.
 | [`docs/host-slice.md`](docs/host-slice.md) | HOST-ONLY reader/tape/materializer/differential results |
 | [`docs/v0-slice.md`](docs/v0-slice.md) | V0 NAPI/HAP build and current BLOCKED list |
 | [`docs/v0.1-decode.md`](docs/v0.1-decode.md) | V0.1 generated field table + `decodeUser` NAPI, claim levels and limitations |
+| [`docs/v0.2-decode-many.md`](docs/v0.2-decode-many.md) | V0.2 batch `decodeMany`, limits and NAPI compile-only claim |
 
 ## Scope and non-goals
 
@@ -84,7 +85,7 @@ bash scripts/build.sh
 #   export Q207_SIGN_STORE_PWD=...   (or create gitignored signing/.local_pwd)
 bash scripts/sign_hap.sh
 
-# HOST-ONLY C++/TS slice: build + 433 assertions + bench + differential + evidence
+# HOST-ONLY C++/TS slice: build + 464 assertions + bench + differential + evidence
 bash scripts/build_host.sh
 ```
 
@@ -97,7 +98,7 @@ bash scripts/build_host.sh
 ## Current next steps
 
 1. implement `.proto → descriptor/IR → C++/ArkTS` codegen (currently hand-written POD/decoder);
-2. replace the `ping`/`add` NAPI surface with `decode`/`decodeMany` (P3 batch first);
+2. finish the P3 path: `decode` alias/batch ergonomics, handle-scope tuning and external buffer/worker policy;
 3. lock API generation/acceptance baseline (current HAP targets API 24 / compileSdk 6.1.1.125);
 4. when a board + official signing material/UDID exist: install, run `ohosTest`, record `ping/add`
    and AOT evidence, then measure device performance.
