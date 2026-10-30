@@ -27,13 +27,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y g++
-      - name: Codegen / negative tests / sample
+      - name: Host gate (codegen + negative + sample + build + fake NAPI)
+        run: bash scripts/ci_host.sh
+      - name: ASan/UBSan host tests
         run: |
-          python scripts/gen_fields.py --check
-          python scripts/test_gen_fields.py
-          python scripts/check_batch_sample.py --check
-      - name: Host build and 468 assertions
-        run: bash scripts/build_host.sh
+          bash scripts/build_host_asan.sh
+          ./build/host/host_tests_asan.exe
       - name: Upload host logs
         if: always()
         uses: actions/upload-artifact@v4

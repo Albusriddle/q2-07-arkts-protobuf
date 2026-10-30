@@ -10,10 +10,12 @@
 namespace q207 {
 namespace pod {
 
-struct MapEntry {
+struct UserScoresEntry {
   std::string key;
   int32_t value = 0;
 };
+
+using MapEntry = UserScoresEntry;
 
 struct Profile {
   bool present = false;
@@ -50,7 +52,7 @@ struct User {
   std::string email;
   std::string phone;
   int32_t level = 0;
-  std::vector<MapEntry> scores;
+  std::vector<UserScoresEntry> scores;
 
   bool present(uint32_t field) const {
     return field >= 1 && field <= 32 && ((presence >> (field - 1)) & 1u) != 0;

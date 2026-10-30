@@ -1,0 +1,33 @@
+name: hap-windows
+
+# Manual only: requires a self-hosted Windows runner with DevEco Studio,
+# HarmonyOS SDK/NDK and hdc.  This job is intentionally not triggered by push.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hap:
+    runs-on: [self-hosted, windows]
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build unsigned HAP + test HAP
+        shell: bash
+        run: |
+          bash scripts/build.sh
+          cd app
+          hvigorw assembleHap --mode module -p module=entry@ohosTest -p product=default -p buildMode=debug --no-daemon
+      - name: Upload artifact evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hap-evidence
+          path: |
+            evidence/v0_build.json
+            evidence/v0_ohostest_build.json
+            evidence/hap_build.log
+            evidence/hap_build_ohostest.log
+          if-no-files-found: ignore

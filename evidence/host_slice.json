@@ -34,10 +34,10 @@
     "node": "v24.18.0"
   },
   "git": {
-    "branch": "feature/v0.6-generic-codegen",
-    "head": "4ed55a8370e5309935eacef9a826d27ae8c0d39e",
-    "dirty_files": 1,
-    "dirty_files_raw": 5,
+    "branch": "feature/v0.7-map-hardening",
+    "head": "8b0b6379ae3ac1cb5ddd92151b65db913baa067b",
+    "dirty_files": 26,
+    "dirty_files_raw": 32,
     "note": "source dirty files only; evidence outputs excluded (see dirty_files_raw)"
   },
   "steps": [
@@ -45,13 +45,13 @@
       "step": "codegen-check",
       "command": "python scripts/gen_fields.py --check (proto -> generated files)",
       "exit_code": 0,
-      "duration_ms": 158
+      "duration_ms": 159
     },
     {
       "step": "codegen-negative",
       "command": "python scripts/test_gen_fields.py (unsupported constructs must fail)",
       "exit_code": 0,
-      "duration_ms": 144
+      "duration_ms": 147
     },
     {
       "step": "sample-check",
@@ -63,37 +63,37 @@
       "step": "build",
       "command": "native host compiler: cl/g++/clang++ over src/host/**, -O2, 4 binaries",
       "exit_code": 0,
-      "duration_ms": 18059
+      "duration_ms": 17657
     },
     {
       "step": "unit-tests",
       "command": "build/host/host_tests.exe (wire + 38 golden vectors + tape + decode)",
       "exit_code": 0,
-      "duration_ms": 172
+      "duration_ms": 143
     },
     {
       "step": "napi-shim",
       "command": "build/host/napi_shim_tests.exe (fake NAPI object mapper, host-only)",
       "exit_code": 0,
-      "duration_ms": 147
+      "duration_ms": 120
     },
     {
       "step": "data-cards",
       "command": "python bench/gen_cards.py --out bench/data",
       "exit_code": 0,
-      "duration_ms": 2785
+      "duration_ms": 2572
     },
     {
       "step": "bench",
       "command": "host_bench.exe --card bench/data/{s1_user_1kb,s3_100mb}.bin --reps 5 -> evidence/host/host_bench.csv",
       "exit_code": 0,
-      "duration_ms": 8134
+      "duration_ms": 7750
     },
     {
       "step": "differential",
       "command": "differential vs protobufjs 7.6.5 (gen_corpus + differential + materializer_check), Python golden fallback when unavailable",
       "exit_code": 0,
-      "duration_ms": 1396
+      "duration_ms": 1202
     }
   ],
   "steps_all_zero": true,
@@ -151,8 +151,8 @@
     "materialized_sha256": "0640ce0876a76ba50701d6b4f991c806e7e319347272aa385dd9f30f6dadfcdb",
     "users": 8178,
     "roots": 8178,
-    "materialize_ms": 48.074,
-    "users_per_s": 170112,
+    "materialize_ms": 45.267,
+    "users_per_s": 180660,
     "json_bytes": 8997209,
     "exact_text_match": true,
     "graph_diffs": 0,
@@ -174,35 +174,35 @@
       "host_os": "Windows (host native)",
       "metrics": {
         "wire_decode_mb_per_s": {
-          "value": "528.535931",
+          "value": "593.128836",
           "unit": "MB/s (payload bytes/1e6 per s)"
         },
         "wire_decode_msg_per_s": {
-          "value": "514708.659039",
+          "value": "577611.718921",
           "unit": "messages/s"
         },
         "wire_decode_ns_per_msg": {
-          "value": "1942.846662",
+          "value": "1731.266813",
           "unit": "ns/message"
         },
         "wire_decode_median_ms": {
-          "value": "15.888600",
+          "value": "14.158300",
           "unit": "ms/full card"
         },
         "tape_write_median_ms": {
-          "value": "97.685100",
+          "value": "98.932500",
           "unit": "ms/full card (decode + tape write)"
         },
         "tape_write_only_median_ms": {
-          "value": "81.796500",
+          "value": "84.774200",
           "unit": "ms/full card (derived: tape pass minus decode pass)"
         },
         "tape_write_only_ns_per_msg": {
-          "value": "10002.017608",
+          "value": "10366.128638",
           "unit": "ns/message (derived)"
         },
         "tape_write_ns_per_msg": {
-          "value": "11944.864270",
+          "value": "12097.395451",
           "unit": "ns/message"
         },
         "tape_bytes_total": {
@@ -249,35 +249,35 @@
       "host_os": "Windows (host native)",
       "metrics": {
         "wire_decode_mb_per_s": {
-          "value": "550.471074",
+          "value": "626.923975",
           "unit": "MB/s (payload bytes/1e6 per s)"
         },
         "wire_decode_msg_per_s": {
-          "value": "535239.856654",
+          "value": "609577.349754",
           "unit": "messages/s"
         },
         "wire_decode_ns_per_msg": {
-          "value": "1868.321254",
+          "value": "1640.480901",
           "unit": "ns/message"
         },
         "wire_decode_median_ms": {
-          "value": "190.755600",
+          "value": "167.493100",
           "unit": "ms/full card"
         },
         "tape_write_median_ms": {
-          "value": "1154.017500",
+          "value": "1106.365800",
           "unit": "ms/full card (decode + tape write)"
         },
         "tape_write_only_median_ms": {
-          "value": "963.261900",
+          "value": "938.872700",
           "unit": "ms/full card (derived: tape pass minus decode pass)"
         },
         "tape_write_only_ns_per_msg": {
-          "value": "9434.494613",
+          "value": "9195.619001",
           "unit": "ns/message (derived)"
         },
         "tape_write_ns_per_msg": {
-          "value": "11302.815867",
+          "value": "10836.099902",
           "unit": "ns/message"
         },
         "tape_bytes_total": {
@@ -314,19 +314,19 @@
   "artifacts": {
     "build/host/host_tests.exe": {
       "bytes": 340480,
-      "sha256": "8d8df17861aab2bfb7e275f442eaaa0fcd8f3f015862baf18e063a8f4751dab0"
+      "sha256": "5fba6e5e3f617bd75b716a7c1bd84a041f8a8a9e16cc14db21071c3b55d17f50"
     },
     "build/host/host_decode_dump.exe": {
       "bytes": 294912,
-      "sha256": "3c7de500e88f267fd6678990122b5b3b719f480851bf4abda26b2a46adb883bc"
+      "sha256": "ae77c0352a73771c327563807ac6d611427b2312869020feb0e0dc6f8a10d77f"
     },
     "build/host/host_bench.exe": {
       "bytes": 238592,
-      "sha256": "f72a0944eece0749942c55dc09124885e3d101da9b8ca013ec84a35ee81dca26"
+      "sha256": "4ed1fa018dc68e0c3f8f908b94817903f4b93f4bcc2847505adf4b8b5bb30892"
     },
     "evidence/host/host_bench.csv": {
       "bytes": 7309,
-      "sha256": "45401e78317a270b3191d4824c2e23c6df4505de38169e8a9a5d4a05081e3671"
+      "sha256": "4d4beae1cc337a83f3c7cc1c4101900a2f67e2d782bccec9e0c76c45bbf2709f"
     },
     "evidence/host/differential.json": {
       "bytes": 918,
@@ -334,7 +334,7 @@
     },
     "evidence/host/materializer_check.json": {
       "bytes": 668,
-      "sha256": "a5c78930ee02f147249fe83f8ba440b08ff77cf3c98b728db999e0cd4435e9ab"
+      "sha256": "e7d3c9d1bcf1155e23655c5c6dd5bd2f63aa4518f91f3e368248b978ad42b42f"
     },
     "evidence/host/corpus/corpus.json": {
       "bytes": 12308,
@@ -421,8 +421,8 @@
       "sha256": "8420b5819ebf30cbffa39e57e98d962c92f3f46e17345b375f24c1017c171b79"
     },
     "src/host/decoder/generated/q207_demo_pod.h": {
-      "bytes": 2109,
-      "sha256": "c1a853db2433200da7571566e68d28fe0e59bbbf1d25f13664dd9ac059090325"
+      "bytes": 2158,
+      "sha256": "3e63c9f28e1a7c6cfd3ed741d8c6733a38b0ef855c814b67e082ffe822d430ce"
     },
     "src/host/decoder/generated/q207_demo_schema.h": {
       "bytes": 1504,
@@ -433,16 +433,16 @@
       "sha256": "68a4e5e0e1132acb81d5aa0b95421939f13f464b356fd455846dd2fb8911eeeb"
     },
     "src/host/decoder/generated/q207_demo_decoder.inc": {
-      "bytes": 7317,
-      "sha256": "2a88c4e8aaffbff8064f063e1cadb6ab165c3a080e2adb26cc0d525c8df5b304"
+      "bytes": 7340,
+      "sha256": "a1489f7564772c81ce87d38c50bf4e37735b82569e70b0e431373f3109a8af3e"
     },
     "src/host/decoder/pod.h": {
       "bytes": 432,
       "sha256": "b203412baed701dd49c96af0dd3b28a6d7fc6ae02d2faf9a74d39be29da58362"
     },
     "scripts/gen_fields.py": {
-      "bytes": 35436,
-      "sha256": "fb8b0f42b0e9ef13889bf7a8232066351d7d155262857f94dc89d60abc5a5501"
+      "bytes": 36346,
+      "sha256": "3254bcd163260ddb811769ffb6c65228a38cfbf4e60afd078bcce229bae88823"
     },
     "scripts/codegen.sh": {
       "bytes": 351,
