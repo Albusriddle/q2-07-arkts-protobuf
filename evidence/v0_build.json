@@ -1,8 +1,8 @@
 {
   "slice": "V0-min: NAPI .so + ArkTS caller",
-  "timestamp_utc": "2026-10-30T07:27:35.227979+00:00",
-  "branch": "feature/v0.3-schema-pod",
-  "commit": "0c03fb3",
+  "timestamp_utc": "2026-10-30T07:41:11.365469+00:00",
+  "branch": "feature/v0.4-generated-decoder",
+  "commit": "ea66b6e",
   "status": "PASS-UNSIGNED",
   "commands": [
     {
@@ -41,14 +41,14 @@
       {
         "path": "build/napi/libentry.so",
         "size": 239392,
-        "sha256": "c80e08bc4f53b9a5b6e000f7b195ee5028542fdcd4a3f720a1745ac79c92b549"
+        "sha256": "1d7dfc947a6c1ff75c7aa543dae93f160686c1ba1eb8acbdc6c9c82ca9eb51b3"
       }
     ],
     "hap": [
       {
         "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
-        "size": 1634081,
-        "sha256": "a8cc64d4861d9281a253ec7d63eb620b47851eddc90cb69fd3026319268ffea5",
+        "size": 1634241,
+        "sha256": "ebfe1dfbf01cc0fc4f61593dcbf6587cd07550d09fb86fe2f72c132a8a31041d",
         "signed": false
       }
     ]
