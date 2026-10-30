@@ -13,10 +13,12 @@
     "napi shim iterator include",
     "CI uses ci_host",
     "ASan script/job",
-    "docs pointers"
+    "docs pointers",
+    "Reader Limits lifetime",
+    "synthetic multi-shape map compile"
   ],
   "host_evidence": {
-    "head": "6c7d2062450ed93837991ceed89cdc8481a743e7",
+    "head": "7921133831eb8bc9f40056c3584f494d9ffa6a80",
     "tests": {
       "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
       "passed": 468,
@@ -67,7 +69,7 @@
     "binary": {
       "path": "build/host/host_tests_asan.exe",
       "size": 4587520,
-      "sha256": "b999c44a6753a6c20a764fc06fda713f75dbf7bb92d03d0d4dd7780158a74d48"
+      "sha256": "b30d71c878ff2f73d900a2e93f4a826d5cb0935db0c5ea342060215f7bb70b4b"
     },
     "note": "allocation-count block skipped under Q207_ASAN; normal host is 468"
   },
