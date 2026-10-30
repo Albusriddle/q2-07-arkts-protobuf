@@ -80,7 +80,7 @@ host/napi/             CMake shim; the canonical NAPI source is app/entry/src/ma
 
 Prerequisites: DevEco Studio + HarmonyOS SDK/NDK, Node/npm, Python 3, and
 `DEVECO_HOME` if DevEco is not at its default path. `PYTHON` can point at a
-specific interpreter (default: `python3`, fallback `python`).
+specific interpreter (auto-detected: working `python`, else `python3`).
 
 ```bash
 # V0: host .so + ohpm install + HAP (unsigned)
