@@ -19,3 +19,4 @@ fi
 "$PYTHON" scripts/test_gen_fields.py
 "$PYTHON" scripts/check_batch_sample.py --check
 bash scripts/build_host.sh
+"$PYTHON" scripts/check_generated_map_compile.py
