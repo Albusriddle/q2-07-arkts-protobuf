@@ -7,9 +7,10 @@
 #include "host/tests/test_framework.h"
 
 // ---- global allocation counter -----------------------------------------
-// Overriding global new/delete lets the test prove, at the malloc level and not
-// only at the reader's own bookkeeping level, that a pathological length prefix
-// does not trigger an allocation.
+// ASan installs its own operator new/delete; overriding them would duplicate
+// symbols.  The allocation-order proof is compiled out under Q207_ASAN and the
+// sanitizer covers the same path at runtime.
+#if !defined(Q207_ASAN)
 static unsigned long long g_new_bytes = 0;
 static unsigned long long g_new_calls = 0;
 
@@ -25,6 +26,7 @@ void operator delete(void* p) noexcept { std::free(p); }
 void operator delete[](void* p) noexcept { std::free(p); }
 void operator delete(void* p, std::size_t) noexcept { std::free(p); }
 void operator delete[](void* p, std::size_t) noexcept { std::free(p); }
+#endif
 
 namespace q207 {
 namespace test {
@@ -333,6 +335,7 @@ void suite_wire() {
     }
   }
 
+#if !defined(Q207_ASAN)
   ctx().begin("wire/allocation-order");
   {
     // Pathological length prefixes must be rejected with ZERO allocations,
@@ -356,6 +359,7 @@ void suite_wire() {
     std::printf("   allocation delta for 4 GiB length prefix: %llu bytes in %llu calls\n", dbytes,
                 g_new_calls - calls_before);
   }
+#endif
 
   ctx().begin("wire/skip-unknown");
   {

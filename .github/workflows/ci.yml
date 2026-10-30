@@ -41,5 +41,5 @@ jobs:
           path: |
             build/host/logs/
             evidence/host_slice.json
-            evidence/v0_4_decoder.json
+            evidence/v0_7_hardening.json
           if-no-files-found: ignore
