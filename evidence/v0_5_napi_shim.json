@@ -1,0 +1,43 @@
+{
+  "scope": "V0.5 fake NAPI host runtime smoke tests",
+  "claim_level": "napi_shim_host_executed + generated_decoder_host_verified",
+  "napi_executed": true,
+  "napi_execution_kind": "fake NAPI shim (host-only; not ArkCompiler)",
+  "device_run": false,
+  "test_binary": {
+    "path": "build/host/napi_shim_tests.exe",
+    "size": 320000,
+    "sha256": "c714b1d24721addaf5dca80211e2defee3e2a583095942b47207ba3c60e7091b"
+  },
+  "covered": [
+    "DecodeUser(c20_full) object shape",
+    "DecodeMany(c20+empty) users[2]",
+    "empty batch",
+    "non-Uint8Array error",
+    "truncated batch error",
+    "handle scope balance"
+  ],
+  "host_evidence": {
+    "head": "65baad72811f94d22db7affcf4a66d7993988fe6",
+    "tests": {
+      "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
+      "passed": 468,
+      "failed": 0
+    },
+    "steps": [
+      "codegen-check",
+      "codegen-negative",
+      "sample-check",
+      "build",
+      "unit-tests",
+      "napi-shim",
+      "data-cards",
+      "bench",
+      "differential"
+    ]
+  },
+  "blocked": [
+    "real ArkCompiler/NAPI runtime still requires device",
+    "decodeMany handle scope not device-tested"
+  ]
+}
