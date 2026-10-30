@@ -18,6 +18,7 @@ struct MapEntry {
 struct Profile {
   bool present = false;
   uint32_t presence = 0;
+  uint32_t unknown_fields = 0;
   std::string city;
   int32_t age = 0;
 
@@ -30,6 +31,7 @@ struct Profile {
   void clear() {
     present = false;
     presence = 0;
+    unknown_fields = 0;
     city.clear();
     age = 0;
   }
@@ -37,19 +39,18 @@ struct Profile {
 
 struct User {
   uint32_t presence = 0;
+  uint32_t unknown_fields = 0;
+  uint32_t contact_bits = 0;
+  uint32_t oneof_case = 0;
+  bool has_level = false;
   int64_t id = 0;
   std::string name;
   std::vector<std::string> tags;
   Profile profile;
-  // oneof contact: compat arm keeps ALL members (bits), spec arm keeps last.
-  uint32_t contact_bits = 0;  // bit (field) for fields 5 / 6
-  uint32_t oneof_case = 0;    // last member seen: 0 none, 5 email, 6 phone
   std::string email;
   std::string phone;
-  bool has_level = false;
   int32_t level = 0;
   std::vector<MapEntry> scores;
-  uint32_t unknown_fields = 0;
 
   bool present(uint32_t field) const {
     return field >= 1 && field <= 32 && ((presence >> (field - 1)) & 1u) != 0;
@@ -59,24 +60,37 @@ struct User {
   }
   void clear() {
     presence = 0;
+    unknown_fields = 0;
+    contact_bits = 0;
+    oneof_case = 0;
+    has_level = false;
     id = 0;
     name.clear();
     tags.clear();
     profile.clear();
-    contact_bits = 0;
-    oneof_case = 0;
     email.clear();
     phone.clear();
-    has_level = false;
     level = 0;
     scores.clear();
-    unknown_fields = 0;
   }
 };
 
 struct UserBatch {
+  uint32_t presence = 0;
+  uint32_t unknown_fields = 0;
   std::vector<User> users;
-  void clear() { users.clear(); }
+
+  bool present(uint32_t field) const {
+    return field >= 1 && field <= 32 && ((presence >> (field - 1)) & 1u) != 0;
+  }
+  void mark(uint32_t field) {
+    if (field >= 1 && field <= 32) presence |= (1u << (field - 1));
+  }
+  void clear() {
+    presence = 0;
+    unknown_fields = 0;
+    users.clear();
+  }
 };
 
 }  // namespace pod
