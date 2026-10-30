@@ -1,36 +1,36 @@
 > hvigor [32mUP-TO-DATE :entry:default@PreBuild...  [39m
-> hvigor [32mFinished :entry:default@CreateModuleInfo... after 2 ms [39m
-> hvigor [32mFinished :entry:default@GenerateMetadata... after 7 ms [39m
-> hvigor [32mFinished :entry:default@ConfigureCmake... after 55 ms [39m
-> hvigor [32mFinished :entry:default@MergeProfile... after 6 ms [39m
-> hvigor [32mFinished :entry:default@CreateBuildProfile... after 5 ms [39m
+> hvigor [32mFinished :entry:default@CreateModuleInfo... after 1 ms [39m
+> hvigor [32mFinished :entry:default@GenerateMetadata... after 3 ms [39m
+> hvigor [32mFinished :entry:default@ConfigureCmake... after 18 ms [39m
+> hvigor [32mFinished :entry:default@MergeProfile... after 3 ms [39m
+> hvigor [32mFinished :entry:default@CreateBuildProfile... after 2 ms [39m
 > hvigor [32mFinished :entry:default@PreCheckSyscap... after 1 ms [39m
-> hvigor [32mFinished :entry:default@GeneratePkgContextInfo... after 12 ms [39m
-> hvigor [32mFinished :entry:default@GeneratePkgSdkInfo... after 4 ms [39m
-> hvigor [32mFinished :entry:default@ProcessIntegratedHsp... after 2 ms [39m
-> hvigor [32mFinished :entry:default@MakePackInfo... after 5 ms [39m
-> hvigor [32mFinished :entry:default@SyscapTransform... after 13 ms [39m
-> hvigor [32mFinished :entry:default@ProcessProfile... after 151 ms [39m
-> hvigor [32mFinished :entry:default@ProcessRouterMap... after 4 ms [39m
-> hvigor [32mFinished :entry:default@ProcessShareConfig... after 3 ms [39m
-> hvigor [32mFinished :entry:default@ProcessStartupConfig... after 2 ms [39m
-> hvigor [32mFinished :entry:default@ProcessResource... after 4 ms [39m
-> hvigor [32mFinished :entry:default@GenerateLoaderJson... after 8 ms [39m
-> hvigor [32mFinished :entry:default@CompileResource... after 326 ms [39m
+> hvigor [32mFinished :entry:default@GeneratePkgContextInfo... after 5 ms [39m
+> hvigor [32mFinished :entry:default@GeneratePkgSdkInfo... after 3 ms [39m
+> hvigor [32mFinished :entry:default@ProcessIntegratedHsp... after 1 ms [39m
+> hvigor [32mFinished :entry:default@MakePackInfo... after 4 ms [39m
+> hvigor [32mFinished :entry:default@SyscapTransform... after 9 ms [39m
+> hvigor [32mFinished :entry:default@ProcessProfile... after 133 ms [39m
+> hvigor [32mFinished :entry:default@ProcessRouterMap... after 3 ms [39m
+> hvigor [32mFinished :entry:default@ProcessShareConfig... after 2 ms [39m
+> hvigor [32mFinished :entry:default@ProcessStartupConfig... after 1 ms [39m
+> hvigor [32mFinished :entry:default@ProcessResource... after 3 ms [39m
+> hvigor [32mFinished :entry:default@GenerateLoaderJson... after 6 ms [39m
+> hvigor [32mFinished :entry:default@CompileResource... after 320 ms [39m
 > hvigor [32mFinished :entry:default@BuildJS... after 2 ms [39m
-> hvigor [32mFinished :entry:default@BuildNativeWithCmake... after 890 ms [39m
-> hvigor [32mFinished :entry:default@BuildNativeWithNinja... after 1 s 511 ms [39m
-> hvigor [32mFinished :entry:default@ProcessLibs... after 29 ms [39m
-> hvigor [32mFinished :entry:default@DoNativeStrip... after 105 ms [39m
-> hvigor [32mFinished :entry:default@CacheNativeLibs... after 6 ms [39m
-> hvigor [32mFinished :entry:default@CompileArkTS... after 3 s 157 ms [39m
-> hvigor [32mFinished :entry:default@GeneratePkgModuleJson... after 4 ms [39m
+> hvigor [32mFinished :entry:default@BuildNativeWithCmake... after 773 ms [39m
+> hvigor [32mFinished :entry:default@BuildNativeWithNinja... after 1 s 56 ms [39m
+> hvigor [32mFinished :entry:default@ProcessLibs... after 19 ms [39m
+> hvigor [32mFinished :entry:default@DoNativeStrip... after 84 ms [39m
+> hvigor [32mFinished :entry:default@CacheNativeLibs... after 4 ms [39m
+> hvigor [32mFinished :entry:default@CompileArkTS... after 2 s 825 ms [39m
+> hvigor [32mFinished :entry:default@GeneratePkgModuleJson... after 2 ms [39m
 > hvigor [32mFinished :entry:default@ProcessCompiledResources... after 1 ms [39m
-> hvigor [32mFinished :entry:default@PackageHap... after 427 ms [39m
+> hvigor [32mFinished :entry:default@PackageHap... after 362 ms [39m
 > hvigor [32mFinished :entry:default@PackingCheck... after 3 ms [39m
 > hvigor [33mWARN: Will skip sign 'hos_hap'. No signingConfigs profile is configured in current project.
              If needed, configure the signingConfigs in D:\DSHws4TSCsingle\repo\app\build-profile.json5.[39m
 > hvigor [32mFinished :entry:default@SignHap... after 2 ms [39m
 > hvigor [32mFinished :entry:default@CollectDebugSymbol... after 1 ms [39m
 > hvigor [32mFinished :entry:assembleHap... after 1 ms [39m
-> hvigor [32mBUILD SUCCESSFUL in 7 s 882 ms [39m
+> hvigor [32mBUILD SUCCESSFUL in 6 s 943 ms [39m

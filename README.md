@@ -1,6 +1,6 @@
 # Q2-07 · Native ArkTS High-Performance Protobuf Parsing
 
-> Status: **V0.5 adds fake-NAPI host runtime smoke tests and CI**; generated decoder + `decodeMany` batch NAPI, unsigned/self-signed HAP built (not device-run).
+> Status: **V0.6 generates message/nested/oneof POD + decoder from schema**; fake-NAPI host tests and CI are in place; HAP built (not device-run).
 > Feasibility: **B- / conditionally viable** under “API-level compatibility + P3-batch first + hot-message P4 + 20 weeks”.
 > This repository is a working scaffold, not a claim that 1.5×/700 ms is achieved.
 
@@ -16,7 +16,7 @@ A feasibility + implementation workspace for the OpenHarmony Q2-07 challenge:
 
 - host-side C++17 wire reader, POD decoder for `proto/example.proto`, tape v0 writer/verifier,
   TS materializer and differential harness against **protobufjs 7.6.5**;
-- V0.5 fake NAPI host tests; V0.4 generated decoder; NAPI bridge (`ping`/`add`/`decodeUser`/`decodeMany`) unchanged in `app/entry/src/main/cpp/`,
+- V0.6 generic message codegen; V0.5 fake NAPI host tests; V0.4 generated decoder; NAPI bridge (`ping`/`add`/`decodeUser`/`decodeMany`) unchanged in `app/entry/src/main/cpp/`,
   built by hvigor `externalNativeOptions`; `decodeUser` returns the norm-v1 object shape;
 - field numbers, wire types, POD structs, schema IR, decoder body and ArkTS types generated
   from `proto/example.proto` (`scripts/codegen.sh --check`);
@@ -25,7 +25,7 @@ A feasibility + implementation workspace for the OpenHarmony Q2-07 challenge:
 
 **Not implemented yet (do not claim as done)**
 
-- full generic `.proto` compiler; decoder generation is schema-specific and NAPI bindings remain hand-written;
+- full generic `.proto` compiler; message/nested/oneof codegen is generic, but the map shape is single-shaped and NAPI bindings remain hand-written;
 - `decode` alias / full P3 handle-scope tuning remain;
 - protobufjs **8.x**, full P3/P4, real device install/run/AOT/performance.
 
@@ -46,6 +46,7 @@ profile. All host numbers are labelled `HOST-ONLY`.
 | [`docs/v0.3-codegen.md`](docs/v0.3-codegen.md) | V0.3 schema IR + generated POD + ArkTS types, regression and limits |
 | [`docs/v0.4-decoder.md`](docs/v0.4-decoder.md) | V0.4 generated decoder body, 468-assertion regression and limits |
 | [`docs/v0.5-napi-shim.md`](docs/v0.5-napi-shim.md) | V0.5 fake NAPI host runtime tests, scope/error checks and limits |
+| [`docs/v0.6-generic-codegen.md`](docs/v0.6-generic-codegen.md) | V0.6 message-graph POD/decoder/DTS generation and limits |
 
 ## Scope and non-goals
 
@@ -103,7 +104,7 @@ bash scripts/build_host.sh   # includes fake-NAPI napi-shim step
 
 ## Current next steps
 
-1. turn the schema-specific decoder generator into a reusable schema/IR compiler;
+1. extend the generic generator to multi-shape maps/enums/fixed types and a generic materializer;
 2. finish the P3 path: `decode` alias/batch ergonomics, handle-scope tuning and external buffer/worker policy;
 3. lock API generation/acceptance baseline (current HAP targets API 24 / compileSdk 6.1.1.125);
 4. when a board + official signing material/UDID exist: install, run `ohosTest`, record `ping/add`
