@@ -35,9 +35,9 @@
   },
   "git": {
     "branch": "feature/v0.8-bench",
-    "head": "def824fd257a726e44f5c0bac61dc654dc14f7a5",
-    "dirty_files": 5,
-    "dirty_files_raw": 11,
+    "head": "8a92c6e6ffada674de01fdca6c120de4d7d964a4",
+    "dirty_files": 1,
+    "dirty_files_raw": 7,
     "note": "source dirty files only; evidence outputs excluded (see dirty_files_raw)"
   },
   "steps": [
@@ -45,67 +45,67 @@
       "step": "codegen-check",
       "command": "python scripts/gen_fields.py --check (proto -> generated files)",
       "exit_code": 0,
-      "duration_ms": 204
+      "duration_ms": 219
     },
     {
       "step": "codegen-negative",
       "command": "python scripts/test_gen_fields.py (unsupported constructs must fail)",
       "exit_code": 0,
-      "duration_ms": 230
+      "duration_ms": 204
     },
     {
       "step": "sample-check",
       "command": "python scripts/check_batch_sample.py --check (c20_full -> 56 B UserBatch)",
       "exit_code": 0,
-      "duration_ms": 179
+      "duration_ms": 204
     },
     {
       "step": "build",
       "command": "native host compiler: cl/g++/clang++ over src/host/**, -O2, 4 binaries",
       "exit_code": 0,
-      "duration_ms": 26345
+      "duration_ms": 26105
     },
     {
       "step": "unit-tests",
       "command": "build/host/host_tests.exe (wire + 38 golden vectors + tape + decode)",
       "exit_code": 0,
-      "duration_ms": 177
+      "duration_ms": 180
     },
     {
       "step": "napi-shim",
       "command": "build/host/napi_shim_tests.exe (fake NAPI object mapper, host-only)",
       "exit_code": 0,
-      "duration_ms": 141
+      "duration_ms": 153
     },
     {
       "step": "data-cards",
       "command": "python bench/gen_cards.py --out bench/data",
       "exit_code": 0,
-      "duration_ms": 2915
+      "duration_ms": 2845
     },
     {
       "step": "bench",
       "command": "host_bench.exe --card bench/data/{s1_user_1kb,s3_100mb}.bin --reps 5 -> evidence/host/host_bench.csv",
       "exit_code": 0,
-      "duration_ms": 8347
+      "duration_ms": 7673
     },
     {
       "step": "differential",
       "command": "differential vs protobufjs 7.6.5 (gen_corpus + differential + materializer_check), Python golden fallback when unavailable",
       "exit_code": 0,
-      "duration_ms": 1591
+      "duration_ms": 1270
     },
     {
       "step": "protobufjs-bench",
       "command": "protobufjs 7.6.5 decode/decode+toObject baseline on S1/S3 cards",
       "exit_code": 0,
-      "duration_ms": 1822
+      "duration_ms": 1609
     },
     {
       "step": "bench-compare",
       "command": "native vs protobufjs host-only comparison -> evidence/host/bench_compare.json",
       "exit_code": 0,
-      "duration_ms": 186
+      "duration_ms": 139
     }
   ],
   "steps_all_zero": true,
@@ -163,8 +163,8 @@
     "materialized_sha256": "0640ce0876a76ba50701d6b4f991c806e7e319347272aa385dd9f30f6dadfcdb",
     "users": 8178,
     "roots": 8178,
-    "materialize_ms": 48.988,
-    "users_per_s": 166940,
+    "materialize_ms": 44.131,
+    "users_per_s": 185310,
     "json_bytes": 8997209,
     "exact_text_match": true,
     "graph_diffs": 0,
@@ -186,35 +186,35 @@
       "host_os": "Windows (host native)",
       "metrics": {
         "wire_decode_mb_per_s": {
-          "value": "582.457396",
+          "value": "634.909652",
           "unit": "MB/s (payload bytes/1e6 per s)"
         },
         "wire_decode_msg_per_s": {
-          "value": "567219.459414",
+          "value": "618299.487397",
           "unit": "messages/s"
         },
         "wire_decode_ns_per_msg": {
-          "value": "1762.986060",
+          "value": "1617.339203",
           "unit": "ns/message"
         },
         "wire_decode_median_ms": {
-          "value": "14.417700",
+          "value": "13.226600",
           "unit": "ms/full card"
         },
         "tape_write_median_ms": {
-          "value": "101.515200",
+          "value": "93.916600",
           "unit": "ms/full card (decode + tape write)"
         },
         "tape_write_only_median_ms": {
-          "value": "87.097500",
+          "value": "80.690000",
           "unit": "ms/full card (derived: tape pass minus decode pass)"
         },
         "tape_write_only_ns_per_msg": {
-          "value": "10650.220103",
+          "value": "9866.715578",
           "unit": "ns/message (derived)"
         },
         "tape_write_ns_per_msg": {
-          "value": "12413.206163",
+          "value": "11484.054781",
           "unit": "ns/message"
         },
         "tape_bytes_total": {
@@ -261,35 +261,35 @@
       "host_os": "Windows (host native)",
       "metrics": {
         "wire_decode_mb_per_s": {
-          "value": "614.685180",
+          "value": "702.307059",
           "unit": "MB/s (payload bytes/1e6 per s)"
         },
         "wire_decode_msg_per_s": {
-          "value": "597677.195776",
+          "value": "682874.627964",
           "unit": "messages/s"
         },
         "wire_decode_ns_per_msg": {
-          "value": "1673.143976",
+          "value": "1464.397649",
           "unit": "ns/message"
         },
         "wire_decode_median_ms": {
-          "value": "170.828000",
+          "value": "149.515000",
           "unit": "ms/full card"
         },
         "tape_write_median_ms": {
-          "value": "1203.653200",
+          "value": "1110.041200",
           "unit": "ms/full card (decode + tape write)"
         },
         "tape_write_only_median_ms": {
-          "value": "1032.825200",
+          "value": "960.526200",
           "unit": "ms/full card (derived: tape pass minus decode pass)"
         },
         "tape_write_only_ns_per_msg": {
-          "value": "10115.819785",
+          "value": "9407.700294",
           "unit": "ns/message (derived)"
         },
         "tape_write_ns_per_msg": {
-          "value": "11788.963761",
+          "value": "10872.097943",
           "unit": "ns/message"
         },
         "tape_bytes_total": {
@@ -326,27 +326,27 @@
   "artifacts": {
     "build/host/host_tests.exe": {
       "bytes": 315036,
-      "sha256": "c0f4169bbb27ff7e912ab287972d439a54dd1980867873e3df1812b467ce6a54"
+      "sha256": "c3905b1cbe7364fd1fbf206c0c9b5984908d7cbcfcc806a3fddf7018f001cee8"
     },
     "build/host/host_decode_dump.exe": {
       "bytes": 246672,
-      "sha256": "6c6337a358d8aa4feeb3adf507c7a87da0d1d1c3e2c2aba603b5cd88f04839b6"
+      "sha256": "360c3e5b865e533d806281a8320b1a6eeec534a1dd05e36f2a75755897a1dcca"
     },
     "build/host/host_bench.exe": {
       "bytes": 204281,
-      "sha256": "5d99f77847d0c6a99ec3d070ea89762bedf9b707416e31f7009fc3b7e8df007b"
+      "sha256": "d46bb9b8be1efdb1a9274ec258eac01f5869f03f6d6a1c97fc237f63946c0c1c"
     },
     "evidence/host/host_bench.csv": {
-      "bytes": 7012,
-      "sha256": "1e1b24298e0ee07e14bf26b13374a0a3750f8fbb8380fc1bc287f9d8b9f46a16"
+      "bytes": 7008,
+      "sha256": "5fdf7d5389a4aef76110245035ed87839022cec7b02ff52c4d4c03c5e3a93d9b"
     },
     "evidence/host/protobufjs_bench.csv": {
-      "bytes": 2674,
-      "sha256": "688a75ad7c14add129b09e33a76dd4f56964c913c264c18ac8142a91724de6b3"
+      "bytes": 2673,
+      "sha256": "aa3f042a45b088e971c78db3cdc4ca8ea3769e7b746c7408d857bca5b6b3eec8"
     },
     "evidence/host/bench_compare.json": {
-      "bytes": 1317,
-      "sha256": "e5f75ca07b16d1c0e94df5a2e6ed26af8d5458dc0683043abaea7becd592b785"
+      "bytes": 1315,
+      "sha256": "e5343b4cd32c3d905a9ed00f52c34f27a847d06c87880c4a91bf26865487f919"
     },
     "evidence/host/differential.json": {
       "bytes": 918,
@@ -354,7 +354,7 @@
     },
     "evidence/host/materializer_check.json": {
       "bytes": 668,
-      "sha256": "5c650b9d49aa552216b9e397c895de12b8beee3ec6507309988daba831dfeea1"
+      "sha256": "bcdb671e7c64c6fc227997b6b4b0b3b6fde192cf130d366fc763ecf6495f123f"
     },
     "evidence/host/corpus/corpus.json": {
       "bytes": 12308,
