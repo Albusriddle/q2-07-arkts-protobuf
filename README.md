@@ -1,6 +1,6 @@
 # Q2-07 · Native ArkTS High-Performance Protobuf Parsing
 
-> Status: **V0.6 generates message/nested/oneof POD + decoder from schema**; fake-NAPI host tests and CI are in place; HAP built (not device-run).
+> Status: **V0.7 hardens multi-shape maps, DTS map keys, CI/ASan and docs**; generated message/nested/oneof POD+decoder; HAP built (not device-run).
 > Feasibility: **B- / conditionally viable** under “API-level compatibility + P3-batch first + hot-message P4 + 20 weeks”.
 > This repository is a working scaffold, not a claim that 1.5×/700 ms is achieved.
 
@@ -16,7 +16,7 @@ A feasibility + implementation workspace for the OpenHarmony Q2-07 challenge:
 
 - host-side C++17 wire reader, POD decoder for `proto/example.proto`, tape v0 writer/verifier,
   TS materializer and differential harness against **protobufjs 7.6.5**;
-- V0.6 generic message codegen; V0.5 fake NAPI host tests; V0.4 generated decoder; NAPI bridge (`ping`/`add`/`decodeUser`/`decodeMany`) unchanged in `app/entry/src/main/cpp/`,
+- V0.7 map hardening + CI/ASan docs; V0.6 generic message codegen; V0.5 fake NAPI host tests; V0.4 generated decoder; NAPI bridge (`ping`/`add`/`decodeUser`/`decodeMany`) unchanged in `app/entry/src/main/cpp/`,
   built by hvigor `externalNativeOptions`; `decodeUser` returns the norm-v1 object shape;
 - field numbers, wire types, POD structs, schema IR, decoder body and ArkTS types generated
   from `proto/example.proto` (`scripts/codegen.sh --check`);
@@ -25,7 +25,7 @@ A feasibility + implementation workspace for the OpenHarmony Q2-07 challenge:
 
 **Not implemented yet (do not claim as done)**
 
-- full generic `.proto` compiler; message/nested/oneof codegen is generic, but the map shape is single-shaped and NAPI bindings remain hand-written;
+- full generic `.proto` compiler; message/nested/oneof/map codegen is generic for the supported scalar subset; NAPI bindings remain hand-written;
 - `decode` alias / full P3 handle-scope tuning remain;
 - protobufjs **8.x**, full P3/P4, real device install/run/AOT/performance.
 
@@ -47,6 +47,7 @@ profile. All host numbers are labelled `HOST-ONLY`.
 | [`docs/v0.4-decoder.md`](docs/v0.4-decoder.md) | V0.4 generated decoder body, 468-assertion regression and limits |
 | [`docs/v0.5-napi-shim.md`](docs/v0.5-napi-shim.md) | V0.5 fake NAPI host runtime tests, scope/error checks and limits |
 | [`docs/v0.6-generic-codegen.md`](docs/v0.6-generic-codegen.md) | V0.6 message-graph POD/decoder/DTS generation and limits |
+| [`docs/v0.7-hardening.md`](docs/v0.7-hardening.md) | V0.7 map/CI/docs hardening and remaining limits |
 
 ## Scope and non-goals
 

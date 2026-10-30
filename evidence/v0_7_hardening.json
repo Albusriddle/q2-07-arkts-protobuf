@@ -1,0 +1,69 @@
+{
+  "scope": "V0.7 map/CI/docs hardening",
+  "claim_level": "generic_map_codegen_host_verified + napi_shim_host_executed",
+  "napi_executed": true,
+  "napi_execution_kind": "fake NAPI shim (host-only)",
+  "device_run": false,
+  "installable": false,
+  "fixes": [
+    "per-field map entries",
+    "string map default",
+    "DTS map key",
+    "Profile unknown semantics",
+    "napi shim iterator include",
+    "CI uses ci_host",
+    "ASan script/job",
+    "docs pointers"
+  ],
+  "host_evidence": {
+    "head": "8b0b6379ae3ac1cb5ddd92151b65db913baa067b",
+    "tests": {
+      "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
+      "passed": 468,
+      "failed": 0
+    },
+    "steps": [
+      "codegen-check",
+      "codegen-negative",
+      "sample-check",
+      "build",
+      "unit-tests",
+      "napi-shim",
+      "data-cards",
+      "bench",
+      "differential"
+    ]
+  },
+  "artifacts": {
+    "so": {
+      "path": "build/napi/libentry.so",
+      "size": 239440,
+      "sha256": "23a6910a94491553c8ecf202ac40ab89867e413443d53eb58bb635b197984e75"
+    },
+    "hap_unsigned": {
+      "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
+      "size": 1634817,
+      "sha256": "bb67e66fd37183edb436954651157a18981f7f64283b77faf8d238a171ee9fae"
+    },
+    "hap_signed": {
+      "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
+      "size": 1696167,
+      "sha256": "c9a2db7b102e77e9288ffc237f5e2a76160456a221a78f4f91ec7188f98a23ee"
+    },
+    "hap_test": {
+      "path": "app/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap",
+      "size": 1460043,
+      "sha256": "96d88b6ee1ec54a04b00af4a8557254124a39d348897c4e85fa0c6a114fd0c65"
+    }
+  },
+  "asan": {
+    "script": "scripts/build_host_asan.sh",
+    "local_executed": false,
+    "reason": "no g++/clang++ on this Windows host; Ubuntu CI job runs it"
+  },
+  "blocked": [
+    "real device/ArkCompiler NAPI not run",
+    "object_model/tape User-specific",
+    "old test password remains in git history"
+  ]
+}

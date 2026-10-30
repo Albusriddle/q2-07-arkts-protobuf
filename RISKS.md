@@ -45,7 +45,7 @@
 
 ## R7 hvigor 原生构建后 HAP 体积 +1.26 MB（2026-10-29 新增）
 
-- 现象：接入 `externalNativeOptions` 后，hvigor 默认按 `c++_shared` 打包 `libc++_shared.so`（1,262,504 B），HAP 由约 127 KB 增至约 1.63 MB（V0.4 当前值；以 `evidence/v0_build.json` 为准）。
+- 现象：接入 `externalNativeOptions` 后，hvigor 默认按 `c++_shared` 打包 `libc++_shared.so`（1,262,504 B），HAP 由约 127 KB 增至约 1.63 MB（V0.7 当前值；以 `evidence/v0_build.json` 为准）。
 - 影响：若以 HAR/HSP 分发，每个包都背这个成本；若改 `c++_static`，多 native 库时 STL 重复且跨库 `std::string` 有 ABI 风险。
 - 现状：**未决策**。证据见 `evidence/v1_hvigor_native.json`、文档 `docs/v1-hvigor-native.md` §3.1。
 - 处置：在 HAR 承载 native 的验证（W1 必做）之前先定；不阻塞当前 host 切片与 V0 设备侧。

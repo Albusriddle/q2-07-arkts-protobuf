@@ -1,15 +1,16 @@
-# Host-side vertical slice (v0, implemented)
+# Host-side vertical slice (V0.7, implemented)
 
 HOST-ONLY. Everything under `src/host/**` is a logic/correctness harness that runs on
 the development PC. It produces **no device numbers**: no ArkTS runtime, no board.
-V0.1/V0.2 also compile the decoder subset into the NAPI `.so`; the NAPI binding is
-compiled but not executed on a device. See `docs/host-slice.md` and `docs/v0.1-decode.md`.
+V0.6 includes generated message/nested/oneof POD/decoder, fake-NAPI host tests
+and 468 assertions. The NAPI binding is compiled and host-shim tested, but not
+executed on a device. See `docs/v0.6-generic-codegen.md` and `docs/v0.5-napi-shim.md`.
 
 ```
 proto/example.proto
   -> descriptor/IR (generated: decoder/generated/q207_demo_schema.json)
   -> wire reader          (decoder/wire_reader.{h,cpp})       C++17
-  -> POD decode           (decoder/decode_user.cpp + generated decoder.inc) User / UserBatch
+  -> POD decode           (decoder/decode_user.cpp + generated decoder.inc) message graph
   -> norm-v1 object dump  (decoder/norm.{h,cpp})
   -> tape v0 write/verify (tape/tape.{h,cpp})
   -> materializer         (materializer/materializer.ts)       tape -> plain objects

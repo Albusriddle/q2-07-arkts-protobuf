@@ -2,42 +2,42 @@
 > hvigor [32mFinished :entry:ohosTest@CreateModuleInfo... after 1 ms [39m
 > hvigor [32mFinished :entry:ohosTest@GenerateMetadata... after 3 ms [39m
 > hvigor [32mFinished :entry:ohosTest@ConfigureCmake... after 1 ms [39m
-> hvigor [32mFinished :entry:ohosTest@MergeProfile... after 4 ms [39m
+> hvigor [32mFinished :entry:ohosTest@MergeProfile... after 5 ms [39m
 > hvigor [32mFinished :entry:ohosTest@CreateBuildProfile... after 2 ms [39m
 > hvigor [32mFinished :entry:ohosTest@PreCheckSyscap... after 1 ms [39m
 > hvigor [32mUP-TO-DATE :entry:ohosTest@GenerateOhosTestTemplate...  [39m
-> hvigor [32mFinished :entry:ohosTest@GeneratePkgContextInfo... after 5 ms [39m
+> hvigor [32mFinished :entry:ohosTest@GeneratePkgContextInfo... after 6 ms [39m
 > hvigor [32mFinished :entry:ohosTest@GeneratePkgSdkInfo... after 3 ms [39m
 > hvigor [32mFinished :entry:ohosTest@ProcessIntegratedHsp... after 1 ms [39m
 > hvigor [32mFinished :entry:ohosTest@BuildNativeWithCmake... after 1 ms [39m
 > hvigor [32mFinished :entry:ohosTest@MakePackInfo... after 3 ms [39m
 > hvigor [32mFinished :entry:ohosTest@SyscapTransform... after 2 ms [39m
-> hvigor [32mFinished :entry:ohosTest@ProcessProfile... after 109 ms [39m
+> hvigor [32mFinished :entry:ohosTest@ProcessProfile... after 136 ms [39m
 > hvigor [32mFinished :entry:ohosTest@ProcessRouterMap... after 3 ms [39m
-> hvigor [32mFinished :entry:ohosTest@ProcessShareConfig... after 3 ms [39m
+> hvigor [32mFinished :entry:ohosTest@ProcessShareConfig... after 2 ms [39m
 > hvigor [32mFinished :entry:ohosTest@ProcessStartupConfig... after 1 ms [39m
 > hvigor [32mFinished :entry:ohosTest@BuildNativeWithNinja... after 1 ms [39m
 > hvigor [32mFinished :entry:ohosTest@ProcessResource... after 4 ms [39m
 > hvigor [32mFinished :entry:ohosTest@GenerateLoaderJson... after 6 ms [39m
-> hvigor [32mFinished :entry:ohosTest@ProcessLibs... after 4 ms [39m
+> hvigor [32mFinished :entry:ohosTest@ProcessLibs... after 5 ms [39m
 > hvigor [33mWARN: Warning: 'start_window_background' conflict, first declared.
 at D:\DSHws4TSCsingle\repo\app\entry\src\main\resources\base\element\color.json
 but declared again.
 at D:\DSHws4TSCsingle\repo\app\entry\.test\default\intermediates\src\ohosTest\resources\base\element\color.json
 [39m
-> hvigor [32mFinished :entry:ohosTest@CompileResource... after 306 ms [39m
+> hvigor [32mFinished :entry:ohosTest@CompileResource... after 292 ms [39m
 > hvigor [32mFinished :entry:ohosTest@DoNativeStrip... after 3 ms [39m
-> hvigor [32mFinished :entry:ohosTest@OhosTestBuildJS... after 2 ms [39m
-> hvigor [32mFinished :entry:ohosTest@CacheNativeLibs... after 10 ms [39m
-> hvigor [32mFinished :entry:ohosTest@OhosTestCompileArkTS... after 2 s 744 ms [39m
+> hvigor [32mFinished :entry:ohosTest@OhosTestBuildJS... after 3 ms [39m
+> hvigor [32mFinished :entry:ohosTest@CacheNativeLibs... after 8 ms [39m
+> hvigor [32mFinished :entry:ohosTest@OhosTestCompileArkTS... after 2 s 713 ms [39m
 > hvigor [32mFinished :entry:ohosTest@OhosTestCopyMockConfigJson... after 1 ms [39m
 > hvigor [32mFinished :entry:ohosTest@GeneratePkgModuleJson... after 2 ms [39m
 > hvigor [32mFinished :entry:ohosTest@ProcessCompiledResources... after 1 ms [39m
-> hvigor [32mFinished :entry:ohosTest@PackageHap... after 338 ms [39m
+> hvigor [32mFinished :entry:ohosTest@PackageHap... after 407 ms [39m
 > hvigor [32mFinished :entry:ohosTest@PackingCheck... after 2 ms [39m
 > hvigor [33mWARN: Will skip sign 'hos_hap'. No signingConfigs profile is configured in current project.
              If needed, configure the signingConfigs in D:\DSHws4TSCsingle\repo\app\build-profile.json5.[39m
 > hvigor [32mFinished :entry:ohosTest@SignHap... after 2 ms [39m
 > hvigor [32mFinished :entry:ohosTest@CollectDebugSymbol... after 1 ms [39m
 > hvigor [32mFinished :entry:assembleHap... after 1 ms [39m
-> hvigor [32mBUILD SUCCESSFUL in 6 s 539 ms [39m
+> hvigor [32mBUILD SUCCESSFUL in 6 s 615 ms [39m

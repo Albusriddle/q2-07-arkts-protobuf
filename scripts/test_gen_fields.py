@@ -84,6 +84,24 @@ message Outer {
     assert "export interface DecodedOuter" in dts
     print("  ok  generic schema: POD/decoder/DTS generated")
 
+    map_src = base + """
+message M {
+  map<string,string> labels = 1;
+  map<string,int32> counts = 2;
+}
+"""
+    map_parser = mod.Parser(mod.tokenize(map_src))
+    map_messages = map_parser.parse()
+    mod.validate_decoder_support(map_messages)
+    map_pod = mod.generate_pod(map_messages, map_src)
+    map_dec = mod.generate_decoder(map_messages, map_src)
+    map_dts = mod.generate_dts(map_parser)
+    assert "MLabelsEntry" in map_pod and "MCountsEntry" in map_pod
+    assert "std::string value;" in map_pod
+    assert "parse_m_labels_entry" in map_dec and "parse_m_counts_entry" in map_dec
+    assert "Record<string, string>" in map_dts
+    print("  ok  multi-shape map: per-field entries and string defaults")
+
     print("gen_fields negative tests: PASS")
     return 0
 
