@@ -2,10 +2,10 @@
     "version-name": "2.0.0",
     "version-code": 2,
     "app-distribution-type": "os_integration",
-    "uuid": "7d7d0dca-5ddd-43a0-a2a2-3db263501103",
+    "uuid": "da9ba90a-988a-426f-840b-bc8c8c18363a",
     "validity": {
-        "not-before": 1793258933,
-        "not-after": 1819182533
+        "not-before": 1793341677,
+        "not-after": 1819265277
     },
     "type": "release",
     "bundle-info": {

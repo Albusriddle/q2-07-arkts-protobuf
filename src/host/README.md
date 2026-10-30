@@ -7,7 +7,7 @@ compiled but not executed on a device. See `docs/host-slice.md` and `docs/v0.1-d
 
 ```
 proto/example.proto
-  -> descriptor/IR (hand-written for now: decoder/pod.h field numbers)
+  -> descriptor/IR (generated: decoder/generated/q207_demo_schema.json)
   -> wire reader          (decoder/wire_reader.{h,cpp})       C++17
   -> POD decode           (decoder/decode_user.{h,cpp})       User / UserBatch
   -> norm-v1 object dump  (decoder/norm.{h,cpp})
@@ -24,7 +24,7 @@ proto/example.proto
 | `common/status.h`, `common/status.cpp` | `Code` enum + canonical `E_*` names (identical to the W0 Python reference model) and the hard limits (64 MiB/message, depth 100, 16 MiB/string, 1e6 repeated, 256 MiB tape) |
 | `common/sha256.{h,cpp}` | dependency-free SHA-256 for artifact/data-card fingerprints |
 | `decoder/wire_reader.{h,cpp}` | the reader. Mandated order `tag → wire type → len ≤ remaining → len ≤ cap → allocate`; varint (10-byte rule), zigzag, fixed32/64, length-delimited, packed, group skip, strict UTF-8, depth/field/object budgets, `note_alloc()` accounting hook |
-| `decoder/pod.h` | POD structs for `example.proto` + field numbers + presence bitmaps |
+| `decoder/pod.h` | thin include of generated field constants, POD structs and schema metadata |
 | `decoder/decode_user.{h,cpp}` | generated-code-shaped decoder for `User` / `UserBatch`: int64, string, repeated string, nested `Profile`, oneof (keep-all + discriminator), proto3 `optional` tri-state, `map<string,int32>` |
 | `decoder/conformance.{h,cpp}` | the W0 reference schema (f1..f5) instantiated on the same reader so the 38 golden vectors can judge the C++ reader directly |
 | `decoder/norm.{h,cpp}` | "norm-v1" canonical object dump; rules are exactly protobufjs 7.6.5 `toObject({defaults:true, longs:String})` (probed, not guessed) |
