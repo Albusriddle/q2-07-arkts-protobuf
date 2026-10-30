@@ -1,0 +1,17 @@
+scope,dataset,card_file,card_bytes,payload_bytes,frames,messages,reps,metric,value,unit,protobufjs_version,node_version,host_os
+HOST-ONLY,s1_user_1kb,../../../bench/data/s1_user_1kb.bin,8397700,8397696,1,8178,3,wire_decode_mb_per_s,926.908244,MB/s (payload bytes/1e6 per s),7.6.5,v24.18.0,win32
+HOST-ONLY,s1_user_1kb,../../../bench/data/s1_user_1kb.bin,8397700,8397696,1,8178,3,wire_decode_msg_per_s,902658.970,messages/s,7.6.5,v24.18.0,win32
+HOST-ONLY,s1_user_1kb,../../../bench/data/s1_user_1kb.bin,8397700,8397696,1,8178,3,wire_decode_ns_per_msg,1107.838102,ns/message,7.6.5,v24.18.0,win32
+HOST-ONLY,s1_user_1kb,../../../bench/data/s1_user_1kb.bin,8397700,8397696,1,8178,3,wire_decode_median_ms,9.059900,ms/full card,7.6.5,v24.18.0,win32
+HOST-ONLY,s1_user_1kb,../../../bench/data/s1_user_1kb.bin,8397700,8397696,1,8178,3,decode_plus_toObject_mb_per_s,571.419551,MB/s (payload bytes/1e6 per s),7.6.5,v24.18.0,win32
+HOST-ONLY,s1_user_1kb,../../../bench/data/s1_user_1kb.bin,8397700,8397696,1,8178,3,decode_plus_toObject_msg_per_s,556470.380,messages/s,7.6.5,v24.18.0,win32
+HOST-ONLY,s1_user_1kb,../../../bench/data/s1_user_1kb.bin,8397700,8397696,1,8178,3,decode_plus_toObject_ns_per_msg,1797.040841,ns/message,7.6.5,v24.18.0,win32
+HOST-ONLY,s1_user_1kb,../../../bench/data/s1_user_1kb.bin,8397700,8397696,1,8178,3,decode_plus_toObject_median_ms,14.696200,ms/full card,7.6.5,v24.18.0,win32
+HOST-ONLY,s3_100mb,../../../bench/data/s3_100mb.bin,105005840,105005440,100,102100,3,wire_decode_mb_per_s,931.969238,MB/s (payload bytes/1e6 per s),7.6.5,v24.18.0,win32
+HOST-ONLY,s3_100mb,../../../bench/data/s3_100mb.bin,105005840,105005440,100,102100,3,wire_decode_msg_per_s,906182.186,messages/s,7.6.5,v24.18.0,win32
+HOST-ONLY,s3_100mb,../../../bench/data/s3_100mb.bin,105005840,105005440,100,102100,3,wire_decode_ns_per_msg,1103.530852,ns/message,7.6.5,v24.18.0,win32
+HOST-ONLY,s3_100mb,../../../bench/data/s3_100mb.bin,105005840,105005440,100,102100,3,wire_decode_median_ms,112.670500,ms/full card,7.6.5,v24.18.0,win32
+HOST-ONLY,s3_100mb,../../../bench/data/s3_100mb.bin,105005840,105005440,100,102100,3,decode_plus_toObject_mb_per_s,716.522005,MB/s (payload bytes/1e6 per s),7.6.5,v24.18.0,win32
+HOST-ONLY,s3_100mb,../../../bench/data/s3_100mb.bin,105005840,105005440,100,102100,3,decode_plus_toObject_msg_per_s,696696.254,messages/s,7.6.5,v24.18.0,win32
+HOST-ONLY,s3_100mb,../../../bench/data/s3_100mb.bin,105005840,105005440,100,102100,3,decode_plus_toObject_ns_per_msg,1435.345739,ns/message,7.6.5,v24.18.0,win32
+HOST-ONLY,s3_100mb,../../../bench/data/s3_100mb.bin,105005840,105005440,100,102100,3,decode_plus_toObject_median_ms,146.548800,ms/full card,7.6.5,v24.18.0,win32

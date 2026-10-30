@@ -336,6 +336,37 @@ run_differential() {
 }
 
 # ---------------------------------------------------------------------------
+# 6b. protobufjs baseline benchmark
+# ---------------------------------------------------------------------------
+run_protobufjs_bench() {
+  local ts_dir="$ROOT/src/host/ts"
+  local out="$EVID/protobufjs_bench.csv"
+  if [ ! -d "$ts_dir/node_modules/protobufjs" ]; then
+    printf 'protobufjs benchmark skipped: node_modules/protobufjs missing\n' >&2
+    return 0
+  fi
+  rm -f "$out"
+  ( cd "$ts_dir" && node protobufjs_bench.mjs \
+      --card ../../../bench/data/s1_user_1kb.bin --dataset s1_user_1kb --reps 3 \
+      --csv ../../../evidence/host/protobufjs_bench.csv --header ) >"$LOGS/protobufjs_bench.log" 2>&1 || return $?
+  ( cd "$ts_dir" && node protobufjs_bench.mjs \
+      --card ../../../bench/data/s3_100mb.bin --dataset s3_100mb --reps 3 \
+      --csv ../../../evidence/host/protobufjs_bench.csv --append ) >>"$LOGS/protobufjs_bench.log" 2>&1 || return $?
+  cat "$LOGS/protobufjs_bench.log"
+  return 0
+}
+
+run_bench_compare() {
+  if [ ! -s "$EVID/protobufjs_bench.csv" ]; then
+    printf 'bench compare skipped: protobufjs benchmark missing\n' >&2
+    return 0
+  fi
+  "$PYTHON" "$ROOT/scripts/compare_protobufjs_bench.py" \
+    --native "$BENCH_CSV" --pbjs "$EVID/protobufjs_bench.csv" \
+    --out "$EVID/bench_compare.json"
+}
+
+# ---------------------------------------------------------------------------
 # 7. evidence
 # ---------------------------------------------------------------------------
 collect_evidence() {
@@ -391,6 +422,8 @@ run_step "napi-shim" "build/host/napi_shim_tests.exe (fake NAPI object mapper, h
 run_step "data-cards" "python bench/gen_cards.py --out bench/data" gen_cards
 run_step "bench" "host_bench.exe --card bench/data/{s1_user_1kb,s3_100mb}.bin --reps 5 -> evidence/host/host_bench.csv" run_bench
 run_step "differential" "differential vs protobufjs 7.6.5 (gen_corpus + differential + materializer_check), Python golden fallback when unavailable" run_differential
+run_step "protobufjs-bench" "protobufjs 7.6.5 decode/decode+toObject baseline on S1/S3 cards" run_protobufjs_bench
+run_step "bench-compare" "native vs protobufjs host-only comparison -> evidence/host/bench_compare.json" run_bench_compare
 run_step "evidence" "python src/host/tools/collect_evidence.py -> evidence/host_slice.json" collect_evidence
 
 say "DONE (HOST-ONLY)"
