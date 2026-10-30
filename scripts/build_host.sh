@@ -156,12 +156,13 @@ compile_bin() {
     # MSVC needs '/'-prefixed options to be written with '-': MSYS rewrites them.
     # Paths stay relative: cl.exe cannot parse MSYS-style absolute paths (/d/...).
     cl -nologo -D_CRT_SECURE_NO_WARNINGS -std:c++17 -EHsc -O2 -W4 -I src \
+      -I app/entry/src/main/cpp -I src/host/tests/napi_shim \
       "-Fo:build/host/" "-Fe:build/host/$exe.exe" "$@" >"$LOGS/build_$exe.log" 2>&1
     local rc=$?
     grep -Ei "error|warning" "$LOGS/build_$exe.log" || true
     return $rc
   elif [ "$CC_KIND" = "gcc" ] || [ "$CC_KIND" = "clang" ] || [ "$CC_KIND" = "generic" ]; then
-    "$CC_NAME" -std=c++17 -O2 -Wall -Wextra -I src -o "$BUILD/$exe.exe" "$@" \
+    "$CC_NAME" -std=c++17 -O2 -Wall -Wextra -I app/entry/src/main/cpp -I src/host/tests/napi_shim -I src -o "$BUILD/$exe.exe" "$@" \
       >"$LOGS/build_$exe.log" 2>&1
     local rc=$?
     grep -Ei "error|warning" "$LOGS/build_$exe.log" || true
@@ -189,13 +190,25 @@ build_all() {
   compile_bin host_decode_dump $SHARED src/host/tools/host_decode_dump.cpp || return 1
   # shellcheck disable=SC2086
   compile_bin host_bench $SHARED src/host/bench/host_bench.cpp || return 1
-  ls -l "$BUILD"/host_tests.exe "$BUILD"/host_decode_dump.exe "$BUILD"/host_bench.exe
+  # NAPI mapper smoke tests run against the fake napi/native_api.h include path.
+  # shellcheck disable=SC2086
+  compile_bin napi_shim_tests $SHARED app/entry/src/main/cpp/decode_napi.cpp \
+    src/host/tests/napi_shim/fake_napi.cpp src/host/tests/napi_shim/napi_shim_test.cpp || return 1
+  ls -l "$BUILD"/host_tests.exe "$BUILD"/host_decode_dump.exe "$BUILD"/host_bench.exe "$BUILD"/napi_shim_tests.exe
   return 0
 }
 
 # ---------------------------------------------------------------------------
 # 3. tests
 # ---------------------------------------------------------------------------
+run_napi_shim() {
+  local out="$LOGS/napi_shim.log"
+  "$BUILD/napi_shim_tests.exe" >"$out" 2>&1
+  local rc=$?
+  tail -3 "$out"
+  return $rc
+}
+
 run_tests() {
   local out="$LOGS/tests.log"
   "$BUILD/host_tests.exe" >"$out" 2>&1
@@ -372,8 +385,9 @@ done
 run_step "codegen-check" "python scripts/gen_fields.py --check (proto -> generated files)" run_codegen_check
 run_step "codegen-negative" "python scripts/test_gen_fields.py (unsupported constructs must fail)" run_codegen_negative
 run_step "sample-check" "python scripts/check_batch_sample.py --check (c20_full -> 56 B UserBatch)" run_sample_check
-run_step "build" "native host compiler: cl/g++/clang++ over src/host/**, -O2, 3 binaries" build_all
+run_step "build" "native host compiler: cl/g++/clang++ over src/host/**, -O2, 4 binaries" build_all
 run_step "unit-tests" "build/host/host_tests.exe (wire + 38 golden vectors + tape + decode)" run_tests
+run_step "napi-shim" "build/host/napi_shim_tests.exe (fake NAPI object mapper, host-only)" run_napi_shim
 run_step "data-cards" "python bench/gen_cards.py --out bench/data" gen_cards
 run_step "bench" "host_bench.exe --card bench/data/{s1_user_1kb,s3_100mb}.bin --reps 5 -> evidence/host/host_bench.csv" run_bench
 run_step "differential" "differential vs protobufjs 7.6.5 (gen_corpus + differential + materializer_check), Python golden fallback when unavailable" run_differential

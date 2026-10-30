@@ -6,18 +6,41 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
-  host-check:
+  host:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: npm
+          cache-dependency-path: src/host/ts/package-lock.json
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Placeholder checks
+      - name: Install host toolchain
         run: |
-          echo "Host vertical slice not implemented yet."
-          echo "This workflow will run schema/TS/Python checks once src/host is populated."
+          sudo apt-get update
+          sudo apt-get install -y g++
+      - name: Codegen / negative tests / sample
+        run: |
+          python scripts/gen_fields.py --check
+          python scripts/test_gen_fields.py
+          python scripts/check_batch_sample.py --check
+      - name: Host build and 468 assertions
+        run: bash scripts/build_host.sh
+      - name: Upload host logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: host-logs
+          path: |
+            build/host/logs/
+            evidence/host_slice.json
+            evidence/v0_4_decoder.json
+          if-no-files-found: ignore

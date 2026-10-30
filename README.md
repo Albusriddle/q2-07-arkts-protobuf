@@ -1,6 +1,6 @@
 # Q2-07 · Native ArkTS High-Performance Protobuf Parsing
 
-> Status: **host vertical slice implemented; V0.4 generates the decoder from schema IR**; `decodeMany` batch NAPI and unsigned/self-signed HAP built (not device-run).
+> Status: **V0.5 adds fake-NAPI host runtime smoke tests and CI**; generated decoder + `decodeMany` batch NAPI, unsigned/self-signed HAP built (not device-run).
 > Feasibility: **B- / conditionally viable** under “API-level compatibility + P3-batch first + hot-message P4 + 20 weeks”.
 > This repository is a working scaffold, not a claim that 1.5×/700 ms is achieved.
 
@@ -16,7 +16,7 @@ A feasibility + implementation workspace for the OpenHarmony Q2-07 challenge:
 
 - host-side C++17 wire reader, POD decoder for `proto/example.proto`, tape v0 writer/verifier,
   TS materializer and differential harness against **protobufjs 7.6.5**;
-- V0.4 generated decoder; NAPI bridge (`ping`/`add`/`decodeUser`/`decodeMany`) unchanged in `app/entry/src/main/cpp/`,
+- V0.5 fake NAPI host tests; V0.4 generated decoder; NAPI bridge (`ping`/`add`/`decodeUser`/`decodeMany`) unchanged in `app/entry/src/main/cpp/`,
   built by hvigor `externalNativeOptions`; `decodeUser` returns the norm-v1 object shape;
 - field numbers, wire types, POD structs, schema IR, decoder body and ArkTS types generated
   from `proto/example.proto` (`scripts/codegen.sh --check`);
@@ -45,6 +45,7 @@ profile. All host numbers are labelled `HOST-ONLY`.
 | [`docs/v0.2-decode-many.md`](docs/v0.2-decode-many.md) | V0.2 batch `decodeMany`, limits and NAPI compile-only claim |
 | [`docs/v0.3-codegen.md`](docs/v0.3-codegen.md) | V0.3 schema IR + generated POD + ArkTS types, regression and limits |
 | [`docs/v0.4-decoder.md`](docs/v0.4-decoder.md) | V0.4 generated decoder body, 468-assertion regression and limits |
+| [`docs/v0.5-napi-shim.md`](docs/v0.5-napi-shim.md) | V0.5 fake NAPI host runtime tests, scope/error checks and limits |
 
 ## Scope and non-goals
 
@@ -91,7 +92,7 @@ bash scripts/build.sh
 bash scripts/sign_hap.sh
 
 # HOST-ONLY C++/TS slice: build + 468 assertions + bench + differential + evidence
-bash scripts/build_host.sh
+bash scripts/build_host.sh   # includes fake-NAPI napi-shim step
 ```
 
 > Schema/codegen: `bash scripts/codegen.sh --check` (and `build.sh` / `build_host.sh` run it
