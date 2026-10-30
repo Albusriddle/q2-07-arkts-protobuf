@@ -15,7 +15,8 @@
           "map": false,
           "map_key": "",
           "map_value": "",
-          "oneof": false
+          "oneof": false,
+          "oneof_name": ""
         },
         {
           "name": "age",
@@ -26,7 +27,8 @@
           "map": false,
           "map_key": "",
           "map_value": "",
-          "oneof": false
+          "oneof": false,
+          "oneof_name": ""
         }
       ]
     },
@@ -42,7 +44,8 @@
           "map": false,
           "map_key": "",
           "map_value": "",
-          "oneof": false
+          "oneof": false,
+          "oneof_name": ""
         },
         {
           "name": "name",
@@ -53,7 +56,8 @@
           "map": false,
           "map_key": "",
           "map_value": "",
-          "oneof": false
+          "oneof": false,
+          "oneof_name": ""
         },
         {
           "name": "tags",
@@ -64,7 +68,8 @@
           "map": false,
           "map_key": "",
           "map_value": "",
-          "oneof": false
+          "oneof": false,
+          "oneof_name": ""
         },
         {
           "name": "profile",
@@ -75,7 +80,8 @@
           "map": false,
           "map_key": "",
           "map_value": "",
-          "oneof": false
+          "oneof": false,
+          "oneof_name": ""
         },
         {
           "name": "email",
@@ -86,7 +92,8 @@
           "map": false,
           "map_key": "",
           "map_value": "",
-          "oneof": true
+          "oneof": true,
+          "oneof_name": "contact"
         },
         {
           "name": "phone",
@@ -97,7 +104,8 @@
           "map": false,
           "map_key": "",
           "map_value": "",
-          "oneof": true
+          "oneof": true,
+          "oneof_name": "contact"
         },
         {
           "name": "level",
@@ -108,7 +116,8 @@
           "map": false,
           "map_key": "",
           "map_value": "",
-          "oneof": false
+          "oneof": false,
+          "oneof_name": ""
         },
         {
           "name": "scores",
@@ -119,7 +128,8 @@
           "map": true,
           "map_key": "string",
           "map_value": "int32",
-          "oneof": false
+          "oneof": false,
+          "oneof_name": ""
         }
       ]
     },
@@ -135,7 +145,8 @@
           "map": false,
           "map_key": "",
           "map_value": "",
-          "oneof": false
+          "oneof": false,
+          "oneof_name": ""
         }
       ]
     }

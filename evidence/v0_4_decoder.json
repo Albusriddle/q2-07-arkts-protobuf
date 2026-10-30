@@ -47,11 +47,11 @@
     "napi_bindings_handwritten": true
   },
   "host_evidence": {
-    "head": "34fff16a708e3b820004fb4083d66545a4cd2eb7",
+    "head": "4a94c624ff4fce23cc8a626e93eceb653ea4f74e",
     "dirty_files": 1,
     "tests": {
       "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
-      "passed": 464,
+      "passed": 468,
       "failed": 0
     },
     "differential": {
@@ -67,23 +67,23 @@
   "artifacts": {
     "so": {
       "path": "build/napi/libentry.so",
-      "size": 239392,
-      "sha256": "1d7dfc947a6c1ff75c7aa543dae93f160686c1ba1eb8acbdc6c9c82ca9eb51b3"
+      "size": 239376,
+      "sha256": "f271c072ef1d80e78e3309a6ec3cd22eeda9e41489fd2fdcb8510fa0fdea838b"
     },
     "hap_unsigned": {
       "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
       "size": 1634241,
-      "sha256": "ebfe1dfbf01cc0fc4f61593dcbf6587cd07550d09fb86fe2f72c132a8a31041d"
+      "sha256": "c06d0aba5d501253dc97c6d75e8d7a6affd228f382f1428c5b5ae91c7b50886c"
     },
     "hap_signed": {
       "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
-      "size": 1696745,
-      "sha256": "22b9a8a14217daed8529787794eeed32ac9bb34a4d23c566d4decda8b016f890"
+      "size": 1696744,
+      "sha256": "b7fe53f02b75ffb5f18f043895afdefafc8f3240a4ccf2c919e94247310c8ec5"
     },
     "hap_test": {
       "path": "app/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap",
       "size": 1460043,
-      "sha256": "f7a87356b86f0c16d614b3e63bb9305caefb07abc2779df702fde23bf7776005"
+      "sha256": "39b6424e9fe23061189d8f55724c33ed764b8d58dd552984d2613287ad88713e"
     }
   },
   "blocked": [

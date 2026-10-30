@@ -60,6 +60,24 @@ export interface MaterializedUser {
 
 const textDecoder = new TextDecoder('utf-8', { fatal: false });
 
+const CRC_TABLE = (() => {
+  const table = new Uint32Array(256);
+  for (let i = 0; i < 256; i += 1) {
+    let c = i;
+    for (let k = 0; k < 8; k += 1) c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
+    table[i] = c >>> 0;
+  }
+  return table;
+})();
+
+function crc32(data: Uint8Array, seed = 0): number {
+  let crc = (seed ^ 0xffffffff) >>> 0;
+  for (let i = 0; i < data.length; i += 1) {
+    crc = (CRC_TABLE[(crc ^ data[i]) & 0xff] ^ (crc >>> 8)) >>> 0;
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
 export function parseHeader(bytes: Uint8Array): TapeHeader {
   if (bytes.byteLength < TAPE_LAYOUT.HEADER_BYTES) {
     throw new RangeError('tape shorter than header');
@@ -121,6 +139,17 @@ export class TapeReader {
       throw new Error('tape sections overlap or are out of order');
     }
     if (valuesEnd > bytes.byteLength) throw new Error('tape sections exceed buffer');
+
+    // The C++ verifier is authoritative; this mirrors its CRC check so a tape
+    // handed directly to the TS materializer cannot be silently corrupted.
+    let crc = 0;
+    if (h.rootsCount > 0) {
+      crc = crc32(bytes.subarray(h.rootsOff, h.rootsOff + h.rootsCount * 4), crc);
+    }
+    crc = crc32(bytes.subarray(h.tapeOff, h.tapeOff + h.tapeBytes), crc);
+    crc = crc32(bytes.subarray(h.blobOff, h.blobOff + h.blobBytes), crc);
+    crc = crc32(bytes.subarray(h.valuesOff, h.valuesOff + h.valuesBytes), crc);
+    if (crc !== h.crc32) throw new Error('tape CRC mismatch');
   }
 
   private u32(off: number): number {

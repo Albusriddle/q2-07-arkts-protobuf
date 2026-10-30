@@ -98,9 +98,12 @@ struct Header {
 // ---- writer ------------------------------------------------------------
 class Writer {
  public:
-  explicit Writer(uint32_t flags = kFlagOneofKeepAll) : flags_(flags) {}
+  explicit Writer(uint32_t flags = kFlagOneofKeepAll, const Limits& limits = Limits())
+      : flags_(flags), lim_(limits) {}
 
   void clear();
+  bool ok() const { return !overflow_; }
+  bool overflow() const { return overflow_; }
   // Appends one user record (+ profile record when present) and one root.
   // Returns the byte offset of the user record inside the tape region.
   uint32_t add_user(const pod::User& u);
@@ -130,6 +133,8 @@ class Writer {
   uint32_t n_users_ = 0;
   uint32_t n_profiles_ = 0;
   uint32_t flags_;
+  Limits lim_;
+  bool overflow_ = false;
 };
 
 // ---- verifier ----------------------------------------------------------

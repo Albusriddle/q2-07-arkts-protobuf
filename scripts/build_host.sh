@@ -13,6 +13,19 @@ set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT" || exit 1
 
+# Prefer python3 on Unix; allow PYTHON override for another interpreter.
+PYTHON="${PYTHON:-}"
+if [ -z "$PYTHON" ]; then
+  if command -v python >/dev/null 2>&1 && python -c 'import sys' >/dev/null 2>&1; then
+    PYTHON=python
+  elif command -v python3 >/dev/null 2>&1 && python3 -c 'import sys' >/dev/null 2>&1; then
+    PYTHON=python3
+  else
+    PYTHON=python
+  fi
+fi
+export PYTHON
+
 BUILD="$ROOT/build/host"
 LOGS="$BUILD/logs"
 EVID="$ROOT/evidence/host"
@@ -38,7 +51,7 @@ now_ms() {
   local t
   t="$(date +%s%3N 2>/dev/null || true)"
   case "$t" in
-    ''|*[!0-9]*) python -c 'import time;print(int(time.time()*1000))' ;;
+    ''|*[!0-9]*) "$PYTHON" -c 'import time;print(int(time.time()*1000))' ;;
     *) printf '%s\n' "$t" ;;
   esac
 }
@@ -196,7 +209,7 @@ run_tests() {
 # 4. data cards
 # ---------------------------------------------------------------------------
 gen_cards() {
-  python "$ROOT/bench/gen_cards.py" --out "$ROOT/bench/data" >"$LOGS/cards.log" 2>&1
+  "$PYTHON" "$ROOT/bench/gen_cards.py" --out "$ROOT/bench/data" >"$LOGS/cards.log" 2>&1
   local rc=$?
   tail -20 "$LOGS/cards.log"
   return $rc
@@ -237,7 +250,7 @@ run_differential() {
     DIFF_MODE="python-fallback"
     rm -f "$EVID/differential.json"
     say "differential: DEGRADED to the Python golden baseline (protobufjs unavailable/disabled)"
-    python "$ROOT/src/host/tools/py_fallback_diff.py" --work "$BUILD/pyfallback" \
+    "$PYTHON" "$ROOT/src/host/tools/py_fallback_diff.py" --work "$BUILD/pyfallback" \
       --cpp-dump "$BUILD/host_decode_dump.exe" --corpus "$cpp" \
       --report "$EVID/differential.json" >"$LOGS/py_fallback.log" 2>&1
     local rc=$?
@@ -252,12 +265,24 @@ run_differential() {
   fi
 
   if [ ! -d "$ts_dir/node_modules/protobufjs" ]; then
-    say "installing protobufjs 7.6.5 (npm)"
-    ( cd "$ts_dir" && npm install --no-audit --no-fund ) >"$LOGS/npm_install.log" 2>&1
+    say "installing protobufjs 7.6.5 (npm ci --ignore-scripts)"
+    if [ -f "$ts_dir/package-lock.json" ]; then
+      ( cd "$ts_dir" && npm ci --ignore-scripts --no-audit --no-fund ) >"$LOGS/npm_install.log" 2>&1
+    else
+      ( cd "$ts_dir" && npm install --ignore-scripts --no-audit --no-fund ) >"$LOGS/npm_install.log" 2>&1
+    fi
     if [ ! -d "$ts_dir/node_modules/protobufjs" ]; then
       python_fallback
       return $?
     fi
+  fi
+
+  local actual_pbjs
+  actual_pbjs="$(cd "$ts_dir" && node -p "require('./node_modules/protobufjs/package.json').version" 2>/dev/null || true)"
+  if [ "$actual_pbjs" != "7.6.5" ]; then
+    printf 'protobufjs version mismatch: expected 7.6.5, got %s\n' "${actual_pbjs:-unknown}" >&2
+    python_fallback
+    return $?
   fi
 
   DIFF_MODE="protobufjs-7.6.5"
@@ -303,7 +328,7 @@ run_differential() {
 collect_evidence() {
   local t0 t1
   t0=$(now_ms)
-  python "$ROOT/src/host/tools/collect_evidence.py" \
+  "$PYTHON" "$ROOT/src/host/tools/collect_evidence.py" \
     --repo "$ROOT" \
     --steps "$STEP_LOG" \
     --bench-csv "$BENCH_CSV" \
@@ -324,11 +349,15 @@ collect_evidence() {
 
 # ---------------------------------------------------------------------------
 run_codegen_check() {
-  python "$ROOT/scripts/gen_fields.py" --check
+  "$PYTHON" "$ROOT/scripts/gen_fields.py" --check
 }
 
 run_sample_check() {
-  python "$ROOT/scripts/check_batch_sample.py" --check
+  "$PYTHON" "$ROOT/scripts/check_batch_sample.py" --check
+}
+
+run_codegen_negative() {
+  "$PYTHON" "$ROOT/scripts/test_gen_fields.py"
 }
 
 NO_NPM=0
@@ -340,7 +369,8 @@ for arg in "$@"; do
   esac
 done
 
-run_step "codegen-check" "python scripts/gen_fields.py --check (proto -> generated/q207_demo_fields.h)" run_codegen_check
+run_step "codegen-check" "python scripts/gen_fields.py --check (proto -> generated files)" run_codegen_check
+run_step "codegen-negative" "python scripts/test_gen_fields.py (unsupported constructs must fail)" run_codegen_negative
 run_step "sample-check" "python scripts/check_batch_sample.py --check (c20_full -> 56 B UserBatch)" run_sample_check
 run_step "build" "native host compiler: cl/g++/clang++ over src/host/**, -O2, 3 binaries" build_all
 run_step "unit-tests" "build/host/host_tests.exe (wire + 38 golden vectors + tape + decode)" run_tests

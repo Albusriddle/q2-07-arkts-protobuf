@@ -3,6 +3,16 @@
 set -u
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PYTHON="${PYTHON:-}"
+if [ -z "$PYTHON" ]; then
+  if command -v python >/dev/null 2>&1 && python -c 'import sys' >/dev/null 2>&1; then
+    PYTHON=python
+  elif command -v python3 >/dev/null 2>&1 && python3 -c 'import sys' >/dev/null 2>&1; then
+    PYTHON=python3
+  else
+    PYTHON=python
+  fi
+fi
 DEVECO="${DEVECO_HOME:-/d/Program Files/Huawei/DevEco Studio}"
 SDK="$DEVECO/sdk/default/openharmony"
 NDK="$SDK/native"
@@ -96,7 +106,7 @@ export V0_HDC="${HDC:-}" V0_HVIGORW="${HVIGORW:-}" V0_PROTOC="${PROTOC:-}" V0_BU
 export V0_BOARD_STATUS="$BOARD_STATUS" V0_BOARD_TARGETS="$BOARD_TARGETS"
 export V0_REQ_MISSING="${REQUIRED_MISSING[*]:-}"
 export V0_OPT_MISSING="${OPTIONAL_MISSING[*]:-}"
-python - <<'PY'
+"$PYTHON" - <<'PY'
 import json, os, datetime
 def split(k):
     v=os.environ.get(k,'').strip()
