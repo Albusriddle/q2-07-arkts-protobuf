@@ -36,7 +36,7 @@ proto/example.proto
 | `tools/collect_evidence.py` | assembles `evidence/host_slice.json` (commands, exit codes, timings, sha256) |
 | `tools/py_fallback_diff.py` | degraded differential used only when protobufjs cannot be installed |
 | `materializer/materializer.ts` | plain-object materializer for tape v0 (NOT ArkTS, NOT the NAPI path) |
-| `ts/` | protobufjs 7.6.5 harness: corpus generator, differential, large-tape materializer check |
+| `ts/` | protobufjs 7.6.5 harness: corpus generator, differential, materializer check, host benchmark |
 
 ## Hard rules the code enforces (and tests assert)
 
