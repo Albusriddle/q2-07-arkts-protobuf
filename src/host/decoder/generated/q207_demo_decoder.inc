@@ -88,11 +88,11 @@ Code parse_user_body(Reader& r, const Limits& lim, pod::User* u) {
       }
       case f::kUserTags: {
         if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &u->unknown_fields); break; }
-        u->mark(field);
         if (u->tags.size() >= lim.max_repeated_elements) {
           e = r.fail_with(Code::FieldBudget);
           break;
         }
+        u->mark(field);
         u->tags.emplace_back();
         e = r.read_string(&u->tags.back(), lim.max_string_bytes);
         break;
@@ -109,24 +109,24 @@ Code parse_user_body(Reader& r, const Limits& lim, pod::User* u) {
       }
       case f::kUserEmail: {
         if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &u->unknown_fields); break; }
-        u->mark(field);
         u->contact_bits |= (1u << f::kUserEmail);
         u->oneof_case = f::kUserEmail;
+        u->mark(field);
         e = r.read_string(&u->email, lim.max_string_bytes);
         break;
       }
       case f::kUserPhone: {
         if (w != wire::kWireLength) { e = mismatch(r, lim, field, w, &u->unknown_fields); break; }
-        u->mark(field);
         u->contact_bits |= (1u << f::kUserPhone);
         u->oneof_case = f::kUserPhone;
+        u->mark(field);
         e = r.read_string(&u->phone, lim.max_string_bytes);
         break;
       }
       case f::kUserLevel: {
         if (w != wire::kWireVarint) { e = mismatch(r, lim, field, w, &u->unknown_fields); break; }
-        u->mark(field);
         u->has_level = true;
+        u->mark(field);
         e = r.read_int32(&u->level);
         break;
       }

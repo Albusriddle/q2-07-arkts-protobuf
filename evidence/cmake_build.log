@@ -1,11 +1,1 @@
-[1/6] Building CXX object CMakeFiles/entry.dir/D_/DSHws4TSCsingle/repo/app/entry/src/main/cpp/decode_napi.cpp.o
-clang++: warning: argument unused during compilation: '--gcc-toolchain=D:/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/llvm' [-Wunused-command-line-argument]
-[2/6] Building CXX object CMakeFiles/entry.dir/D_/DSHws4TSCsingle/repo/src/host/decoder/decode_user.cpp.o
-clang++: warning: argument unused during compilation: '--gcc-toolchain=D:/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/llvm' [-Wunused-command-line-argument]
-[3/6] Building CXX object CMakeFiles/entry.dir/D_/DSHws4TSCsingle/repo/src/host/decoder/object_model.cpp.o
-clang++: warning: argument unused during compilation: '--gcc-toolchain=D:/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/llvm' [-Wunused-command-line-argument]
-[4/6] Building CXX object CMakeFiles/entry.dir/D_/DSHws4TSCsingle/repo/src/host/decoder/map_order.cpp.o
-clang++: warning: argument unused during compilation: '--gcc-toolchain=D:/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/llvm' [-Wunused-command-line-argument]
-[5/6] Building CXX object CMakeFiles/entry.dir/D_/DSHws4TSCsingle/repo/src/host/decoder/norm.cpp.o
-clang++: warning: argument unused during compilation: '--gcc-toolchain=D:/Program Files/Huawei/DevEco Studio/sdk/default/openharmony/native/llvm' [-Wunused-command-line-argument]
-[6/6] Linking CXX shared library libentry.so
+ninja: no work to do.

@@ -17,6 +17,7 @@ struct FieldInfo {
   bool optional;
   bool oneof;
   bool map;
+  const char* oneof_name;
 };
 struct MessageInfo {
   const char* name;
@@ -25,23 +26,23 @@ struct MessageInfo {
 };
 
 inline constexpr FieldInfo kProfileFields[] = {
-    {"city", 1, 2, false, false, false, false},
-    {"age", 2, 0, false, false, false, false},
+    {"city", 1, 2, false, false, false, false, ""},
+    {"age", 2, 0, false, false, false, false, ""},
 };
 
 inline constexpr FieldInfo kUserFields[] = {
-    {"id", 1, 0, false, false, false, false},
-    {"name", 2, 2, false, false, false, false},
-    {"tags", 3, 2, true, false, false, false},
-    {"profile", 4, 2, false, false, false, false},
-    {"email", 5, 2, false, false, true, false},
-    {"phone", 6, 2, false, false, true, false},
-    {"level", 7, 0, false, true, false, false},
-    {"scores", 8, 2, false, false, false, true},
+    {"id", 1, 0, false, false, false, false, ""},
+    {"name", 2, 2, false, false, false, false, ""},
+    {"tags", 3, 2, true, false, false, false, ""},
+    {"profile", 4, 2, false, false, false, false, ""},
+    {"email", 5, 2, false, false, true, false, "contact"},
+    {"phone", 6, 2, false, false, true, false, "contact"},
+    {"level", 7, 0, false, true, false, false, ""},
+    {"scores", 8, 2, false, false, false, true, ""},
 };
 
 inline constexpr FieldInfo kUserBatchFields[] = {
-    {"users", 1, 2, true, false, false, false},
+    {"users", 1, 2, true, false, false, false, ""},
 };
 
 inline constexpr MessageInfo kMessages[] = {
