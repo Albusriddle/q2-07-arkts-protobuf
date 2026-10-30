@@ -1,6 +1,6 @@
 # Tests (HOST-ONLY)
 
-`main.cpp` runs four suites and prints `TESTS PASSED: <n> FAILED: <m>`; the binary exits
+`main.cpp` runs five suites and prints `TESTS PASSED: <n> FAILED: <m>`; the binary exits
 non-zero on any failure. `bash repo/scripts/build_host.sh` runs it as the `unit-tests`
 step and records the exit code in `evidence/host_slice.json`.
 
@@ -10,6 +10,7 @@ step and records the exit code in `evidence/host_slice.json`.
 | `golden/*` | `test_vectors.cpp` | the 38 W0 golden wire vectors + the three R1/D17 additions (non-shortest accepted, negative int32 → −1, 2^64−1 vs 10th-byte overflow) |
 | `tape/*` | `test_tape.cpp` | round-trip, byte determinism, header/layout invariants, 13 verifier negatives, empty tape, 2,000-record tape |
 | `decode/*` | `test_decode.cpp` | `example.proto` decode: empty defaults, full mixed schema, optional tri-state, unknown fields, strict/compat mismatch, dangerous map keys, map ordering, oneof, UTF-8 policy, limits, `UserBatch`, JSON escaping, int64 boundaries |
+| `object_model/*` | `test_object_model.cpp` | POD → UserView/BatchView → canonical JSON: defaults, c20 full, double oneof, map last-wins/order, int64 min/NUL, empty/single/two-user batch, `BatchTooLarge`, truncation, strict/compat, top-level unknown |
 
 ## The allocation-order proof
 

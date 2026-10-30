@@ -55,6 +55,7 @@ napi_value Init(napi_env env, napi_value exports) {
         {"ping", nullptr, Ping, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"add", nullptr, Add, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"decodeUser", nullptr, q207::napi::DecodeUser, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"decodeMany", nullptr, q207::napi::DecodeMany, nullptr, nullptr, nullptr, napi_default, nullptr},
     };
     if (napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc) != napi_ok) {
         return nullptr;

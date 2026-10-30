@@ -122,6 +122,94 @@ napi_value BuildUser(napi_env env, const view::UserView& u) {
   return obj;
 }
 
+Limits NapiLimits() {
+  Limits l;
+  // NAPI is a separate trust boundary from the host tools: lower the batch cap
+  // and per-call field/repeated budgets.  max_objects still counts batch+User+
+  // Profile+MapEntry, so effective user count can be lower.
+  l.max_batch_users = 100000;
+  l.max_fields = 2000000;
+  l.max_repeated_elements = 100000;
+  return l;
+}
+
+bool ReadInput(napi_env env, napi_value value, const uint8_t** data, std::size_t* length) {
+  bool is_typed = false;
+  if (napi_is_typedarray(env, value, &is_typed) != napi_ok || !is_typed) {
+    ThrowType(env, "E_ARGUMENT", "bytes must be a Uint8Array");
+    return false;
+  }
+  napi_typedarray_type type = napi_uint8_array;
+  void* raw = nullptr;
+  napi_value arraybuffer = nullptr;
+  std::size_t byte_offset = 0;
+  if (napi_get_typedarray_info(env, value, &type, length, &raw, &arraybuffer,
+                               &byte_offset) != napi_ok) {
+    ThrowType(env, "E_ARGUMENT", "cannot inspect the Uint8Array");
+    return false;
+  }
+  if (type != napi_uint8_array) {
+    ThrowType(env, "E_ARGUMENT", "bytes must be a Uint8Array");
+    return false;
+  }
+  if (arraybuffer == nullptr) {
+    ThrowType(env, "E_ARGUMENT", "the Uint8Array has no ArrayBuffer");
+    return false;
+  }
+  bool detached = false;
+  if (napi_is_detached_arraybuffer(env, arraybuffer, &detached) != napi_ok) {
+    ThrowType(env, "E_ARGUMENT", "cannot inspect the Uint8Array buffer");
+    return false;
+  }
+  if (detached) {
+    ThrowType(env, "E_ARGUMENT", "the Uint8Array buffer is detached");
+    return false;
+  }
+  if (raw == nullptr && *length > 0) {
+    Throw(env, "E_ARGUMENT", "the Uint8Array has no readable data");
+    return false;
+  }
+  *data = static_cast<const uint8_t*>(raw);
+  return true;
+}
+
+bool IsRangeCode(Code c) {
+  return c == Code::MessageTooLarge || c == Code::ObjectBudget ||
+         c == Code::BatchTooLarge || c == Code::FieldBudget ||
+         c == Code::FieldTooLarge || c == Code::Depth;
+}
+
+class ScopeGuard {
+ public:
+  ScopeGuard(napi_env env, napi_handle_scope scope) : env_(env), scope_(scope) {}
+  ~ScopeGuard() {
+    if (scope_ != nullptr) {
+      // Destructors must not throw; a mismatch is an internal bug and the outer
+      // callback will still fail closed.
+      (void)napi_close_handle_scope(env_, scope_);
+    }
+  }
+  napi_status Close() {
+    if (scope_ == nullptr) return napi_handle_scope_mismatch;
+    napi_status st = napi_close_handle_scope(env_, scope_);
+    scope_ = nullptr;
+    return st;
+  }
+  ScopeGuard(const ScopeGuard&) = delete;
+  ScopeGuard& operator=(const ScopeGuard&) = delete;
+
+ private:
+  napi_env env_;
+  napi_handle_scope scope_;
+};
+
+napi_value ThrowCode(napi_env env, Code code, const decode::Stats& stats, const char* prefix) {
+  std::string msg = std::string(prefix) + ": " + code_name(code) +
+                    " at batch body offset " + std::to_string(stats.error_offset);
+  if (IsRangeCode(code)) return ThrowRange(env, code_name(code), msg);
+  return Throw(env, code_name(code), msg);
+}
+
 }  // namespace
 
 napi_value DecodeUser(napi_env env, napi_callback_info info) {
@@ -132,32 +220,11 @@ napi_value DecodeUser(napi_env env, napi_callback_info info) {
       return ThrowType(env, "E_ARGUMENT", "decodeUser(bytes) expects one Uint8Array");
     }
 
-    bool is_typed = false;
-    if (napi_is_typedarray(env, argv[0], &is_typed) != napi_ok || !is_typed) {
-      return ThrowType(env, "E_ARGUMENT", "decodeUser(bytes) expects a Uint8Array");
-    }
-    napi_typedarray_type type = napi_uint8_array;
+    const uint8_t* data = nullptr;
     std::size_t length = 0;
-    void* data = nullptr;
-    napi_value arraybuffer = nullptr;
-    std::size_t byte_offset = 0;
-    if (napi_get_typedarray_info(env, argv[0], &type, &length, &data, &arraybuffer,
-                                 &byte_offset) != napi_ok) {
-      return ThrowType(env, "E_ARGUMENT", "cannot inspect the Uint8Array");
-    }
-    if (type != napi_uint8_array) {
-      return ThrowType(env, "E_ARGUMENT", "decodeUser(bytes) expects a Uint8Array");
-    }
-    bool detached = false;
-    if (arraybuffer != nullptr &&
-        napi_is_detached_arraybuffer(env, arraybuffer, &detached) == napi_ok && detached) {
-      return ThrowType(env, "E_ARGUMENT", "the Uint8Array buffer is detached");
-    }
-    if (data == nullptr && length > 0) {
-      return Throw(env, "E_ARGUMENT", "the Uint8Array has no readable data");
-    }
+    if (!ReadInput(env, argv[0], &data, &length)) return nullptr;
 
-    Limits limits;
+    Limits limits = NapiLimits();
     if (length > limits.max_message_bytes) {
       return ThrowRange(env, "E_MESSAGE_TOO_LARGE",
                         "decodeUser input exceeds max_message_bytes (64 MiB)");
@@ -165,11 +232,8 @@ napi_value DecodeUser(napi_env env, napi_callback_info info) {
 
     pod::User user;
     decode::Stats stats;
-    const Code code = decode::user(static_cast<const uint8_t*>(data), length, limits, &user, &stats);
-    if (code != Code::Ok) {
-      std::string msg = std::string(code_name(code)) + " at offset " + std::to_string(stats.error_offset);
-      return Throw(env, code_name(code), msg);
-    }
+    const Code code = decode::user(data, length, limits, &user, &stats);
+    if (code != Code::Ok) return ThrowCode(env, code, stats, "decodeUser failed");
 
     view::UserView view;
     view::build_user_view(user, &view);
@@ -180,6 +244,75 @@ napi_value DecodeUser(napi_env env, napi_callback_info info) {
     return result;
   } catch (const std::bad_alloc&) {
     return Throw(env, "E_OUT_OF_MEMORY", "out of memory while decoding");
+  } catch (const std::exception& e) {
+    return Throw(env, "E_INTERNAL", e.what());
+  } catch (...) {
+    return Throw(env, "E_INTERNAL", "unknown internal error");
+  }
+}
+
+napi_value DecodeMany(napi_env env, napi_callback_info info) {
+  try {
+    std::size_t argc = 1;
+    napi_value argv[1] = {nullptr};
+    if (napi_get_cb_info(env, info, &argc, argv, nullptr, nullptr) != napi_ok || argc < 1) {
+      return ThrowType(env, "E_ARGUMENT", "decodeMany(bytes) expects one Uint8Array (one UserBatch body)");
+    }
+
+    const uint8_t* data = nullptr;
+    std::size_t length = 0;
+    if (!ReadInput(env, argv[0], &data, &length)) return nullptr;
+
+    Limits limits = NapiLimits();
+    if (length > limits.max_message_bytes) {
+      return ThrowRange(env, "E_MESSAGE_TOO_LARGE",
+                        "decodeMany input exceeds max_message_bytes (64 MiB)");
+    }
+
+    pod::UserBatch batch;
+    decode::Stats stats;
+    const Code code = decode::user_batch(data, length, limits, &batch, &stats);
+    if (code != Code::Ok) return ThrowCode(env, code, stats, "decodeMany failed");
+    if (batch.users.size() > limits.max_batch_users ||
+        batch.users.size() > 0xFFFFFFFFu) {
+      return ThrowRange(env, "E_BATCH_TOO_LARGE", "decodeMany user count exceeds the NAPI limit");
+    }
+
+    view::BatchView views;
+    view::build_batch_view(batch, &views);
+
+    napi_value users = nullptr;
+    if (napi_create_array_with_length(env, views.users.size(), &users) != napi_ok) {
+      return Throw(env, "E_NAPI", "failed to create the decoded users array");
+    }
+    for (std::size_t i = 0; i < views.users.size(); ++i) {
+      napi_handle_scope scope = nullptr;
+      if (napi_open_handle_scope(env, &scope) != napi_ok) {
+        return Throw(env, "E_NAPI", "failed to open a NAPI handle scope");
+      }
+      ScopeGuard guard(env, scope);
+      napi_value obj = BuildUser(env, views.users[i]);
+      const bool set_ok = obj != nullptr &&
+                          napi_set_element(env, users, static_cast<uint32_t>(i), obj) == napi_ok;
+      const napi_status close_status = guard.Close();
+      if (!set_ok) {
+        bool pending = false;
+        if (napi_is_exception_pending(env, &pending) == napi_ok && pending) return nullptr;
+        return Throw(env, "E_NAPI", "failed to append a decoded user");
+      }
+      if (close_status != napi_ok) {
+        return Throw(env, "E_NAPI", "failed to close a NAPI handle scope");
+      }
+    }
+
+    napi_value result = nullptr;
+    if (napi_create_object(env, &result) != napi_ok ||
+        napi_set_named_property(env, result, "users", users) != napi_ok) {
+      return Throw(env, "E_NAPI", "failed to wrap the decoded users");
+    }
+    return result;
+  } catch (const std::bad_alloc&) {
+    return Throw(env, "E_OUT_OF_MEMORY", "out of memory while decoding a batch");
   } catch (const std::exception& e) {
     return Throw(env, "E_INTERNAL", e.what());
   } catch (...) {

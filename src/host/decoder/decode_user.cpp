@@ -245,6 +245,10 @@ Code user_batch(const uint8_t* data, size_t size, const Limits& limits,
         if (e != Code::Ok) break;
         continue;
       }
+      if (out->users.size() >= limits.max_batch_users) {
+        e = r.fail_with(Code::BatchTooLarge);
+        break;
+      }
       if (out->users.size() >= limits.max_objects) {
         e = r.fail_with(Code::ObjectBudget);
         break;

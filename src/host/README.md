@@ -2,7 +2,7 @@
 
 HOST-ONLY. Everything under `src/host/**` is a logic/correctness harness that runs on
 the development PC. It produces **no device numbers**: no ArkTS runtime, no board.
-V0.1 also compiles the decoder subset into the NAPI `.so`; the NAPI binding is
+V0.1/V0.2 also compile the decoder subset into the NAPI `.so`; the NAPI binding is
 compiled but not executed on a device. See `docs/host-slice.md` and `docs/v0.1-decode.md`.
 
 ```
@@ -29,7 +29,7 @@ proto/example.proto
 | `decoder/conformance.{h,cpp}` | the W0 reference schema (f1..f5) instantiated on the same reader so the 38 golden vectors can judge the C++ reader directly |
 | `decoder/norm.{h,cpp}` | "norm-v1" canonical object dump; rules are exactly protobufjs 7.6.5 `toObject({defaults:true, longs:String})` (probed, not guessed) |
 | `tape/tape.{h,cpp}` | tape v0: 80 B user record, 16 B profile record, `roots` = byte offsets, `blob`, `values`, crc32; writer + verifier + reader |
-| `tests/` | 433 assertions: wire primitives + validation order, 38 golden vectors, tape round-trip/determinism/verifier negatives, decode edge cases |
+| `tests/` | 464 assertions: wire primitives + validation order, 38 golden vectors, tape round-trip/determinism/verifier negatives, decode edge cases |
 | `tools/host_decode_dump.cpp` | CLI: `*.wire` corpus → norm JSON + tape; framed data card → norm + tape |
 | `bench/host_bench.cpp` | S1-like / S3-like cards → `evidence/host/host_bench.csv` |
 | `tools/collect_evidence.py` | assembles `evidence/host_slice.json` (commands, exit codes, timings, sha256) |
