@@ -3,6 +3,16 @@
 set -u
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PYTHON="${PYTHON:-}"
+if [ -z "$PYTHON" ]; then
+  if command -v python >/dev/null 2>&1 && python -c 'import sys' >/dev/null 2>&1; then
+    PYTHON=python
+  elif command -v python3 >/dev/null 2>&1 && python3 -c 'import sys' >/dev/null 2>&1; then
+    PYTHON=python3
+  else
+    PYTHON=python
+  fi
+fi
 EVIDENCE="$ROOT/evidence"
 BUILD_DIR="$ROOT/build/napi"
 mkdir -p "$EVIDENCE" "$BUILD_DIR"
@@ -40,19 +50,19 @@ CHECK_EXIT=$?
 CMD_RECORDS+=("check_env|$CHECK_EXIT|check_env.log")
 
 CODEGEN_LOG="$EVIDENCE/codegen_check.log"
-python "$ROOT/scripts/gen_fields.py" --check >"$CODEGEN_LOG" 2>&1
+"$PYTHON" "$ROOT/scripts/gen_fields.py" --check >"$CODEGEN_LOG" 2>&1
 CODEGEN_EXIT=$?
 CMD_RECORDS+=("codegen-check|$CODEGEN_EXIT|codegen_check.log")
 if [ "$CODEGEN_EXIT" -ne 0 ]; then
   BLOCKED+=("generated field table is stale; run scripts/codegen.sh --write")
-  python "$ROOT/scripts/record_build.py" --status FAIL --hap-status "blocked: stale generated field table" \
+  "$PYTHON" "$ROOT/scripts/record_build.py" --status FAIL --hap-status "blocked: stale generated field table" \
     --hdc-status "unknown" --command "${CMD_RECORDS[@]}" --blocked "${BLOCKED[@]}" || true
   exit 1
 fi
 
 if [ ! -x "$CMAKE" ] || [ ! -x "$NINJA" ]; then
   BLOCKED+=("cmake/ninja missing; cannot build .so")
-  python "$ROOT/scripts/record_build.py" --status FAIL --hap-status "blocked: cmake/ninja missing" --hdc-status "unknown" --command "${CMD_RECORDS[@]}" --blocked "${BLOCKED[@]}" || true
+  "$PYTHON" "$ROOT/scripts/record_build.py" --status FAIL --hap-status "blocked: cmake/ninja missing" --hdc-status "unknown" --command "${CMD_RECORDS[@]}" --blocked "${BLOCKED[@]}" || true
   exit 1
 fi
 
@@ -161,7 +171,7 @@ ARGS=(--status "$STATUS" --hap-status "$HAP_STATUS" --hdc-status "$HDC_STATUS")
 for c in "${CMD_RECORDS[@]}"; do ARGS+=(--command "$c"); done
 for b in "${BLOCKED[@]}"; do ARGS+=(--blocked "$b"); done
 
-python "$ROOT/scripts/record_build.py" "${ARGS[@]}"
+"$PYTHON" "$ROOT/scripts/record_build.py" "${ARGS[@]}"
 
 echo "status=$STATUS"
 echo "so=${SO_PATH:-MISSING}"

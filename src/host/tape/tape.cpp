@@ -60,6 +60,7 @@ void Writer::clear() {
   roots_.clear();
   n_users_ = 0;
   n_profiles_ = 0;
+  overflow_ = false;
 }
 
 uint32_t Writer::add_blob(const std::string& s) {
@@ -75,6 +76,19 @@ uint32_t Writer::add_values_bytes(const uint8_t* p, size_t n) {
 }
 
 uint32_t Writer::add_user(const pod::User& u) {
+  uint64_t need_blob = u.name.size();
+  for (const std::string& t : u.tags) need_blob += t.size();
+  if (u.profile.present) need_blob += u.profile.city.size();
+  const uint64_t need_values = static_cast<uint64_t>(u.tags.size()) * kTagSlotBytes +
+                               static_cast<uint64_t>(u.scores.size()) * kScoreSlotBytes;
+  const uint64_t need_tape = kUserRecordSize + (u.profile.present ? kProfileRecordSize : 0);
+  if (tape_.size() + need_tape > lim_.max_tape_bytes ||
+      blob_.size() + need_blob > lim_.max_blob_bytes ||
+      values_.size() + need_values > lim_.max_values_bytes ||
+      roots_.size() + 1 > lim_.max_objects) {
+    overflow_ = true;
+    return kAbsent;
+  }
   const uint32_t rec_off = static_cast<uint32_t>(tape_.size());
   uint8_t rec[kUserRecordSize];
   std::memset(rec, 0, sizeof(rec));
@@ -151,9 +165,16 @@ uint32_t Writer::add_user(const pod::User& u) {
   return rec_off;
 }
 
-void Writer::add_root(uint32_t rec_off) { roots_.push_back(rec_off); }
+void Writer::add_root(uint32_t rec_off) {
+  if (roots_.size() + 1 > lim_.max_objects) {
+    overflow_ = true;
+    return;
+  }
+  roots_.push_back(rec_off);
+}
 
 std::vector<uint8_t> Writer::finish() const {
+  if (overflow_) return {};
   Header h;
   h.version = kVersion;
   h.header_bytes = kHeaderBytes;
@@ -420,6 +441,7 @@ std::string_view Reader::blob(uint32_t off, uint32_t len) const {
 }
 
 uint32_t Reader::root_at(uint32_t i) const {
+  if (!loaded_ || i >= h_.roots_count) return kAbsent;
   return get_u32(data_ + h_.roots_off + i * 4);
 }
 

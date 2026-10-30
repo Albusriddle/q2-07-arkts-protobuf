@@ -16,7 +16,7 @@ A feasibility + implementation workspace for the OpenHarmony Q2-07 challenge:
 
 - host-side C++17 wire reader, POD decoder for `proto/example.proto`, tape v0 writer/verifier,
   TS materializer and differential harness against **protobufjs 7.6.5**;
-- V0.4 NAPI bridge (`ping`/`add`/`decodeUser`/`decodeMany`) in `app/entry/src/main/cpp/`,
+- V0.4 generated decoder; NAPI bridge (`ping`/`add`/`decodeUser`/`decodeMany`) unchanged in `app/entry/src/main/cpp/`,
   built by hvigor `externalNativeOptions`; `decodeUser` returns the norm-v1 object shape;
 - field numbers, wire types, POD structs, schema IR, decoder body and ArkTS types generated
   from `proto/example.proto` (`scripts/codegen.sh --check`);
@@ -44,7 +44,7 @@ profile. All host numbers are labelled `HOST-ONLY`.
 | [`docs/v0.1-decode.md`](docs/v0.1-decode.md) | V0.1 generated field table + `decodeUser` NAPI, claim levels and limitations |
 | [`docs/v0.2-decode-many.md`](docs/v0.2-decode-many.md) | V0.2 batch `decodeMany`, limits and NAPI compile-only claim |
 | [`docs/v0.3-codegen.md`](docs/v0.3-codegen.md) | V0.3 schema IR + generated POD + ArkTS types, regression and limits |
-| [`docs/v0.4-decoder.md`](docs/v0.4-decoder.md) | V0.4 generated decoder body, 464-assertion regression and limits |
+| [`docs/v0.4-decoder.md`](docs/v0.4-decoder.md) | V0.4 generated decoder body, 468-assertion regression and limits |
 
 ## Scope and non-goals
 
@@ -76,7 +76,11 @@ app/                   OpenHarmony ArkTS app + NAPI native module
 host/napi/             CMake shim; the canonical NAPI source is app/entry/src/main/cpp/entry.cpp
 ```
 
-## Build and test (local, no device)
+## Build and test (local, Windows + DevEco)
+
+Prerequisites: DevEco Studio + HarmonyOS SDK/NDK, Node/npm, Python 3, and
+`DEVECO_HOME` if DevEco is not at its default path. `PYTHON` can point at a
+specific interpreter (default: `python3`, fallback `python`).
 
 ```bash
 # V0: host .so + ohpm install + HAP (unsigned)
@@ -86,7 +90,7 @@ bash scripts/build.sh
 #   export Q207_SIGN_STORE_PWD=...   (or create gitignored signing/.local_pwd)
 bash scripts/sign_hap.sh
 
-# HOST-ONLY C++/TS slice: build + 464 assertions + bench + differential + evidence
+# HOST-ONLY C++/TS slice: build + 468 assertions + bench + differential + evidence
 bash scripts/build_host.sh
 ```
 
