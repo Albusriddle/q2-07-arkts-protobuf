@@ -16,7 +16,7 @@
     "docs pointers"
   ],
   "host_evidence": {
-    "head": "17a14da35b7aeccc49865f75906daab4a79bd569",
+    "head": "6c7d2062450ed93837991ceed89cdc8481a743e7",
     "tests": {
       "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
       "passed": 468,
