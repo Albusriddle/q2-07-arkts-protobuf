@@ -7,8 +7,10 @@ cd "$ROOT"
 mkdir -p build/host
 CXX="${CXX:-}"
 if [ -z "$CXX" ]; then
-  if command -v clang++ >/dev/null 2>&1; then CXX=clang++;
-  elif [ -x /c/msys64/clang64/bin/clang++.exe ]; then CXX=/c/msys64/clang64/bin/clang++.exe;
+  # Prefer the known-good MSYS2 clang64 toolchain on Windows; a bare
+  # clang++ from another distribution may lack the ASan runtime.
+  if [ -x /c/msys64/clang64/bin/clang++.exe ]; then CXX=/c/msys64/clang64/bin/clang++.exe;
+  elif command -v clang++ >/dev/null 2>&1; then CXX=clang++;
   elif command -v g++ >/dev/null 2>&1; then CXX=g++;
   elif [ -x /c/msys64/mingw64/bin/g++.exe ]; then CXX=/c/msys64/mingw64/bin/g++.exe;
   else echo "ASan: clang++/g++ not found" >&2; exit 2; fi
