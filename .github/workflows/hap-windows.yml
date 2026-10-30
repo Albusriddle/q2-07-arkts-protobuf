@@ -27,7 +27,8 @@ jobs:
           fi
           bash scripts/build.sh
           cd app
-          "$DEVECO_HOME/tools/hvigor/bin/hvigorw" assembleHap --mode module             -p module=entry@ohosTest -p product=default -p buildMode=debug --no-daemon
+          "$DEVECO_HOME/tools/hvigor/bin/hvigorw" assembleHap --mode module \
+            -p module=entry@ohosTest -p product=default -p buildMode=debug --no-daemon
       - name: Upload artifact evidence
         if: always()
         uses: actions/upload-artifact@v4
