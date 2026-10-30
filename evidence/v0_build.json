@@ -1,8 +1,8 @@
 {
   "slice": "V0-min: NAPI .so + ArkTS caller",
-  "timestamp_utc": "2026-10-29T08:28:23.693244+00:00",
-  "branch": "feature/v0.1-decode",
-  "commit": "516ffdb",
+  "timestamp_utc": "2026-10-30T07:27:35.227979+00:00",
+  "branch": "feature/v0.3-schema-pod",
+  "commit": "0c03fb3",
   "status": "PASS-UNSIGNED",
   "commands": [
     {
@@ -47,8 +47,8 @@
     "hap": [
       {
         "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
-        "size": 1634048,
-        "sha256": "251b4beb165ac822f3ae7d4c77c8d6a08b1c0e8cd5e2df8255735c11a78d9c79",
+        "size": 1634081,
+        "sha256": "a8cc64d4861d9281a253ec7d63eb620b47851eddc90cb69fd3026319268ffea5",
         "signed": false
       }
     ]
