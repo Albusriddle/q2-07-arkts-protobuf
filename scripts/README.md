@@ -12,5 +12,5 @@
 | `sign_hap.sh` | Local self-signed HAP: PKI/profile → sign-profile → sign-app → verify-app; **not installable** |
 | `record_build.py` | Write `evidence/v0_build.json` with commands, exits, artifacts, hashes |
 
-Not present yet: generic schema/decoder compiler, schema inventory, statistics/replay layers. Those are
+Not present yet: full generic schema compiler (multi-shape maps/enums/fixed), schema inventory, statistics/replay layers. Those are
 tracked as remaining work in the README/report, not hidden behind these scripts.

@@ -49,7 +49,7 @@ def main() -> int:
         raise AssertionError("unsupported scalar was accepted")
 
     try:
-        bad = parse(base + 'message M { map<string,string> m = 1; }\n')
+        bad = parse(base + 'message M { map<string,bytes> m = 1; }\n')
         mod.validate_decoder_support(bad)
     except mod.ParseError:
         print("  ok  unsupported map value: rejected")
@@ -63,6 +63,26 @@ def main() -> int:
         print("  ok  field number > 32: rejected")
     else:
         raise AssertionError("field number > 32 was accepted")
+
+    generic_src = base + """
+message Inner { string label = 1; }
+message Outer {
+  Inner inner = 1;
+  repeated string tags = 2;
+  optional int32 level = 3;
+  oneof contact { string email = 4; string phone = 5; }
+}
+"""
+    parser = mod.Parser(mod.tokenize(generic_src))
+    generic = parser.parse()
+    mod.validate_decoder_support(generic)
+    pod = mod.generate_pod(generic, generic_src)
+    dec = mod.generate_decoder(generic, generic_src)
+    dts = mod.generate_dts(parser)
+    assert "struct Inner" in pod and "Inner inner;" in pod
+    assert "parse_outer" in dec and "parse_inner" in dec
+    assert "export interface DecodedOuter" in dts
+    print("  ok  generic schema: POD/decoder/DTS generated")
 
     print("gen_fields negative tests: PASS")
     return 0
