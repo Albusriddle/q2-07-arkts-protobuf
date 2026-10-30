@@ -6,13 +6,13 @@
 Code parse_profile(Reader& r, const Limits& lim, pod::Profile* out);
 Code parse_user(Reader& r, const Limits& lim, pod::User* out);
 Code parse_user_batch(Reader& r, const Limits& lim, pod::UserBatch* out);
-Code parse_map_entry(Reader& r, const Limits& lim, pod::MapEntry* out);
+Code parse_user_scores_entry(Reader& r, const Limits& lim, pod::UserScoresEntry* out);
 
-Code parse_map_entry(Reader& r, const Limits& lim, pod::MapEntry* out) {
+Code parse_user_scores_entry(Reader& r, const Limits& lim, pod::UserScoresEntry* out) {
   Code e = r.count_object();
   if (e != Code::Ok) return e;
   out->key = {};
-  out->value = 0;
+  out->value = {};
   while (!r.at_end()) {
     uint32_t field = 0, w = 0;
     e = r.read_tag(&field, &w);
@@ -60,7 +60,7 @@ Code parse_profile(Reader& r, const Limits& lim, pod::Profile* out) {
         e = r.read_int32(&out->age);
         break;
       }
-      default: ++out->unknown_fields; e = r.skip_field(field, w); break;
+      default: e = r.skip_field(field, w); break;
     }
     if (e != Code::Ok) return e;
   }
@@ -144,8 +144,8 @@ Code parse_user(Reader& r, const Limits& lim, pod::User* out) {
         const uint64_t cap = std::min<uint64_t>(r.remaining(), lim.max_message_bytes);
         e = r.enter_length(cap);
         if (e != Code::Ok) break;
-        pod::MapEntry entry;
-        e = parse_map_entry(r, lim, &entry);
+        pod::UserScoresEntry entry;
+        e = parse_user_scores_entry(r, lim, &entry);
         if (e == Code::Ok) e = r.leave();
         if (e == Code::Ok) out->scores.push_back(std::move(entry));
         break;

@@ -1,8 +1,8 @@
 {
   "slice": "V0-sign: local self-signed HAP (no device, no install)",
-  "timestamp_utc": "2026-10-30T09:14:48Z",
-  "branch": "main",
-  "commit": "cfc9e18",
+  "timestamp_utc": "2026-10-30T09:54:56Z",
+  "branch": "feature/v0.7-map-hardening",
+  "commit": "8b0b637",
   "status": "PASS-SIGNED-NOT-INSTALLABLE",
   "signing": {
     "tool": "<DevEco>/sdk/default/openharmony/toolchains/lib/hap-sign-tool.jar",
@@ -43,26 +43,26 @@
   "artifacts": {
     "hap_unsigned": {
       "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
-      "size": 1634833,
-      "sha256": "80cdae5bfb96788f1f2d6e30cc0267f8736ab1f35faf2b8d7103535d177d1adb",
+      "size": 1634817,
+      "sha256": "bb67e66fd37183edb436954651157a18981f7f64283b77faf8d238a171ee9fae",
       "signed": false
     },
     "hap_signed": {
       "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
-      "size": 1696154,
-      "sha256": "a576d918e8f0a5c5aedc38246a36779d7aae59a0f7afe649b73251cbf8c4648c",
+      "size": 1696167,
+      "sha256": "c9a2db7b102e77e9288ffc237f5e2a76160456a221a78f4f91ec7188f98a23ee",
       "signed": true,
       "installable": false
     },
     "profile_signed": {
       "path": "signing/profile/q207-profile.p7b",
-      "size": 3066,
-      "sha256": "2a66cca5e0c68e568f2b9808cf3eb1898393e17b40333db958cbaa332cf50f41"
+      "size": 3065,
+      "sha256": "bcdcf3f1db2d474847523289f4cae5a80d5432f8b0c4e8b992d78ad07388d72f"
     },
     "profile_json": {
       "path": "signing/profile/q207-profile.json",
       "size": 1427,
-      "sha256": "00a8f3d905b6e479618a2e2c8ae2d72ad11404fcf1f254e4758dccbf0327b2e6"
+      "sha256": "f09f3908367b999c7c8975dba13d3179791bcc19a7ebfb89c1ff4ea36ec05c7d"
     },
     "app_cert_chain": {
       "path": "signing/certs/q207-app-cert.pem",
