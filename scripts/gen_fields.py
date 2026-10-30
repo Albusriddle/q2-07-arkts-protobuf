@@ -328,27 +328,6 @@ CPP_SCALAR = {
 }
 
 
-def cpp_type(field: Field, messages: dict[str, list[Field]]) -> str:
-    if field.kind == "map":
-        return "std::vector<MapEntry>"
-    if field.kind in messages:
-        return field.kind
-    return CPP_SCALAR.get(field.kind, "std::string")
-
-
-def cpp_decl(field: Field, messages: dict[str, list[Field]]) -> str:
-    t = cpp_type(field, messages)
-    if field.label == "repeated" or field.kind == "map":
-        return f"std::vector<{t}> {field.name};" if field.kind != "map" else f"{t} {field.name};"
-    if field.kind in messages:
-        return f"{t} {field.name};"
-    if t == "bool":
-        return f"bool {field.name} = false;"
-    if t in ("std::string",):
-        return f"std::string {field.name};"
-    return f"{t} {field.name} = 0;"
-
-
 def _scalar_cpp(kind: str) -> str:
     if kind not in CPP_SCALAR:
         raise ParseError(f"unsupported scalar type {kind}")
