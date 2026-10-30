@@ -138,7 +138,7 @@ class Reader {
   uint32_t depth_ = 0;
   uint32_t sp_ = 0;
   size_t stack_[128];  // max_depth <= 100 by default; guard extra room
-  const Limits& lim_;
+  Limits lim_;
   uint64_t objects_ = 0;
   uint64_t fields_ = 0;
   uint64_t alloc_calls_ = 0;

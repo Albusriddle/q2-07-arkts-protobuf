@@ -1,8 +1,8 @@
 {
   "slice": "V0-min: NAPI .so + ArkTS caller",
-  "timestamp_utc": "2026-10-30T09:54:38.755751+00:00",
-  "branch": "feature/v0.7-map-hardening",
-  "commit": "8b0b637",
+  "timestamp_utc": "2026-10-30T11:50:17.306600+00:00",
+  "branch": "main",
+  "commit": "efbb04e",
   "status": "PASS-UNSIGNED",
   "commands": [
     {
@@ -40,15 +40,15 @@
     "so": [
       {
         "path": "build/napi/libentry.so",
-        "size": 239440,
-        "sha256": "23a6910a94491553c8ecf202ac40ab89867e413443d53eb58bb635b197984e75"
+        "size": 239408,
+        "sha256": "1131ee56abcb8243f132115432446fb942fb7fe2b4525caa45c3d8d7aa58e515"
       }
     ],
     "hap": [
       {
         "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
         "size": 1634817,
-        "sha256": "bb67e66fd37183edb436954651157a18981f7f64283b77faf8d238a171ee9fae",
+        "sha256": "b50b5c6f4f45a443a17b2b3370ff04289c053435b3274b0d20015ee27eec23a0",
         "signed": false
       }
     ]
