@@ -1,0 +1,47 @@
+{
+  "scope": "HOST-ONLY",
+  "not_claimed": [
+    "device performance",
+    "1.5x",
+    "700ms"
+  ],
+  "note": "native vs protobufjs is host-only; different runtimes and object models",
+  "datasets": {
+    "s1_user_1kb": {
+      "native": {
+        "decode_median_ms": 14.4177,
+        "decode_mb_per_s": 582.457396,
+        "decode_msg_per_s": 567219.459414
+      },
+      "protobufjs": {
+        "decode_median_ms": 13.6371,
+        "decode_mb_per_s": 615.797787,
+        "decode_msg_per_s": 599687.617,
+        "decode_plus_toObject_median_ms": 14.7684
+      },
+      "ratios": {
+        "native_speedup_by_median": 0.9458582159429035,
+        "native_mb_per_s_over_pbjs": 0.9458582156288263
+      },
+      "messages": 8178
+    },
+    "s3_100mb": {
+      "native": {
+        "decode_median_ms": 170.828,
+        "decode_mb_per_s": 614.68518,
+        "decode_msg_per_s": 597677.195776
+      },
+      "protobufjs": {
+        "decode_median_ms": 124.8418,
+        "decode_mb_per_s": 841.108026,
+        "decode_msg_per_s": 817835.052,
+        "decode_plus_toObject_median_ms": 160.2254
+      },
+      "ratios": {
+        "native_speedup_by_median": 0.7308040836396844,
+        "native_mb_per_s_over_pbjs": 0.7308040834222166
+      },
+      "messages": 102100
+    }
+  }
+}

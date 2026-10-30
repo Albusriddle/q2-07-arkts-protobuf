@@ -1,6 +1,6 @@
 # Q2-07 · Native ArkTS High-Performance Protobuf Parsing
 
-> Status: **V0.7 hardens multi-shape maps, DTS map keys, CI/ASan and docs**; generated message/nested/oneof POD+decoder; HAP built (not device-run).
+> Status: **V0.8 adds a host-only native vs protobufjs benchmark**; generated message/nested/oneof POD+decoder; HAP built (not device-run).
 > Feasibility: **B- / conditionally viable** under “API-level compatibility + P3-batch first + hot-message P4 + 20 weeks”.
 > This repository is a working scaffold, not a claim that 1.5×/700 ms is achieved.
 
@@ -16,7 +16,7 @@ A feasibility + implementation workspace for the OpenHarmony Q2-07 challenge:
 
 - host-side C++17 wire reader, POD decoder for `proto/example.proto`, tape v0 writer/verifier,
   TS materializer and differential harness against **protobufjs 7.6.5**;
-- V0.7 map hardening + CI/ASan docs; V0.6 generic message codegen; V0.5 fake NAPI host tests; V0.4 generated decoder; NAPI bridge (`ping`/`add`/`decodeUser`/`decodeMany`) unchanged in `app/entry/src/main/cpp/`,
+- V0.8 host benchmark (native vs protobufjs 7.6.5); V0.7 map hardening + CI/ASan docs; V0.6 generic message codegen; V0.5 fake NAPI host tests; V0.4 generated decoder; NAPI bridge (`ping`/`add`/`decodeUser`/`decodeMany`) unchanged in `app/entry/src/main/cpp/`,
   built by hvigor `externalNativeOptions`; `decodeUser` returns the norm-v1 object shape;
 - field numbers, wire types, POD structs, schema IR, decoder body and ArkTS types generated
   from `proto/example.proto` (`scripts/codegen.sh --check`);
@@ -48,6 +48,7 @@ profile. All host numbers are labelled `HOST-ONLY`.
 | [`docs/v0.5-napi-shim.md`](docs/v0.5-napi-shim.md) | V0.5 fake NAPI host runtime tests, scope/error checks and limits |
 | [`docs/v0.6-generic-codegen.md`](docs/v0.6-generic-codegen.md) | V0.6 message-graph POD/decoder/DTS generation and limits |
 | [`docs/v0.7-hardening.md`](docs/v0.7-hardening.md) | V0.7 map/CI/docs hardening and remaining limits |
+| [`docs/v0.8-benchmark.md`](docs/v0.8-benchmark.md) | V0.8 host-only native vs protobufjs benchmark; no 1.5x claim |
 
 ## Scope and non-goals
 

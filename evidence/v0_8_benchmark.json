@@ -1,0 +1,91 @@
+{
+  "scope": "V0.8 native vs protobufjs host-only benchmark",
+  "claim_level": "host_benchmark_only",
+  "device_run": false,
+  "not_claimed": [
+    "device performance",
+    "1.5x",
+    "700ms"
+  ],
+  "host_evidence": {
+    "head": "def824fd257a726e44f5c0bac61dc654dc14f7a5",
+    "tests": {
+      "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
+      "passed": 468,
+      "failed": 0
+    },
+    "steps": [
+      "codegen-check",
+      "codegen-negative",
+      "sample-check",
+      "build",
+      "unit-tests",
+      "napi-shim",
+      "data-cards",
+      "bench",
+      "differential",
+      "protobufjs-bench",
+      "bench-compare"
+    ],
+    "artifacts_hashed": 59
+  },
+  "bench_compare": {
+    "scope": "HOST-ONLY",
+    "not_claimed": [
+      "device performance",
+      "1.5x",
+      "700ms"
+    ],
+    "note": "native vs protobufjs is host-only; different runtimes and object models",
+    "datasets": {
+      "s1_user_1kb": {
+        "native": {
+          "decode_median_ms": 14.4177,
+          "decode_mb_per_s": 582.457396,
+          "decode_msg_per_s": 567219.459414
+        },
+        "protobufjs": {
+          "decode_median_ms": 13.6371,
+          "decode_mb_per_s": 615.797787,
+          "decode_msg_per_s": 599687.617,
+          "decode_plus_toObject_median_ms": 14.7684
+        },
+        "ratios": {
+          "native_speedup_by_median": 0.9458582159429035,
+          "native_mb_per_s_over_pbjs": 0.9458582156288263
+        },
+        "messages": 8178
+      },
+      "s3_100mb": {
+        "native": {
+          "decode_median_ms": 170.828,
+          "decode_mb_per_s": 614.68518,
+          "decode_msg_per_s": 597677.195776
+        },
+        "protobufjs": {
+          "decode_median_ms": 124.8418,
+          "decode_mb_per_s": 841.108026,
+          "decode_msg_per_s": 817835.052,
+          "decode_plus_toObject_median_ms": 160.2254
+        },
+        "ratios": {
+          "native_speedup_by_median": 0.7308040836396844,
+          "native_mb_per_s_over_pbjs": 0.7308040834222166
+        },
+        "messages": 102100
+      }
+    }
+  },
+  "files": {
+    "protobufjs_csv": {
+      "path": "evidence/host/protobufjs_bench.csv",
+      "size": 2674,
+      "sha256": "688a75ad7c14add129b09e33a76dd4f56964c913c264c18ac8142a91724de6b3"
+    },
+    "compare_json": {
+      "path": "evidence/host/bench_compare.json",
+      "size": 1317,
+      "sha256": "e5f75ca07b16d1c0e94df5a2e6ed26af8d5458dc0683043abaea7becd592b785"
+    }
+  }
+}
