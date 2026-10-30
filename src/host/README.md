@@ -2,7 +2,7 @@
 
 HOST-ONLY. Everything under `src/host/**` is a logic/correctness harness that runs on
 the development PC. It produces **no device numbers**: no ArkTS runtime, no board.
-V0.6 includes generated message/nested/oneof POD/decoder, fake-NAPI host tests
+V0.7 includes generated message/nested/oneof/map POD/decoder, fake-NAPI host tests
 and 468 assertions. The NAPI binding is compiled and host-shim tested, but not
 executed on a device. See `docs/v0.6-generic-codegen.md` and `docs/v0.5-napi-shim.md`.
 
@@ -26,7 +26,7 @@ proto/example.proto
 | `common/sha256.{h,cpp}` | dependency-free SHA-256 for artifact/data-card fingerprints |
 | `decoder/wire_reader.{h,cpp}` | the reader. Mandated order `tag → wire type → len ≤ remaining → len ≤ cap → allocate`; varint (10-byte rule), zigzag, fixed32/64, length-delimited, packed, group skip, strict UTF-8, depth/field/object budgets, `note_alloc()` accounting hook |
 | `decoder/pod.h` | thin include of generated field constants, POD structs and schema metadata |
-| `decoder/decode_user.cpp` | thin wrapper; parser body is generated in `generated/q207_demo_decoder.inc`: int64, string, repeated string, nested `Profile`, oneof (keep-all + discriminator), proto3 `optional` tri-state, `map<string,int32>` |
+| `decoder/decode_user.cpp` | thin wrapper; parser body is generated in `generated/q207_demo_decoder.inc`: int64, string, repeated string, nested `Profile`, oneof (keep-all + discriminator), proto3 `optional` tri-state, per-field map entries (supported scalar subset) |
 | `decoder/conformance.{h,cpp}` | the W0 reference schema (f1..f5) instantiated on the same reader so the 38 golden vectors can judge the C++ reader directly |
 | `decoder/norm.{h,cpp}` | "norm-v1" canonical object dump; rules are exactly protobufjs 7.6.5 `toObject({defaults:true, longs:String})` (probed, not guessed) |
 | `tape/tape.{h,cpp}` | tape v0: 80 B user record, 16 B profile record, `roots` = byte offsets, `blob`, `values`, crc32; writer + verifier + reader |

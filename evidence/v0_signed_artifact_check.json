@@ -1,22 +1,22 @@
 {
   "schema": "q207.v0.artifact_check/1",
-  "generated_utc": "2026-10-30T09:55:00.223120+00:00",
+  "generated_utc": "2026-10-30T11:50:36.933741+00:00",
   "generator": {
     "script": "scripts/inspect_hap.py",
     "python": "3.13.0"
   },
   "repo": {
-    "branch": "feature/v0.7-map-hardening",
-    "commit": "8b0b637",
+    "branch": "main",
+    "commit": "efbb04e",
     "root": "D:/DSHws4TSCsingle/repo"
   },
   "mode": "read-only: no rebuild, no re-sign, no patch, no write into the HAP",
   "input": {
     "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
     "exists": true,
-    "size": 1696167,
-    "sha256": "c9a2db7b102e77e9288ffc237f5e2a76160456a221a78f4f91ec7188f98a23ee",
-    "mtime_utc": "2026-10-30T09:54:54.421855+00:00"
+    "size": 1696169,
+    "sha256": "2582be0cf114b96241f3731e23b017ae0e08197eee01ad94bf188a12ba86f784",
+    "mtime_utc": "2026-10-30T11:50:34.337065+00:00"
   },
   "container": {
     "is_zip": true,
@@ -144,7 +144,7 @@
     },
     "bundled_count": 2,
     "size": 243864,
-    "sha256": "2bfd26aa871e6c724e4b0c325fb57d797a098e684092a7397cf1263372c099cf",
+    "sha256": "e1a8a867d952bf56f20616483aa5c6772770175b47f1a22f3735f9dcb3fc12e4",
     "elf": {
       "is_elf": true,
       "magic": "7f454c46",
@@ -187,8 +187,8 @@
   "cross_checks": {
     "build/napi/libentry.so": {
       "exists": true,
-      "size": 239440,
-      "sha256": "23a6910a94491553c8ecf202ac40ab89867e413443d53eb58bb635b197984e75",
+      "size": 239408,
+      "sha256": "1131ee56abcb8243f132115432446fb942fb7fe2b4525caa45c3d8d7aa58e515",
       "identical_to_hap_entry": false
     },
     "app/entry/libs/arm64-v8a/libentry.so": {

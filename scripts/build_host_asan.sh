@@ -8,12 +8,14 @@ mkdir -p build/host
 CXX="${CXX:-}"
 if [ -z "$CXX" ]; then
   if command -v clang++ >/dev/null 2>&1; then CXX=clang++;
+  elif [ -x /c/msys64/clang64/bin/clang++.exe ]; then CXX=/c/msys64/clang64/bin/clang++.exe;
   elif command -v g++ >/dev/null 2>&1; then CXX=g++;
+  elif [ -x /c/msys64/mingw64/bin/g++.exe ]; then CXX=/c/msys64/mingw64/bin/g++.exe;
   else echo "ASan: clang++/g++ not found" >&2; exit 2; fi
 fi
 exec "$CXX" -std=c++17 -O1 -g -fno-omit-frame-pointer \
   -fsanitize=address,undefined \
-  -I app/entry/src/main/cpp -I src/host/tests/napi_shim -I src \
+  -DQ207_ASAN -I app/entry/src/main/cpp -I src/host/tests/napi_shim -I src \
   -o build/host/host_tests_asan.exe \
   src/host/common/status.cpp src/host/common/sha256.cpp src/host/decoder/wire_reader.cpp \
   src/host/decoder/conformance.cpp src/host/decoder/decode_user.cpp src/host/decoder/norm.cpp \

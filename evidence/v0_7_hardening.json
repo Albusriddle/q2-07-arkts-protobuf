@@ -16,7 +16,7 @@
     "docs pointers"
   ],
   "host_evidence": {
-    "head": "90a7dbe5f1e790172af64648aa55bc9b916f659f",
+    "head": "6c7d2062450ed93837991ceed89cdc8481a743e7",
     "tests": {
       "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
       "passed": 468,
@@ -37,29 +37,39 @@
   "artifacts": {
     "so": {
       "path": "build/napi/libentry.so",
-      "size": 239440,
-      "sha256": "23a6910a94491553c8ecf202ac40ab89867e413443d53eb58bb635b197984e75"
+      "size": 239408,
+      "sha256": "1131ee56abcb8243f132115432446fb942fb7fe2b4525caa45c3d8d7aa58e515"
     },
     "hap_unsigned": {
       "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
       "size": 1634817,
-      "sha256": "bb67e66fd37183edb436954651157a18981f7f64283b77faf8d238a171ee9fae"
+      "sha256": "b50b5c6f4f45a443a17b2b3370ff04289c053435b3274b0d20015ee27eec23a0"
     },
     "hap_signed": {
       "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
-      "size": 1696167,
-      "sha256": "c9a2db7b102e77e9288ffc237f5e2a76160456a221a78f4f91ec7188f98a23ee"
+      "size": 1696169,
+      "sha256": "2582be0cf114b96241f3731e23b017ae0e08197eee01ad94bf188a12ba86f784"
     },
     "hap_test": {
       "path": "app/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap",
       "size": 1460043,
-      "sha256": "96d88b6ee1ec54a04b00af4a8557254124a39d348897c4e85fa0c6a114fd0c65"
+      "sha256": "a818e9e577d3a49bd7c429a60c124b54e52b5504195c17aea6e769ee0927190d"
     }
   },
   "asan": {
     "script": "scripts/build_host_asan.sh",
-    "local_executed": false,
-    "reason": "no g++/clang++ on this Windows host; Ubuntu CI job runs it"
+    "local_executed": true,
+    "compiler": "MSYS2 clang 22.1.8 / LLVM ASan",
+    "tests": {
+      "passed": 457,
+      "failed": 0
+    },
+    "binary": {
+      "path": "build/host/host_tests_asan.exe",
+      "size": 4587520,
+      "sha256": "b999c44a6753a6c20a764fc06fda713f75dbf7bb92d03d0d4dd7780158a74d48"
+    },
+    "note": "allocation-count block skipped under Q207_ASAN; normal host is 468"
   },
   "blocked": [
     "real device/ArkCompiler NAPI not run",

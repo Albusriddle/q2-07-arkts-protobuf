@@ -12,14 +12,23 @@ jobs:
   hap:
     runs-on: [self-hosted, windows]
     timeout-minutes: 30
+    env:
+      DEVECO_HOME: ${{ vars.DEVECO_HOME }}
+      DEVECO_SDK_HOME: ${{ vars.DEVECO_HOME }}\sdk
+      HOS_SDK_HOME: ${{ vars.DEVECO_HOME }}\sdk
     steps:
       - uses: actions/checkout@v4
       - name: Build unsigned HAP + test HAP
         shell: bash
         run: |
+          if [ -z "${DEVECO_HOME:-}" ]; then
+            echo "DEVECO_HOME is not configured on this self-hosted runner" >&2
+            exit 2
+          fi
           bash scripts/build.sh
           cd app
-          hvigorw assembleHap --mode module -p module=entry@ohosTest -p product=default -p buildMode=debug --no-daemon
+          "$DEVECO_HOME/tools/hvigor/bin/hvigorw" assembleHap --mode module \
+            -p module=entry@ohosTest -p product=default -p buildMode=debug --no-daemon
       - name: Upload artifact evidence
         if: always()
         uses: actions/upload-artifact@v4
