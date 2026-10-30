@@ -7,7 +7,7 @@
   "test_binary": {
     "path": "build/host/napi_shim_tests.exe",
     "size": 320000,
-    "sha256": "2034468c2e1af36c96a42645e5b004ce91f6841f0a4ec00ebb6c70d234d99c8d"
+    "sha256": "8143ebfe7b051d206b917495dfe71667b2feec1ba44ab5014998b9096308e8b1"
   },
   "covered": [
     "DecodeUser(c20_full) object shape",
@@ -18,7 +18,7 @@
     "handle scope balance"
   ],
   "host_evidence": {
-    "head": "224148c29f5376252e730d6af94d5808750c3bc4",
+    "head": "61430b0b0a42840b2420772df2ff6f0c4d783d32",
     "tests": {
       "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
       "passed": 468,
