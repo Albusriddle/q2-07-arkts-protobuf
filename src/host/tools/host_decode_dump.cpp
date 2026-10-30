@@ -130,16 +130,18 @@ void emit(const pod::User& user, const std::string& out_dir, const std::string& 
   it->wire_sha256 = sha256_hex(wire.data(), wire.size());
   const std::string norm = norm::user_json(user);
   it->norm_sha256 = sha256_hex(norm.data(), norm.size());
-  write_text(out_dir + "/" + stem + ".norm.json", norm);
+  bool wrote_ok = write_text(out_dir + "/" + stem + ".norm.json", norm);
 
   tape::Writer w;
   w.add_user(user);
   std::vector<uint8_t> buf = w.finish();
   tape::VerifyReport rep = tape::verify(buf.data(), buf.size());
-  it->tape_verified = rep.ok;
+  it->tape_verified = rep.ok && wrote_ok && w.ok();
   it->tape_bytes = buf.size();
   it->tape_sha256 = sha256_hex(buf.data(), buf.size());
-  write_file(out_dir + "/" + stem + ".tape.bin", buf.data(), buf.size());
+  if (!write_file(out_dir + "/" + stem + ".tape.bin", buf.data(), buf.size())) {
+    it->tape_verified = false;
+  }
 }
 
 void emit_batch(const pod::UserBatch& batch, const std::string& out_dir, const std::string& stem,
@@ -149,16 +151,18 @@ void emit_batch(const pod::UserBatch& batch, const std::string& out_dir, const s
   it->wire_sha256 = sha256_hex(wire.data(), wire.size());
   const std::string norm = norm::user_batch_json(batch);
   it->norm_sha256 = sha256_hex(norm.data(), norm.size());
-  write_text(out_dir + "/" + stem + ".norm.json", norm);
+  bool wrote_ok = write_text(out_dir + "/" + stem + ".norm.json", norm);
 
   tape::Writer w;
   for (const pod::User& u : batch.users) w.add_user(u);
   std::vector<uint8_t> buf = w.finish();
   tape::VerifyReport rep = tape::verify(buf.data(), buf.size());
-  it->tape_verified = rep.ok;
+  it->tape_verified = rep.ok && wrote_ok && w.ok();
   it->tape_bytes = buf.size();
   it->tape_sha256 = sha256_hex(buf.data(), buf.size());
-  write_file(out_dir + "/" + stem + ".tape.bin", buf.data(), buf.size());
+  if (!write_file(out_dir + "/" + stem + ".tape.bin", buf.data(), buf.size())) {
+    it->tape_verified = false;
+  }
 }
 
 int usage() {

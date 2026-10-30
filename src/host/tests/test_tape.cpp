@@ -133,6 +133,18 @@ void suite_tape() {
     TEQ_I64(back.users[0].level, 0);
     TCHECK(back.users[0].has_level);
     TEQ_STR(back.users[0].tags[2], std::string());
+    // Out-of-range roots must fail closed, not read past the roots section.
+    TEQ_U64(r.root_at(2), tape::kAbsent);
+  }
+
+  ctx().begin("tape/writer-budget");
+  {
+    Limits tiny;
+    tiny.max_tape_bytes = 80;  // less than one full user+profile record
+    tape::Writer w(tape::kFlagOneofKeepAll, tiny);
+    TEQ_U64(w.add_user(make_full_user()), tape::kAbsent);
+    TCHECK(!w.ok());
+    TCHECK(w.finish().empty());
   }
 
   ctx().begin("tape/determinism");
