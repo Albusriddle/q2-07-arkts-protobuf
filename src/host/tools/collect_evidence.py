@@ -209,6 +209,7 @@ def main() -> int:
         "src/host/decoder/generated/q207_demo_pod.h",
         "src/host/decoder/generated/q207_demo_schema.h",
         "src/host/decoder/generated/q207_demo_schema.json",
+        "src/host/decoder/generated/q207_demo_decoder.inc",
         "src/host/decoder/pod.h",
         "scripts/gen_fields.py",
         "scripts/codegen.sh",
