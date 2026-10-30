@@ -1,6 +1,6 @@
 # Q2-07 · Native ArkTS High-Performance Protobuf Parsing
 
-> Status: **host vertical slice implemented; V0.2 adds `decodeMany` batch NAPI**; unsigned/self-signed HAP built (not device-run).
+> Status: **host vertical slice implemented; V0.3 adds generated POD/schema/ArkTS types and `decodeMany` batch NAPI**; unsigned/self-signed HAP built (not device-run).
 > Feasibility: **B- / conditionally viable** under “API-level compatibility + P3-batch first + hot-message P4 + 20 weeks”.
 > This repository is a working scaffold, not a claim that 1.5×/700 ms is achieved.
 
@@ -16,18 +16,18 @@ A feasibility + implementation workspace for the OpenHarmony Q2-07 challenge:
 
 - host-side C++17 wire reader, POD decoder for `proto/example.proto`, tape v0 writer/verifier,
   TS materializer and differential harness against **protobufjs 7.6.5**;
-- V0.2 NAPI bridge (`ping`/`add`/`decodeUser`/`decodeMany`) in `app/entry/src/main/cpp/`,
+- V0.3 NAPI bridge (`ping`/`add`/`decodeUser`/`decodeMany`) in `app/entry/src/main/cpp/`,
   built by hvigor `externalNativeOptions`; `decodeUser` returns the norm-v1 object shape;
-- field numbers/wire types generated from `proto/example.proto` into
-  `src/host/decoder/generated/q207_demo_fields.h` (`scripts/codegen.sh --check`);
+- field numbers, wire types, POD structs, schema IR and ArkTS types generated from
+  `proto/example.proto` (`scripts/codegen.sh --check`);
 - `ohosTest` test HAP builds (not executed: no device); `decodeUser` is **compiled,
   not executed on a device** (see `docs/v0.1-decode.md`).
 
 **Not implemented yet (do not claim as done)**
 
-- full `.proto → descriptor/IR → C++/ArkTS` code generation; only field constants + wire
-  types are generated today, while `pod.h` / `decode_user.cpp` remain hand-written;
-- NAPI `decodeMany` now exists; `decode` alias / full P3 handle-scope tuning remain;
+- full generated decoder; field table, POD, schema IR and ArkTS types are generated, but
+  `decode_user.cpp` / NAPI bindings remain hand-written;
+- `decode` alias / full P3 handle-scope tuning remain;
 - protobufjs **8.x**, full P3/P4, real device install/run/AOT/performance.
 
 Device-side performance numbers are **not** available: no board, no UDID, no trusted signing
@@ -44,6 +44,7 @@ profile. All host numbers are labelled `HOST-ONLY`.
 | [`docs/v0-slice.md`](docs/v0-slice.md) | V0 NAPI/HAP build and current BLOCKED list |
 | [`docs/v0.1-decode.md`](docs/v0.1-decode.md) | V0.1 generated field table + `decodeUser` NAPI, claim levels and limitations |
 | [`docs/v0.2-decode-many.md`](docs/v0.2-decode-many.md) | V0.2 batch `decodeMany`, limits and NAPI compile-only claim |
+| [`docs/v0.3-codegen.md`](docs/v0.3-codegen.md) | V0.3 schema IR + generated POD + ArkTS types, regression and limits |
 
 ## Scope and non-goals
 
@@ -89,7 +90,7 @@ bash scripts/sign_hap.sh
 bash scripts/build_host.sh
 ```
 
-> Field table: `bash scripts/codegen.sh --check` (and `build.sh` / `build_host.sh` run it
+> Schema/codegen: `bash scripts/codegen.sh --check` (and `build.sh` / `build_host.sh` run it
 > automatically). Native build is integrated through `externalNativeOptions`; `scripts/build.sh`
 > builds the standalone `.so` and the HAP. `scripts/build_hap.sh` is the hvigor-only shortcut and now
 > runs `ohpm install` first. `scripts/sign_hap.sh` only signs/verifies locally; its output is
@@ -97,7 +98,7 @@ bash scripts/build_host.sh
 
 ## Current next steps
 
-1. implement `.proto → descriptor/IR → C++/ArkTS` codegen (currently hand-written POD/decoder);
+1. generate the decoder itself from schema IR (POD/fields/types are already generated);
 2. finish the P3 path: `decode` alias/batch ergonomics, handle-scope tuning and external buffer/worker policy;
 3. lock API generation/acceptance baseline (current HAP targets API 24 / compileSdk 6.1.1.125);
 4. when a board + official signing material/UDID exist: install, run `ohosTest`, record `ping/add`

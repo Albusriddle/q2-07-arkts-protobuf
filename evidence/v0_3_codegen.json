@@ -1,0 +1,107 @@
+{
+  "scope": "V0.3 schema IR + generated POD + generated ArkTS types",
+  "claim_level": "codegen_schema_pod_verified + napi_shim_compiled_not_executed",
+  "napi_executed": false,
+  "device_run": false,
+  "installable": false,
+  "generator": {
+    "script": "scripts/gen_fields.py",
+    "proto": {
+      "path": "proto/example.proto",
+      "size": 379,
+      "sha256": "05ef0e9ec2f5351efa5c3216977c99c37625e657199649cba1d81f58b68d6891"
+    },
+    "outputs": [
+      {
+        "path": "src/host/decoder/generated/q207_demo_fields.h",
+        "size": 1603,
+        "sha256": "8420b5819ebf30cbffa39e57e98d962c92f3f46e17345b375f24c1017c171b79"
+      },
+      {
+        "path": "src/host/decoder/generated/q207_demo_pod.h",
+        "size": 1885,
+        "sha256": "7ea9ac81e0578e664fff1ab8f52d22e6ef58d0011e0c36ba0d69a79e4c590931"
+      },
+      {
+        "path": "src/host/decoder/generated/q207_demo_schema.h",
+        "size": 1420,
+        "sha256": "b0688df0860954727783652dd01614df48e172e8a4fec064cfbdf13932117255"
+      },
+      {
+        "path": "src/host/decoder/generated/q207_demo_schema.json",
+        "size": 3049,
+        "sha256": "7212e5fd2f81fc34d803e5e1d033ffdda68bfe29721fcbad9b5f4f24af0a1daf"
+      },
+      {
+        "path": "app/entry/src/main/ets/types/libentry/index.d.ts",
+        "size": 903,
+        "sha256": "c5b7dd6bb352ae637e021701b059be7b64c3deb179129067dc71f510886e1433"
+      }
+    ],
+    "schema_messages": [
+      "Profile",
+      "User",
+      "UserBatch"
+    ],
+    "package": "q207.demo"
+  },
+  "handwriting": {
+    "pod_structs": false,
+    "field_table": false,
+    "arkts_types": false,
+    "decoder": true,
+    "napi_bindings": true
+  },
+  "host_evidence": {
+    "head": "0c03fb36c959fabdeda80cb0b11ff6916990e048",
+    "dirty_files": 23,
+    "tests": {
+      "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
+      "passed": 464,
+      "failed": 0
+    },
+    "differential": {
+      "ok": true,
+      "cases": 25
+    },
+    "materializer": {
+      "ok": true,
+      "users": 8178
+    },
+    "artifacts_hashed": 54
+  },
+  "artifacts": {
+    "so": {
+      "path": "build/napi/libentry.so",
+      "size": 239392,
+      "sha256": "c80e08bc4f53b9a5b6e000f7b195ee5028542fdcd4a3f720a1745ac79c92b549"
+    },
+    "hap_unsigned": {
+      "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
+      "size": 1634081,
+      "sha256": "a8cc64d4861d9281a253ec7d63eb620b47851eddc90cb69fd3026319268ffea5"
+    },
+    "hap_signed": {
+      "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
+      "size": 1696904,
+      "sha256": "cc4fa60d880d63181d9c16d0fc282e8ec70aebce6f34c30ece57653b0d985cb2"
+    },
+    "hap_test": {
+      "path": "app/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap",
+      "size": 1460043,
+      "sha256": "a6a05189d7e83924221325fa0edb7527f6103838d0a30821fa9af20b8f1223a0"
+    }
+  },
+  "blocked": [
+    "no target device: decodeUser/decodeMany not executed",
+    "decoder and NAPI bindings remain hand-written",
+    "self-signed HAP is not installable"
+  ],
+  "commands": [
+    "python scripts/gen_fields.py --check",
+    "bash scripts/build_host.sh",
+    "bash scripts/build.sh",
+    "hvigorw assembleHap -p module=entry@ohosTest",
+    "bash scripts/sign_hap.sh"
+  ]
+}

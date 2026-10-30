@@ -1,0 +1,143 @@
+{
+  "syntax": "proto3",
+  "package": "q207.demo",
+  "proto_sha256": "05ef0e9ec2f5351efa5c3216977c99c37625e657199649cba1d81f58b68d6891",
+  "messages": [
+    {
+      "name": "Profile",
+      "fields": [
+        {
+          "name": "city",
+          "number": 1,
+          "type": "string",
+          "label": "",
+          "wire": 2,
+          "map": false,
+          "map_key": "",
+          "map_value": "",
+          "oneof": false
+        },
+        {
+          "name": "age",
+          "number": 2,
+          "type": "int32",
+          "label": "",
+          "wire": 0,
+          "map": false,
+          "map_key": "",
+          "map_value": "",
+          "oneof": false
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "fields": [
+        {
+          "name": "id",
+          "number": 1,
+          "type": "int64",
+          "label": "",
+          "wire": 0,
+          "map": false,
+          "map_key": "",
+          "map_value": "",
+          "oneof": false
+        },
+        {
+          "name": "name",
+          "number": 2,
+          "type": "string",
+          "label": "",
+          "wire": 2,
+          "map": false,
+          "map_key": "",
+          "map_value": "",
+          "oneof": false
+        },
+        {
+          "name": "tags",
+          "number": 3,
+          "type": "string",
+          "label": "repeated",
+          "wire": 2,
+          "map": false,
+          "map_key": "",
+          "map_value": "",
+          "oneof": false
+        },
+        {
+          "name": "profile",
+          "number": 4,
+          "type": "Profile",
+          "label": "",
+          "wire": 2,
+          "map": false,
+          "map_key": "",
+          "map_value": "",
+          "oneof": false
+        },
+        {
+          "name": "email",
+          "number": 5,
+          "type": "string",
+          "label": "",
+          "wire": 2,
+          "map": false,
+          "map_key": "",
+          "map_value": "",
+          "oneof": true
+        },
+        {
+          "name": "phone",
+          "number": 6,
+          "type": "string",
+          "label": "",
+          "wire": 2,
+          "map": false,
+          "map_key": "",
+          "map_value": "",
+          "oneof": true
+        },
+        {
+          "name": "level",
+          "number": 7,
+          "type": "int32",
+          "label": "optional",
+          "wire": 0,
+          "map": false,
+          "map_key": "",
+          "map_value": "",
+          "oneof": false
+        },
+        {
+          "name": "scores",
+          "number": 8,
+          "type": "map",
+          "label": "",
+          "wire": 2,
+          "map": true,
+          "map_key": "string",
+          "map_value": "int32",
+          "oneof": false
+        }
+      ]
+    },
+    {
+      "name": "UserBatch",
+      "fields": [
+        {
+          "name": "users",
+          "number": 1,
+          "type": "User",
+          "label": "repeated",
+          "wire": 2,
+          "map": false,
+          "map_key": "",
+          "map_value": "",
+          "oneof": false
+        }
+      ]
+    }
+  ]
+}
