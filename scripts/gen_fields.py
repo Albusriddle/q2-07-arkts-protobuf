@@ -29,6 +29,7 @@ OUT_FIELDS = GENDIR / "q207_demo_fields.h"
 OUT_POD = GENDIR / "q207_demo_pod.h"
 OUT_SCHEMA_H = GENDIR / "q207_demo_schema.h"
 OUT_SCHEMA_JSON = GENDIR / "q207_demo_schema.json"
+OUT_DECODER = GENDIR / "q207_demo_decoder.inc"
 OUT_DTS = ROOT / "app" / "entry" / "src" / "main" / "ets" / "types" / "libentry" / "index.d.ts"
 
 TOKEN_RE = re.compile(
@@ -580,6 +581,210 @@ def generate_dts(parser: Parser) -> str:
     return "\n".join(lines)
 
 
+def _wire_expr(wire: int) -> str:
+    return {
+        WIRE_VARINT: "wire::kWireVarint",
+        WIRE_FIXED64: "wire::kWireFixed64",
+        WIRE_LENGTH: "wire::kWireLength",
+        WIRE_FIXED32: "wire::kWireFixed32",
+    }[wire]
+
+
+def _field_case(msg: str, f: Field, target: str, unknown: str, indent: str) -> list[str]:
+    c = f"f::k{msg}{pascal(f.name)}"
+    w = _wire_expr(f.wire)
+    mis = unknown if unknown else "nullptr"
+    lines = [f"{indent}case {c}: {{"]
+    lines.append(f"{indent}  if (w != {w}) {{ e = mismatch(r, lim, field, w, {mis}); break; }}")
+    if f.kind == "map":
+        lines += [
+            f"{indent}  if ({target}->{f.name}.size() >= lim.max_repeated_elements) {{",
+            f"{indent}    e = r.fail_with(Code::FieldBudget);",
+            f"{indent}    break;",
+            f"{indent}  }}",
+            f"{indent}  {target}->mark(field);",
+            f"{indent}  const uint64_t cap = std::min<uint64_t>(r.remaining(), lim.max_message_bytes);",
+            f"{indent}  e = r.enter_length(cap);",
+            f"{indent}  if (e != Code::Ok) break;",
+            f"{indent}  pod::MapEntry entry;",
+            f"{indent}  e = parse_map_entry(r, lim, &entry);",
+            f"{indent}  if (e == Code::Ok) e = r.leave();",
+            f"{indent}  if (e == Code::Ok) {target}->{f.name}.push_back(std::move(entry));",
+            f"{indent}  break;",
+        ]
+    elif f.kind in ("Profile", "User") and f.label != "repeated":
+        lines += [
+            f"{indent}  {target}->mark(field);",
+            f"{indent}  const uint64_t cap = std::min<uint64_t>(r.remaining(), lim.max_message_bytes);",
+            f"{indent}  e = r.enter_length(cap);",
+            f"{indent}  if (e != Code::Ok) break;",
+            f"{indent}  e = parse_{f.kind.lower()}(r, lim, &{target}->{f.name});",
+            f"{indent}  if (e == Code::Ok) e = r.leave();",
+            f"{indent}  break;",
+        ]
+    elif f.kind == "User" and f.label == "repeated":
+        lines += [
+            f"{indent}  if ({target}->{f.name}.size() >= lim.max_repeated_elements) {{",
+            f"{indent}    e = r.fail_with(Code::FieldBudget);",
+            f"{indent}    break;",
+            f"{indent}  }}",
+            f"{indent}  {target}->mark(field);",
+            f"{indent}  {target}->{f.name}.emplace_back();",
+            f"{indent}  const uint64_t cap = std::min<uint64_t>(r.remaining(), lim.max_message_bytes);",
+            f"{indent}  e = r.enter_length(cap);",
+            f"{indent}  if (e != Code::Ok) break;",
+            f"{indent}  e = parse_user_body(r, lim, &{target}->{f.name}.back());",
+            f"{indent}  if (e == Code::Ok) e = r.leave();",
+            f"{indent}  break;",
+        ]
+    else:
+        # scalar / repeated scalar / string / optional / oneof
+        lines.append(f"{indent}  {target}->mark(field);")
+        if f.oneof:
+            lines += [
+                f"{indent}  {target}->contact_bits |= (1u << f::k{msg}{pascal(f.name)});",
+                f"{indent}  {target}->oneof_case = f::k{msg}{pascal(f.name)};",
+            ]
+        if f.label == "optional":
+            lines.append(f"{indent}  {target}->has_level = true;")
+        if f.label == "repeated":
+            lines += [
+                f"{indent}  if ({target}->{f.name}.size() >= lim.max_repeated_elements) {{",
+                f"{indent}    e = r.fail_with(Code::FieldBudget);",
+                f"{indent}    break;",
+                f"{indent}  }}",
+                f"{indent}  {target}->{f.name}.emplace_back();",
+                f"{indent}  e = r.read_{'string' if f.kind == 'string' else 'int32'}(&{target}->{f.name}.back(), lim.max_string_bytes);" if f.kind == "string" else
+                f"{indent}  e = r.read_int32(&{target}->{f.name}.back());",
+            ]
+        else:
+            read = {
+                "string": f"r.read_string(&{target}->{f.name}, lim.max_string_bytes)",
+                "int32": f"r.read_int32(&{target}->{f.name})",
+                "int64": f"r.read_int64(&{target}->{f.name})",
+                "bool": f"r.read_int32(&{target}->{f.name})",
+            }.get(f.kind, f"r.read_int32(&{target}->{f.name})")
+            lines.append(f"{indent}  e = {read};")
+        lines.append(f"{indent}  break;")
+    lines.append(f"{indent}}}")
+    return lines
+
+
+def generate_decoder(messages: dict[str, list[Field]], proto_text: str) -> str:
+    profile = messages["Profile"]
+    user = messages["User"]
+    batch = messages["UserBatch"]
+    lines = [
+        "// GENERATED by scripts/gen_fields.py -- DO NOT EDIT.",
+        "// Source: proto/example.proto",
+        f"// proto sha256: {hashlib.sha256(proto_text.encode('utf-8')).hexdigest()}",
+        "// Included inside q207::decode's anonymous namespace; relies on mismatch/Reader/f.",
+        "",
+        "Code parse_profile(Reader& r, const Limits& lim, pod::Profile* p) {",
+        "  Code e = r.count_object();",
+        "  if (e != Code::Ok) return e;",
+        "  p->present = true;",
+        "  while (!r.at_end()) {",
+        "    uint32_t field = 0, w = 0;",
+        "    e = r.read_tag(&field, &w);",
+        "    if (e != Code::Ok) return e;",
+        "    if (w == kWireEndGroup) return r.fail_with(Code::GroupUnexpected);",
+        "    e = r.count_field();",
+        "    if (e != Code::Ok) return e;",
+        "    switch (field) {",
+    ]
+    for f in profile:
+        lines += _field_case("Profile", f, "p", "nullptr", "      ")
+    lines += [
+        "      default: e = r.skip_field(field, w); break;",
+        "    }",
+        "    if (e != Code::Ok) return e;",
+        "  }",
+        "  return Code::Ok;",
+        "}",
+        "",
+        "Code parse_map_entry(Reader& r, const Limits& lim, pod::MapEntry* out) {",
+        "  Code e = r.count_object();",
+        "  if (e != Code::Ok) return e;",
+        "  out->key.clear();",
+        "  out->value = 0;",
+        "  bool key_ok = false;",
+        "  while (!r.at_end()) {",
+        "    uint32_t field = 0, w = 0;",
+        "    e = r.read_tag(&field, &w);",
+        "    if (e != Code::Ok) return e;",
+        "    if (w == kWireEndGroup) return r.fail_with(Code::GroupUnexpected);",
+        "    e = r.count_field();",
+        "    if (e != Code::Ok) return e;",
+        "    if (field == 1 && w == kWireLength) { e = r.read_string(&out->key, lim.max_string_bytes); key_ok = true; }",
+        "    else if (field == 2 && w == kWireVarint) { e = r.read_int32(&out->value); }",
+        "    else { e = r.skip_field(field, w); }",
+        "    if (e != Code::Ok) return e;",
+        "  }",
+        "  if (lim.map_reject_dangerous) {",
+        "    static const char* kDangerous[] = {",
+        '        "__proto__", "constructor", "prototype", "toString", "valueOf", "hasOwnProperty",',
+        '        "isPrototypeOf", "propertyIsEnumerable", "__defineGetter__", "__defineSetter__",',
+        '        "__lookupGetter__", "__lookupSetter__",',
+        "    };",
+        "    if (key_ok) for (const char* d : kDangerous) if (out->key == d) return r.fail_with(Code::MapKeyDangerous);",
+        "  }",
+        "  return Code::Ok;",
+        "}",
+        "",
+        "Code parse_user_body(Reader& r, const Limits& lim, pod::User* u) {",
+        "  Code e = r.count_object();",
+        "  if (e != Code::Ok) return e;",
+        "  while (!r.at_end()) {",
+        "    uint32_t field = 0, w = 0;",
+        "    e = r.read_tag(&field, &w);",
+        "    if (e != Code::Ok) return e;",
+        "    if (w == kWireEndGroup) return r.fail_with(Code::GroupUnexpected);",
+        "    e = r.count_field();",
+        "    if (e != Code::Ok) return e;",
+        "    switch (field) {",
+    ]
+    for f in user:
+        lines += _field_case("User", f, "u", "&u->unknown_fields", "      ")
+    lines += [
+        "      default: ++u->unknown_fields; e = r.skip_field(field, w); break;",
+        "    }",
+        "    if (e != Code::Ok) return e;",
+        "  }",
+        "  return Code::Ok;",
+        "}",
+        "",
+        "Code parse_user_batch(Reader& r, const Limits& lim, pod::UserBatch* out) {",
+        "  Code e = r.count_object();",
+        "  while (e == Code::Ok && !r.at_end()) {",
+        "    uint32_t field = 0, w = 0;",
+        "    e = r.read_tag(&field, &w);",
+        "    if (e != Code::Ok) break;",
+        "    if (w == kWireEndGroup) { e = r.fail_with(Code::GroupUnexpected); break; }",
+        "    e = r.count_field();",
+        "    if (e != Code::Ok) break;",
+        "    if (field == f::kUserBatchUsers) {",
+        "      if (w != kWireLength) { e = mismatch(r, lim, field, w, nullptr); if (e != Code::Ok) break; continue; }",
+        "      if (out->users.size() >= lim.max_batch_users) { e = r.fail_with(Code::BatchTooLarge); break; }",
+        "      if (out->users.size() >= lim.max_objects) { e = r.fail_with(Code::ObjectBudget); break; }",
+        "      const uint64_t cap = std::min<uint64_t>(r.remaining(), lim.max_message_bytes);",
+        "      e = r.enter_length(cap);",
+        "      if (e != Code::Ok) break;",
+        "      out->users.emplace_back();",
+        "      e = parse_user_body(r, lim, &out->users.back());",
+        "      if (e == Code::Ok) e = r.leave();",
+        "      if (e != Code::Ok) break;",
+        "    } else {",
+        "      e = r.skip_field(field, w);",
+        "    }",
+        "  }",
+        "  return e;",
+        "}",
+        "",
+    ]
+    return "\n".join(lines)
+
+
 def normalize_newlines(text: str) -> str:
     return text.replace("\r\n", "\n").replace("\r", "\n")
 
@@ -599,6 +804,7 @@ def main() -> int:
             OUT_POD: generate_pod(messages, proto_text),
             OUT_SCHEMA_H: generate_schema_header(parser, proto_text),
             OUT_SCHEMA_JSON: generate_schema_json(parser, proto_text),
+            OUT_DECODER: generate_decoder(messages, proto_text),
             OUT_DTS: generate_dts(parser),
         }
     except ParseError as e:

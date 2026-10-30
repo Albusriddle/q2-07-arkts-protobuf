@@ -1,0 +1,101 @@
+{
+  "scope": "V0.4 generated decoder body",
+  "claim_level": "generated_decoder_host_verified + napi_shim_compiled_not_executed",
+  "napi_executed": false,
+  "device_run": false,
+  "installable": false,
+  "generated": {
+    "decoder_include": {
+      "path": "src/host/decoder/generated/q207_demo_decoder.inc",
+      "size": 6786,
+      "sha256": "6f6db852cda3834ab0f9a2ecd4f47b8e02d4254fa038ede1f72758c8d5a40f34"
+    },
+    "pod": {
+      "path": "src/host/decoder/generated/q207_demo_pod.h",
+      "size": 1885,
+      "sha256": "7ea9ac81e0578e664fff1ab8f52d22e6ef58d0011e0c36ba0d69a79e4c590931"
+    },
+    "fields": {
+      "path": "src/host/decoder/generated/q207_demo_fields.h",
+      "size": 1603,
+      "sha256": "8420b5819ebf30cbffa39e57e98d962c92f3f46e17345b375f24c1017c171b79"
+    },
+    "schema_json": {
+      "path": "src/host/decoder/generated/q207_demo_schema.json",
+      "size": 3192,
+      "sha256": "9ef626262aae114290cc6c0a047784563e8aff932c91a65db54609010084052f"
+    },
+    "schema_header": {
+      "path": "src/host/decoder/generated/q207_demo_schema.h",
+      "size": 1420,
+      "sha256": "b0688df0860954727783652dd01614df48e172e8a4fec064cfbdf13932117255"
+    },
+    "dts": {
+      "path": "app/entry/src/main/ets/types/libentry/index.d.ts",
+      "size": 903,
+      "sha256": "c5b7dd6bb352ae637e021701b059be7b64c3deb179129067dc71f510886e1433"
+    },
+    "schema_messages": [
+      "Profile",
+      "User",
+      "UserBatch"
+    ]
+  },
+  "decoder": {
+    "body_generated": true,
+    "thin_wrapper": "src/host/decoder/decode_user.cpp",
+    "napi_bindings_handwritten": true
+  },
+  "host_evidence": {
+    "head": "34fff16a708e3b820004fb4083d66545a4cd2eb7",
+    "dirty_files": 1,
+    "tests": {
+      "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
+      "passed": 464,
+      "failed": 0
+    },
+    "differential": {
+      "ok": true,
+      "cases": 25
+    },
+    "materializer": {
+      "ok": true,
+      "users": 8178
+    },
+    "artifacts_hashed": 55
+  },
+  "artifacts": {
+    "so": {
+      "path": "build/napi/libentry.so",
+      "size": 239392,
+      "sha256": "1d7dfc947a6c1ff75c7aa543dae93f160686c1ba1eb8acbdc6c9c82ca9eb51b3"
+    },
+    "hap_unsigned": {
+      "path": "app/entry/build/default/outputs/default/entry-default-unsigned.hap",
+      "size": 1634241,
+      "sha256": "ebfe1dfbf01cc0fc4f61593dcbf6587cd07550d09fb86fe2f72c132a8a31041d"
+    },
+    "hap_signed": {
+      "path": "app/entry/build/default/outputs/default/entry-default-signed.hap",
+      "size": 1696745,
+      "sha256": "22b9a8a14217daed8529787794eeed32ac9bb34a4d23c566d4decda8b016f890"
+    },
+    "hap_test": {
+      "path": "app/entry/build/default/outputs/ohosTest/entry-ohosTest-unsigned.hap",
+      "size": 1460043,
+      "sha256": "f7a87356b86f0c16d614b3e63bb9305caefb07abc2779df702fde23bf7776005"
+    }
+  },
+  "blocked": [
+    "no target device: decodeUser/decodeMany not executed",
+    "NAPI handle scope not runtime-tested",
+    "self-signed HAP is not installable"
+  ],
+  "commands": [
+    "python scripts/gen_fields.py --check",
+    "bash scripts/build_host.sh",
+    "bash scripts/build.sh",
+    "hvigorw assembleHap -p module=entry@ohosTest",
+    "bash scripts/sign_hap.sh"
+  ]
+}
