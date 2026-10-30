@@ -8,7 +8,7 @@
     "700ms"
   ],
   "host_evidence": {
-    "head": "8a92c6e6ffada674de01fdca6c120de4d7d964a4",
+    "head": "98059c3b81874365f4dbf511562e2ea3c1ec6ffd",
     "tests": {
       "golden_vectors": "38-vector golden: 38/38 bytes-exact expectations matched",
       "passed": 468,
@@ -40,37 +40,47 @@
     "datasets": {
       "s1_user_1kb": {
         "native": {
-          "decode_median_ms": 13.2266,
-          "decode_mb_per_s": 634.909652,
-          "decode_msg_per_s": 618299.487397
+          "decode_median_ms": 14.2571,
+          "decode_mb_per_s": 589.018524,
+          "decode_msg_per_s": 573608.938704
         },
         "protobufjs": {
-          "decode_median_ms": 9.0599,
-          "decode_mb_per_s": 926.908244,
-          "decode_msg_per_s": 902658.97,
-          "decode_plus_toObject_median_ms": 14.6962
+          "decode_median_ms": 9.7173,
+          "decode_mb_per_s": 864.20055,
+          "decode_msg_per_s": 841591.8,
+          "decode_plus_toObject_median_ms": 15.619
+        },
+        "native_decode_plus_json": {
+          "median_ms": 43.5632,
+          "mb_per_s": 192.770412
         },
         "ratios": {
-          "native_speedup_by_median": 0.6849757307244493,
-          "native_mb_per_s_over_pbjs": 0.684975730995872
+          "native_speedup_by_median": 0.681576197122837,
+          "native_mb_per_s_over_pbjs": 0.6815761966363015,
+          "native_json_vs_pbjs_decode_toObject": 0.3585365629705807
         },
         "messages": 8178
       },
       "s3_100mb": {
         "native": {
-          "decode_median_ms": 149.515,
-          "decode_mb_per_s": 702.307059,
-          "decode_msg_per_s": 682874.627964
+          "decode_median_ms": 185.7033,
+          "decode_mb_per_s": 565.447356,
+          "decode_msg_per_s": 549801.753658
         },
         "protobufjs": {
-          "decode_median_ms": 112.6705,
-          "decode_mb_per_s": 931.969238,
-          "decode_msg_per_s": 906182.186,
-          "decode_plus_toObject_median_ms": 146.5488
+          "decode_median_ms": 117.6497,
+          "decode_mb_per_s": 892.526203,
+          "decode_msg_per_s": 867830.517,
+          "decode_plus_toObject_median_ms": 151.7474
+        },
+        "native_decode_plus_json": {
+          "median_ms": 449.6689,
+          "mb_per_s": 233.517239
         },
         "ratios": {
-          "native_speedup_by_median": 0.7535732200782531,
-          "native_mb_per_s_over_pbjs": 0.7535732193340914
+          "native_speedup_by_median": 0.6335358606982212,
+          "native_mb_per_s_over_pbjs": 0.6335358604592138,
+          "native_json_vs_pbjs_decode_toObject": 0.3374647435034978
         },
         "messages": 102100
       }
@@ -80,12 +90,12 @@
     "protobufjs_csv": {
       "path": "evidence/host/protobufjs_bench.csv",
       "size": 2673,
-      "sha256": "aa3f042a45b088e971c78db3cdc4ca8ea3769e7b746c7408d857bca5b6b3eec8"
+      "sha256": "e73749954b4fbe764010249b13695d6a6bfe15c103cdc7f410f78b0d1bc4810d"
     },
     "compare_json": {
       "path": "evidence/host/bench_compare.json",
-      "size": 1315,
-      "sha256": "e5343b4cd32c3d905a9ed00f52c34f27a847d06c87880c4a91bf26865487f919"
+      "size": 1668,
+      "sha256": "e1b58dc6717bb3120e189650faab1b9cd8b8d304afe7399c212dcdc095174731"
     }
   }
 }
