@@ -44,13 +44,19 @@ def main() -> int:
         p_mb = get(pbjs, "wire_decode_mb_per_s")
         n_msg = get(native, "wire_decode_msg_per_s")
         p_msg = get(pbjs, "wire_decode_msg_per_s")
+        n_json = get(native, "decode_plus_json_median_ms")
+        p_obj = get(pbjs, "decode_plus_toObject_median_ms")
+        n_json_mb = get(native, "decode_plus_json_mb_per_s")
+        p_obj_mb = get(pbjs, "decode_plus_toObject_mb_per_s")
         item = {
             "native": {"decode_median_ms": n_ms, "decode_mb_per_s": n_mb, "decode_msg_per_s": n_msg},
             "protobufjs": {"decode_median_ms": p_ms, "decode_mb_per_s": p_mb, "decode_msg_per_s": p_msg,
                            "decode_plus_toObject_median_ms": p_obj_ms},
+            "native_decode_plus_json": {"median_ms": n_json, "mb_per_s": n_json_mb},
             "ratios": {
                 "native_speedup_by_median": (p_ms / n_ms) if p_ms and n_ms else None,
                 "native_mb_per_s_over_pbjs": (n_mb / p_mb) if n_mb and p_mb else None,
+                "native_json_vs_pbjs_decode_toObject": (p_obj / n_json) if p_obj and n_json else None,
             },
             "messages": int(get(native, "messages") or 0),
         }

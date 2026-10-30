@@ -9,37 +9,47 @@
   "datasets": {
     "s1_user_1kb": {
       "native": {
-        "decode_median_ms": 13.2266,
-        "decode_mb_per_s": 634.909652,
-        "decode_msg_per_s": 618299.487397
+        "decode_median_ms": 15.2521,
+        "decode_mb_per_s": 550.592771,
+        "decode_msg_per_s": 536188.459294
       },
       "protobufjs": {
-        "decode_median_ms": 9.0599,
-        "decode_mb_per_s": 926.908244,
-        "decode_msg_per_s": 902658.97,
-        "decode_plus_toObject_median_ms": 14.6962
+        "decode_median_ms": 13.586,
+        "decode_mb_per_s": 618.113941,
+        "decode_msg_per_s": 601943.177,
+        "decode_plus_toObject_median_ms": 16.2921
+      },
+      "native_decode_plus_json": {
+        "median_ms": 42.2454,
+        "mb_per_s": 198.783678
       },
       "ratios": {
-        "native_speedup_by_median": 0.6849757307244493,
-        "native_mb_per_s_over_pbjs": 0.684975730995872
+        "native_speedup_by_median": 0.89076258351309,
+        "native_mb_per_s_over_pbjs": 0.890762583528269,
+        "native_json_vs_pbjs_decode_toObject": 0.3856538226647162
       },
       "messages": 8178
     },
     "s3_100mb": {
       "native": {
-        "decode_median_ms": 149.515,
-        "decode_mb_per_s": 702.307059,
-        "decode_msg_per_s": 682874.627964
+        "decode_median_ms": 172.6281,
+        "decode_mb_per_s": 608.275478,
+        "decode_msg_per_s": 591444.845885
       },
       "protobufjs": {
-        "decode_median_ms": 112.6705,
-        "decode_mb_per_s": 931.969238,
-        "decode_msg_per_s": 906182.186,
-        "decode_plus_toObject_median_ms": 146.5488
+        "decode_median_ms": 125.2943,
+        "decode_mb_per_s": 838.070367,
+        "decode_msg_per_s": 814881.443,
+        "decode_plus_toObject_median_ms": 166.0121
+      },
+      "native_decode_plus_json": {
+        "median_ms": 458.0591,
+        "mb_per_s": 229.239939
       },
       "ratios": {
-        "native_speedup_by_median": 0.7535732200782531,
-        "native_mb_per_s_over_pbjs": 0.7535732193340914
+        "native_speedup_by_median": 0.7258047791755804,
+        "native_mb_per_s_over_pbjs": 0.7258047795883946,
+        "native_json_vs_pbjs_decode_toObject": 0.36242506698371457
       },
       "messages": 102100
     }

@@ -19,6 +19,7 @@
 
 #include "host/common/sha256.h"
 #include "host/decoder/decode_user.h"
+#include "host/decoder/norm.h"
 #include "host/decoder/pod.h"
 #include "host/tape/tape.h"
 
@@ -216,6 +217,33 @@ int main(int argc, char** argv) {
   const double msg_s = dec_ms > 0 ? static_cast<double>(messages) / (dec_ms / 1000.0) : 0.0;
   const double ns_msg = messages ? (dec_ms * 1e6) / static_cast<double>(messages) : 0.0;
 
+  // ---- decode + canonical JSON pass (closer to protobufjs decode+toObject) ----
+  std::vector<double> json_ms;
+  uint64_t json_bytes = 0;
+  for (int rep = 0; rep < reps; ++rep) {
+    uint64_t bytes = 0;
+    const auto t0 = std::chrono::steady_clock::now();
+    for (const Frame& fr : frames) {
+      decode::Stats st;
+      Code e = decode::user_batch(card.data() + fr.off, fr.len, Limits(), &batch, &st);
+      if (e != Code::Ok) {
+        std::fprintf(stderr, "decode+json failed: %s\n", code_name(e));
+        return 5;
+      }
+      bytes += norm::user_batch_json(batch).size();
+    }
+    const auto t1 = std::chrono::steady_clock::now();
+    json_ms.push_back(std::chrono::duration<double, std::milli>(t1 - t0).count());
+    json_bytes = bytes;
+  }
+  const double json_total_ms = median_ms(json_ms);
+  const double json_mbps =
+      json_total_ms > 0 ? (static_cast<double>(payload) / 1e6) / (json_total_ms / 1000.0) : 0.0;
+  const double json_msg_s =
+      json_total_ms > 0 ? static_cast<double>(messages) / (json_total_ms / 1000.0) : 0.0;
+  const double json_ns_msg =
+      messages ? (json_total_ms * 1e6) / static_cast<double>(messages) : 0.0;
+
   // ---- tape write pass ---------------------------------------------------
   std::vector<double> tape_ms;
   uint64_t tape_bytes_total = 0;
@@ -261,6 +289,11 @@ int main(int argc, char** argv) {
       {"wire_decode_msg_per_s", std::to_string(msg_s), "messages/s"},
       {"wire_decode_ns_per_msg", std::to_string(ns_msg), "ns/message"},
       {"wire_decode_median_ms", std::to_string(dec_ms), "ms/full card"},
+      {"decode_plus_json_mb_per_s", std::to_string(json_mbps), "MB/s (payload bytes/1e6 per s)"},
+      {"decode_plus_json_msg_per_s", std::to_string(json_msg_s), "messages/s"},
+      {"decode_plus_json_ns_per_msg", std::to_string(json_ns_msg), "ns/message"},
+      {"decode_plus_json_median_ms", std::to_string(json_total_ms), "ms/full card"},
+      {"decode_plus_json_bytes", std::to_string(json_bytes), "bytes/full card"},
       {"tape_write_median_ms", std::to_string(tw_ms), "ms/full card (decode + tape write)"},
       {"tape_write_only_median_ms", std::to_string(tape_only_ms),
        "ms/full card (derived: tape pass minus decode pass)"},
