@@ -3,7 +3,7 @@
 | Script | Purpose |
 |---|---|
 | `check_env.sh` | Detect DevEco/SDK/NDK/cmake/ninja/hdc; write `evidence/env_check.json` |
-| `gen_fields.py` / `codegen.sh` | Generate/verify field constants, POD, schema IR/header and ArkTS types from `proto/example.proto` |
+| `gen_fields.py` / `codegen.sh` | Generate/verify field constants, POD, schema IR/header, decoder body and ArkTS types from `proto/example.proto` |
 | `build.sh` | V0: host `.so` + `ohpm install` + hvigor HAP; `PASS-UNSIGNED` / exit 0 when unsigned HAP built |
 | `build_hap.sh` | hvigor-only HAP shortcut; runs `ohpm install` first |
 | `build_host.sh` | HOST-ONLY: build C++/TS slice, 464 tests, data cards, bench, differential, evidence |
